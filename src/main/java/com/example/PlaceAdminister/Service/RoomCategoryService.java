@@ -1,6 +1,6 @@
-package Service;
+package com.example.PlaceAdminister.Service;
 
-import Model_Entitiy.RoomCategoryEntity;
+import com.example.PlaceAdminister.Model_Entitiy.RoomCategoryEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

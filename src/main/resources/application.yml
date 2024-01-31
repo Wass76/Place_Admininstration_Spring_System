@@ -1,0 +1,8 @@
+server:
+  port: 8022
+
+spring:
+  datasource:
+    url: json://localhost:3306/your_database
+    username: Wassem
+    password: 123456

@@ -1,26 +1,24 @@
-package Controller;
+package com.example.PlaceAdminister.Controller;
 
-import Model_Entitiy.RoomEntity;
-import Service.RoomService;
-import com.example.PlaceAdminister.JsonDealer;
+import com.example.PlaceAdminister.Model_Entitiy.RoomEntity;
+import com.example.PlaceAdminister.Service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.File;
-import java.sql.Time;
-import java.util.HashSet;
+
 import java.util.List;
-import java.util.Set;
 
 @RestController
+//@RequestMapping("/rooms")
+//@RequestMapping("/rooms")
 
-
-@RequestMapping("/rooms")
 public class RoomController {
     @Autowired
     private RoomService roomService;
 
     @GetMapping
+    @RequestMapping(value = "rooms" ,method = RequestMethod.GET)
     public List<RoomEntity> getAllRooms() {
         return roomService.getAllRooms();
     }
@@ -30,9 +28,9 @@ public class RoomController {
         RoomEntity room=new RoomEntity();
         room.setStatus(requset.status());
         room.setMax_num_of_chairs(requset.max_num_of_chairs());
-        List<RoomEntity> rooms=roomService.readFromJsonFile("src/main/resources/application.properties");
+        List<RoomEntity> rooms=roomService.readFromJsonFile("src/main/resources/application.yml");
         rooms.add(room);
-        roomService.writeToJsonFile(rooms,"src/main/resources/application.properties");
+        roomService.writeToJsonFile(rooms,"src/main/resources/application.yml");
 
     }
     record NewRoomRequset(

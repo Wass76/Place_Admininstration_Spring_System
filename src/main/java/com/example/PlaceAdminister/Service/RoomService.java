@@ -1,6 +1,6 @@
-package Service;
+package com.example.PlaceAdminister.Service;
 
-import Model_Entitiy.RoomEntity;
+import com.example.PlaceAdminister.Model_Entitiy.RoomEntity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package Model_Entitiy;
+package com.example.PlaceAdminister.Model_Entitiy;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
