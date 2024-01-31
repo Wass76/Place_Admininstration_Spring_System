@@ -6,40 +6,38 @@ import com.example.PlaceAdminister.JsonDealer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.sql.Time;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RestController
-
-
-@RequestMapping("/rooms")
+@RequestMapping("/api/v1/rooms")
 public class RoomController {
-    @Autowired
     private RoomService roomService;
+    record RoomResponse(
+    ){}
+    public RoomResponse greet (){
+        RoomResponse respose=new RoomResponse(
 
+        );
+        return respose;
+    }
     @GetMapping
-    public List<RoomEntity> getAllRooms() {
-        return roomService.getAllRooms();
+    public RoomResponse getAllRooms() {
+        return new RoomResponse();
     }
 
     @PostMapping
-    public void addRoom(@RequestBody  NewRoomRequset requset) {
+    public void addRoom(@RequestBody  NewRoomRequset requset)  {
+        System.out.println("done");
         RoomEntity room=new RoomEntity();
         room.setStatus(requset.status());
         room.setMax_num_of_chairs(requset.max_num_of_chairs());
-        List<RoomEntity> rooms=roomService.readFromJsonFile("src/main/resources/application.properties");
+        List<RoomEntity> rooms=roomService.readFromJsonFile("src/main/resources/Rooms.json");
         rooms.add(room);
-        roomService.writeToJsonFile(rooms,"src/main/resources/application.properties");
-
+        roomService.writeToJsonFile(rooms,"src/main/resources/Rooms.json");
     }
     record NewRoomRequset(
             int max_num_of_chairs,
-//            Set<Long>categoriesId,
             String status
-//            Time time_0f_reservation
     ){
 
     }
