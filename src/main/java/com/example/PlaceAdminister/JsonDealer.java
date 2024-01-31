@@ -9,28 +9,17 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 public class JsonDealer {
     public static void readFromJson(){
         try {
             ObjectMapper objectMapper = new ObjectMapper();
 
             // Read from rooms.json
-            java.util.List<RoomEntity> rooms = objectMapper.readValue(new File("rooms.json"), new TypeReference<>() {});
+//            List rooms = objectMapper.readValue(new File("rooms.json"), new TypeReference<List<RoomEntity>>() {});
 
             // Read from roomCategories.json
-            java.util.List<RoomCategoryEntity> roomCategories = objectMapper.readValue(new File("roomCategories.json"), new TypeReference<>() {});
+            List roomCategories = objectMapper.readValue(new File("roomCategories.json"), new TypeReference<>() {});
 
-            // Use the loaded data as needed
-            for (RoomEntity room : rooms) {
-//                System.out.println("Room: " + room.getRoomName());
-//                System.out.println("Categories: " + room.getCategoryIds());
-            }
-
-            for (RoomCategoryEntity category : roomCategories) {
-//                System.out.println("Category: " + category.getCategoryName());
-//                System.out.println("Rooms: " + category.getRoomIds());
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }

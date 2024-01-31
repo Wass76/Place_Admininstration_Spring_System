@@ -1,5 +1,6 @@
 package Model_Entitiy;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.sql.Time;
@@ -9,8 +10,7 @@ import java.util.Set;
 @Entity
 public class RoomEntity {
 
-
-
+    @Id
     @SequenceGenerator(
             name = "Room_id_sequence",
             sequenceName = "Room_id_sequence",
@@ -20,11 +20,16 @@ public class RoomEntity {
             strategy = GenerationType.SEQUENCE,
             generator = "Room_id_sequence"
     )
-    @Id
+    @JsonProperty("id")
     private Long id;
+    @JsonProperty("max_num_of_chairs")
     private int max_num_of_chairs;
+    @JsonProperty("categoriesId")
     private Set<Long> categoriesId = new HashSet<>();
+    @JsonProperty("status")
     private String status;
+    @JsonProperty("time_0f_reservation")
+
     private Time time_0f_reservation;
 
     public RoomEntity(){}

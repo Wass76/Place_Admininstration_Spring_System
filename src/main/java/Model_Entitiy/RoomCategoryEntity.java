@@ -1,13 +1,18 @@
 package Model_Entitiy;
 
+import com.example.PlaceAdminister.JsonDealer;
 import jakarta.persistence.*;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 public class RoomCategoryEntity {
 
+    @Id
     @SequenceGenerator(
             name = "Room_Category_id_sequence",
             sequenceName = "Room_Category_id_sequence",
@@ -17,7 +22,6 @@ public class RoomCategoryEntity {
             strategy = GenerationType.SEQUENCE,
             generator = "Room_Category_id_sequence"
     )
-    @Id
     private Long id;
     private String name;
     private Set<Long> roomIds = new HashSet<>();
@@ -52,4 +56,15 @@ public class RoomCategoryEntity {
     public void setRoomIds(Set<Long> roomIds) {
         this.roomIds = roomIds;
     }
+
+    public java.util.List<RoomEntity> getRooms(){
+        List<RoomEntity> rooms=new ArrayList<>();
+        //JsonDealer.readFromJson(new File("src/main/resources/Rooms.json"));
+        for (Long id:roomIds) {
+
+
+        }
+        return rooms;
+    }
+
 }
