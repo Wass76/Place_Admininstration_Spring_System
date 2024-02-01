@@ -7,32 +7,23 @@ import java.sql.Time;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
+
 public class RoomEntity {
 
-    @Id
-    @SequenceGenerator(
-            name = "Room_id_sequence",
-            sequenceName = "Room_id_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "Room_id_sequence"
-    )
     @JsonProperty("id")
-    private Long id;
+    private int id;
     @JsonProperty("max_num_of_chairs")
     private int max_num_of_chairs;
     @JsonProperty("categoriesId")
-    private Set<Long> categoriesId = new HashSet<>();
+    private Set<Integer> categoriesId = new HashSet<>();
     @JsonProperty("status")
     private boolean status;
     @JsonProperty("time_0f_reservation")
     private Time time_0f_reservation;
 
     public RoomEntity(){}
-    public RoomEntity( int max_num_of_chairs, boolean status, Time time_f_reservation) {
+    public RoomEntity(int id, int max_num_of_chairs, boolean status, Time time_f_reservation) {
+        this.id=id;
         this.max_num_of_chairs = max_num_of_chairs;
         this.status = status;
         this.time_0f_reservation = time_f_reservation;
@@ -62,21 +53,21 @@ public class RoomEntity {
         this.time_0f_reservation = time_f_reservation;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
-    public Set<Long> getCategories() {
+    public Set<Integer> getCategories() {
         return categoriesId;
     }
 
-    public void setCategories(Set<Long> categories) {
+    public void setCategories(Set<Integer> categories) {
         this.categoriesId = categoriesId;
     }
-    public void addCategory(Long roomCategoryEntity){
+    public void addCategory(int roomCategoryEntity){
         this.categoriesId.add(roomCategoryEntity);
     }
 }
