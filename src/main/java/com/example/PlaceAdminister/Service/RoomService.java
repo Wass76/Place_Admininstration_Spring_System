@@ -7,19 +7,25 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Service
 public class RoomService {
-    private List<RoomEntity> rooms; // Assuming you load/save this list from/to JSON
 
     public List<RoomEntity> getAllRooms() {
-        return rooms;
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<RoomEntity> models = objectMapper.readValue(new File("src/main/resources/Rooms.json"), new TypeReference<>() {});
+            return models;
+        } catch (IOException e) {
+            return new ArrayList<>();
+        }
     }
 
     public void addRoom(RoomEntity room) {
-        rooms.add(room);
+        //rooms.add(room);
         // Save the updated list to JSON
     }
     record NewRoomRequset(
@@ -28,15 +34,13 @@ public class RoomService {
             Integer age
     ){
     }
-    // Other methods as needed
     public List<RoomEntity> readFromJsonFile(String filePath) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             List<RoomEntity> models = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
             return models;
         } catch (IOException e) {
-            e.printStackTrace(); // Handle the exception appropriately in a production environment
-            return null;
+            return new ArrayList<>();
         }
     }
     public void writeToJsonFile(List<RoomEntity> models, String filePath) {
@@ -44,7 +48,7 @@ public class RoomService {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.writeValue(new File(filePath), models);
         } catch (IOException e) {
-            e.printStackTrace(); // Handle the exception appropriately in a production environment
+
         }
     }
 }

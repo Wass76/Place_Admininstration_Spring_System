@@ -7,23 +7,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Entity
 public class RoomCategoryEntity {
 
-    @Id
-    @SequenceGenerator(
-            name = "Room_Category_id_sequence",
-            sequenceName = "Room_Category_id_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "Room_Category_id_sequence"
-    )
+
     private Long id;
     private String name;
     private Set<Long> roomIds = new HashSet<>();
-    private Set<Long> tableIds = new HashSet<>();
 
     public RoomCategoryEntity(Long id , String name) {
         this.id = id;

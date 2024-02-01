@@ -1,43 +1,36 @@
 package com.example.PlaceAdminister.Model_Entitiy;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
 
 import java.sql.Time;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
+
 public class RoomEntity {
 
-    @Id
-    @SequenceGenerator(
-            name = "Room_id_sequence",
-            sequenceName = "Room_id_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "Room_id_sequence"
-    )
     @JsonProperty("id")
-    private Long id;
+    private int id;
     @JsonProperty("max_num_of_chairs")
     private int max_num_of_chairs;
     @JsonProperty("categoriesId")
-    private Set<Long> categoriesId = new HashSet<>();
+    private Set<Integer> categoriesId = new HashSet<>();
+    @JsonProperty("tableIds")
+    private Set<Integer> tablesIds = new HashSet<>();
     @JsonProperty("status")
-    private String status;
+    private boolean status;
     @JsonProperty("time_0f_reservation")
-
-    private Time time_0f_reservation;
+    private Date time_0f_reservation;
 
     public RoomEntity(){}
-    public RoomEntity(Long id, int max_num_of_chairs, String status, Time time_f_reservation) {
-        this.id = id;
+
+    public RoomEntity(int max_num_of_chairs, Set<Integer> categoriesId, Set<Integer> tablesIds, boolean status, Date time_0f_reservation) {
         this.max_num_of_chairs = max_num_of_chairs;
+        this.categoriesId = categoriesId;
+        this.tablesIds = tablesIds;
         this.status = status;
-        this.time_0f_reservation = time_f_reservation;
+        this.time_0f_reservation = time_0f_reservation;
     }
 
     public int getMax_num_of_chairs() {
@@ -48,37 +41,53 @@ public class RoomEntity {
         this.max_num_of_chairs = max_num_of_chairs;
     }
 
-    public String getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 
-    public Time getTime_0f_reservation() {
+    public Date getTime_0f_reservation() {
         return time_0f_reservation;
     }
 
-    public void setTime_0f_reservation(Time time_f_reservation) {
+    public void setTime_0f_reservation(Date time_f_reservation) {
         this.time_0f_reservation = time_f_reservation;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
-    public Set<Long> getCategories() {
+    public Set<Integer> getCategories() {
         return categoriesId;
     }
 
-    public void setCategories(Set<Long> categories) {
+    public void setCategories(Set<Integer> categories) {
         this.categoriesId = categoriesId;
     }
-    public void addCategory(Long roomCategoryEntity){
-        this.categoriesId.add(roomCategoryEntity);
+    public void addCategory(java.util.List<Integer> roomCategoryIds){
+        this.categoriesId.addAll(roomCategoryIds);
+    }
+    public void addTables(java.util.List<Integer> tableIds){
+        if(tableIds==null) return;
+        this.tablesIds.addAll(tableIds);
+    }
+
+    @Override
+    public String toString() {
+        return "RoomEntity{" +
+                "id=" + id +
+                ", max_num_of_chairs=" + max_num_of_chairs +
+                ", categoriesId=" + categoriesId +
+                ", tableIds=" + tablesIds +
+                ", status=" + status +
+                ", time_0f_reservation=" + time_0f_reservation +
+                '}';
     }
 }
