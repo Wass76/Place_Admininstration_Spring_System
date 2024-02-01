@@ -1,4 +1,4 @@
-package Model_Entitiy;
+package com.example.PlaceAdminister.Model_Entitiy;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -27,14 +27,12 @@ public class RoomEntity {
     @JsonProperty("categoriesId")
     private Set<Long> categoriesId = new HashSet<>();
     @JsonProperty("status")
-    private String status;
+    private boolean status;
     @JsonProperty("time_0f_reservation")
-
     private Time time_0f_reservation;
 
     public RoomEntity(){}
-    public RoomEntity(Long id, int max_num_of_chairs, String status, Time time_f_reservation) {
-        this.id = id;
+    public RoomEntity( int max_num_of_chairs, boolean status, Time time_f_reservation) {
         this.max_num_of_chairs = max_num_of_chairs;
         this.status = status;
         this.time_0f_reservation = time_f_reservation;
@@ -48,11 +46,11 @@ public class RoomEntity {
         this.max_num_of_chairs = max_num_of_chairs;
     }
 
-    public String getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 

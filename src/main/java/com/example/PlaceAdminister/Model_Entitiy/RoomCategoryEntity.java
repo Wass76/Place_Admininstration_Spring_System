@@ -1,9 +1,7 @@
-package Model_Entitiy;
+package com.example.PlaceAdminister.Model_Entitiy;
 
-import com.example.PlaceAdminister.JsonDealer;
 import jakarta.persistence.*;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
