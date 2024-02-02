@@ -16,10 +16,8 @@ import java.util.Set;
 public class RoomCategoryDTO {
     private Long id;
     private String type;
-    private Set<Long> roomIds = new HashSet<>();
 
     public RoomCategoryDTO(RoomCategoryRequest request) {
         this.type=request.getType();
-        roomIds = request.getRoomIds();
     }
 }

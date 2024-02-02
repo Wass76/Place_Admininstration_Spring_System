@@ -19,6 +19,4 @@ public class RoomRequest {
     private Set<Long> categoriesId;
     private Set<Long> tablesIds;
     private Long placeId;
-
-
 }

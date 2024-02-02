@@ -20,12 +20,11 @@ public class RoomController {
     @Autowired
     private RoomService roomService=new RoomService();
 
-
-
     @GetMapping("/AllRooms")
     public List<RoomDTO> index(){
         return roomService.getAllRooms();
     }
+    //checked
 
     @PostMapping("/newRoom")
     public RoomDTO create(@RequestBody RoomRequest request)
@@ -39,16 +38,16 @@ public class RoomController {
     public RoomDTO show(@PathVariable("id") Long id){
         return roomService.show(id);
     }
+    //checked
 
     @PutMapping("update/{id}")
     public RoomDTO edit(@PathVariable("id") Long id ,@RequestBody RoomRequest request){
-        RoomDTO RoomDTO = new RoomDTO(request);
-        return roomService.update(id ,RoomDTO);
+        RoomDTO roomDTO = new RoomDTO(request);
+        if(roomDTO!=null)
+            return roomService.update(id ,roomDTO);
+        else return null;
     }
-
-    record ReserveRoomRequest(Time time){
-    }
-
+    //checked
     @PostMapping("/reservationRoom/{id}")
     public RoomDTO reserveRoom(@PathVariable("id") Long id ,@RequestBody RoomRequest request){
         return roomService.reserveRoom(id,request.getTime_of_reservation());

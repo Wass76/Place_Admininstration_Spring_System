@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @AllArgsConstructor
@@ -20,7 +18,6 @@ import java.util.Set;
 @Setter
 @Component
 public class RoomEntity {
-
     @JsonProperty("id")
     @Id
     private Long id;
@@ -29,7 +26,7 @@ public class RoomEntity {
     @JsonProperty("categoriesId")
     private Set<Long> categoriesId = new HashSet<>();
     @JsonProperty("tableIds")
-    private Set<Long> tablesIds = new HashSet<>();
+    private List<Long> tablesIds = new ArrayList<>();
     @JsonProperty("status")
     private boolean status;
     @JsonProperty("time_0f_reservation")
@@ -37,7 +34,7 @@ public class RoomEntity {
     @JsonProperty("time_0f_reservation")
     private int placeId;
 
-    public RoomEntity(int max_num_of_chairs, Set<Long> categoriesId, Set<Long> tablesIds, boolean status, Date time_0f_reservation,int placeId) {
+    public RoomEntity(int max_num_of_chairs, Set<Long> categoriesId, ArrayList<Long> tablesIds, boolean status, Date time_0f_reservation,int placeId) {
         this.max_num_of_chairs = max_num_of_chairs;
         this.categoriesId = categoriesId;
         this.tablesIds = tablesIds;

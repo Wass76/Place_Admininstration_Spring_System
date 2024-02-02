@@ -18,7 +18,6 @@ import java.util.List;
 
 @Component
 public class RoomCategoryRepository {
-
     public List<RoomCategoryDTO> readFromJsonFile(String filePath) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -28,13 +27,13 @@ public class RoomCategoryRepository {
             return new ArrayList<>();
         }
     }
-
     public RoomCategoryDTO writeToJsonFile(RoomCategoryDTO models, String filePath) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
 
             List<RoomCategoryDTO> roomCategory= readFromJsonFile(filePath);
-            Long id=roomCategory.get(roomCategory.size()+1).getId();
+            Long id= Long.valueOf(1);
+            if(!(roomCategory.size()==0)) id=(Long)roomCategory.get(roomCategory.size()-1).getId()+1;
             models.setId(id);
             roomCategory.add(models);
 
@@ -44,8 +43,6 @@ public class RoomCategoryRepository {
         }
         return models;
     }
-
-
     public RoomCategoryDTO searchDataById(Long id , String filePath) {
         List<RoomCategoryDTO> dataList = readFromJsonFile(filePath);
         return dataList.stream()
@@ -53,7 +50,6 @@ public class RoomCategoryRepository {
                 .findFirst()
                 .orElse(null);
     }
-
     public RoomCategoryDTO UpdateById(Long id , RoomCategoryDTO tableCategoryDTO , String filePath){
         try {
             // Step 1: Read the JSON file and parse it
@@ -86,6 +82,4 @@ public class RoomCategoryRepository {
 
         return tableCategoryDTO;
     }
-
-
 }

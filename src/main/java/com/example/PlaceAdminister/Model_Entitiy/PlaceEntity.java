@@ -1,18 +1,15 @@
 package com.example.PlaceAdminister.Model_Entitiy;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -20,19 +17,17 @@ import java.util.Set;
 @Getter
 @Setter
 @Component
-public class RoomCategoryEntity {
-
-
+public class PlaceEntity {
     @Id
     @JsonProperty("id")
     private Long id;
-    @JsonProperty("type")
-    private String type;
+    @JsonProperty("name")
+    private String name;
+    @JsonProperty("locations")
+    private List<String> locations;
+    @JsonProperty("rooms")
+    private List<String> rooms;
 
-
-    public RoomCategoryEntity(String type) {
-        this.type=type;
-    }
 
 
 }

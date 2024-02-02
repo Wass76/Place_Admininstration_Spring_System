@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class RoomRepository {
-
     public List<RoomDTO> readFromJsonFile(String filePath) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -30,7 +29,6 @@ public class RoomRepository {
             return new ArrayList<>();
         }
     }
-
     public RoomDTO writeToJsonFile(RoomDTO models, String filePath) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -47,7 +45,6 @@ public class RoomRepository {
         }
         return models;
     }
-
     public RoomDTO searchDataById(Long id , String filePath) {
         List<RoomDTO> dataList = readFromJsonFile(filePath);
         return dataList.stream()
@@ -55,7 +52,6 @@ public class RoomRepository {
                 .findFirst()
                 .orElse(null);
     }
-
     public RoomDTO UpdateById(Long id , RoomDTO roomDTO , String filePath) {
         try {
             // Step 1: Read the JSON file and parse it
@@ -69,6 +65,7 @@ public class RoomRepository {
                 JSONObject element = jsonArray.getJSONObject(i);
                 if (element.getLong("id") == (id)) { // Assuming "id" is the identifier for the element
                     element.put("id", id);
+                    roomDTO.setId(id);
                     element.put("status", roomDTO.getStatus());
                     element.put("time_of_reservation", roomDTO.getTime_of_reservation());
                     element.put("max_num_of_chairs", roomDTO.getMax_num_of_chairs());
@@ -93,5 +90,4 @@ public class RoomRepository {
         return roomDTO;
 
     }
-
 }

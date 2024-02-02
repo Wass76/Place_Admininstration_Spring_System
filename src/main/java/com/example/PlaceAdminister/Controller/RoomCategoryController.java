@@ -11,17 +11,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/room-categories")
+@RequestMapping("/api/v1/roomCategories")
 public class RoomCategoryController {
     @Autowired
     private RoomCategoryService roomCategoryService;
 
-    @GetMapping
+    @GetMapping("allRoomCategories")
     public List<RoomCategoryDTO> getAllRoomCategories() {
         return roomCategoryService.getAllRoomCategories();
     }
 
-    @PostMapping
+    @PostMapping("newRoomCategory")
     public RoomCategoryDTO addRoomCategory(@RequestBody RoomCategoryRequest roomCategoryRequest) {
         RoomCategoryDTO roomCategoryDTO = new RoomCategoryDTO(roomCategoryRequest);
         return roomCategoryService.store(roomCategoryDTO);
