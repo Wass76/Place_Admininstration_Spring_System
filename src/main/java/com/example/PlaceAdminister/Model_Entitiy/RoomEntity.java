@@ -34,21 +34,16 @@ public class RoomEntity {
     private boolean status;
     @JsonProperty("time_0f_reservation")
     private Date time_0f_reservation;
-    public RoomEntity(int max_num_of_chairs, Set<Long> categoriesId, Set<Long> tablesIds, boolean status, Date time_0f_reservation) {
+    @JsonProperty("time_0f_reservation")
+    private int placeId;
+
+    public RoomEntity(int max_num_of_chairs, Set<Long> categoriesId, Set<Long> tablesIds, boolean status, Date time_0f_reservation,int placeId) {
         this.max_num_of_chairs = max_num_of_chairs;
         this.categoriesId = categoriesId;
         this.tablesIds = tablesIds;
         this.status = status;
         this.time_0f_reservation = time_0f_reservation;
+        this.placeId=placeId;
     }
-    public void addCategory(java.util.List<Long> roomCategoryIds){
-        this.categoriesId.addAll(roomCategoryIds);
-    }
-    public void addTables(java.util.List<Long> tableIds){
-        if(tableIds==null) return;
-        this.tablesIds.addAll(tableIds);
-    }
-
-
 
 }

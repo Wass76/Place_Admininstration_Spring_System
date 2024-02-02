@@ -12,5 +12,5 @@ import java.util.Set;
 @Setter
 public class RoomCategoryRequest {
     private String type;
-    private Set<Long> roomIds = new HashSet<>();
+    private Set<Long> roomIds;
 }

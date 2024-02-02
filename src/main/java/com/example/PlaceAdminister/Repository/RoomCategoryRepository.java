@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,11 +16,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class RoomCategoryRepository {
 
     public List<RoomCategoryDTO> readFromJsonFile(String filePath) {
-        String filepath1 = "src/main/resources/RoomCategories.json";
-
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             List<RoomCategoryDTO> models = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
@@ -34,7 +34,7 @@ public class RoomCategoryRepository {
             ObjectMapper objectMapper = new ObjectMapper();
 
             List<RoomCategoryDTO> roomCategory= readFromJsonFile(filePath);
-            Long id=(Long)roomCategory.get(roomCategory.size()+1).getId();
+            Long id=roomCategory.get(roomCategory.size()+1).getId();
             models.setId(id);
             roomCategory.add(models);
 

@@ -14,10 +14,11 @@ import java.util.Set;
 @Getter
 @Setter
 public class RoomRequest {
-    Integer status;
-    Time time_of_reservation;
+    private Integer status;
+    private Time time_of_reservation;
     private Set<Long> categoriesId;
     private Set<Long> tablesIds;
+    private Long placeId;
 
 
 }

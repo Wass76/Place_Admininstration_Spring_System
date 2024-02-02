@@ -1,6 +1,9 @@
 package com.example.PlaceAdminister.Controller;
 
+import com.example.PlaceAdminister.DTO.RoomCategoryDTO;
+import com.example.PlaceAdminister.DTO.RoomDTO;
 import com.example.PlaceAdminister.Model_Entitiy.RoomCategoryEntity;
+import com.example.PlaceAdminister.Request.RoomCategoryRequest;
 import com.example.PlaceAdminister.Service.RoomCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,13 +17,14 @@ public class RoomCategoryController {
     private RoomCategoryService roomCategoryService;
 
     @GetMapping
-    public List<RoomCategoryEntity> getAllRoomCategories() {
+    public List<RoomCategoryDTO> getAllRoomCategories() {
         return roomCategoryService.getAllRoomCategories();
     }
 
     @PostMapping
-    public void addRoomCategory(@RequestBody RoomCategoryEntity roomCategoryEntity) {
-        roomCategoryService.addRoomCategory(roomCategoryEntity);
+    public RoomCategoryDTO addRoomCategory(@RequestBody RoomCategoryRequest roomCategoryRequest) {
+        RoomCategoryDTO roomCategoryDTO = new RoomCategoryDTO(roomCategoryRequest);
+        return roomCategoryService.store(roomCategoryDTO);
     }
 
     // Other endpoints as needed

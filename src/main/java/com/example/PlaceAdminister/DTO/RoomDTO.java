@@ -17,12 +17,14 @@ public class RoomDTO {
     private Set<Long> tablesIds = new HashSet<>();
     private int status;
     private Date time_of_reservation;
+    private Long placeId;
 
     public RoomDTO(RoomRequest newRoomRequest) {
         this.status = newRoomRequest.getStatus();
         this.time_of_reservation = newRoomRequest.getTime_of_reservation();
         this.categoriesId = newRoomRequest.getCategoriesId();
         this.tablesIds = newRoomRequest.getTablesIds();
+        this.placeId=newRoomRequest.getPlaceId();
     }
 
 }

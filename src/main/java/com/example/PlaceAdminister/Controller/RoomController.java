@@ -33,6 +33,7 @@ public class RoomController {
         RoomDTO tableDTO = new RoomDTO(request);
         return roomService.store(tableDTO);
     }
+    //checked
 
     @GetMapping("{id}")
     public RoomDTO show(@PathVariable("id") Long id){
