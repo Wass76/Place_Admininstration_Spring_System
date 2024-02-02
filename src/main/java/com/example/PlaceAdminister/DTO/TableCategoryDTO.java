@@ -20,5 +20,4 @@ public class TableCategoryDTO {
         this.setShape( request.getShape());
         this.setNum_of_seats(request.getNum_of_seats());
     }
-
 }

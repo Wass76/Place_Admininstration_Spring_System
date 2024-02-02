@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,7 +21,9 @@ public class TableService {
 
     public List<TableDTO> getAllTables(){
 
-        return tableRepository.readFromJsonFile(filepath);
+        List<TableDTO>  tableDTOList = tableRepository.readFromJsonFile(filepath);
+
+        return tableDTOList;
     }
 
     public TableDTO store(TableDTO tableDTO){
@@ -47,12 +50,14 @@ public class TableService {
     }
 
 
-    public TableDTO reserveTable(Long id , Time time){
-        TableDTO tableDTO = tableRepository.searchDataById(id ,filepath);
+    public TableDTO reserveTable(Long id , LocalDateTime time){
+        String filePath = "src/main/resources/Reservations.json";
+        TableDTO tableDTO = tableRepository.searchDataById(id ,this.filepath);
         if(tableDTO != null){
             tableDTO.setStatus(2);
             tableDTO.setTime_of_reservation(time);
-            tableRepository.UpdateById(id,tableDTO,filepath);
+            tableRepository.UpdateById(id,tableDTO,this.filepath);
+            tableRepository.writeToJsonFile(tableDTO,filePath);
             return tableDTO;
         }
         else {
@@ -74,14 +79,14 @@ public class TableService {
         }
     }
 
-    public Boolean checkAvailableSeats(Long id){
-        TableDTO tableDTO = tableRepository.searchDataById(id,filepath);
-        if(tableDTO != null){
-            if(tableDTO.getAvailable_seats().size()>0 ) // findAny().equals(true)
-                 return tableDTO.getAvailable_seats().stream().filter(i->i.equals(true)).findFirst().orElse(null);
-        }
-            return false;
-    }
+//    public Boolean checkAvailableSeats(Long id){
+//        TableDTO tableDTO = tableRepository.searchDataById(id,filepath);
+//        if(tableDTO != null){
+//            if(tableDTO.getAvailable_seats().size()>0 ) // findAny().equals(true)
+//                 return tableDTO.getAvailable_seats().stream().filter(i->i.equals(true)).findFirst().orElse(null);
+//        }
+//            return false;
+//    }
 
     public void delete(Long id){
 

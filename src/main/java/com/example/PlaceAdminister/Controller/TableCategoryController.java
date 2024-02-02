@@ -17,8 +17,6 @@ public class TableCategoryController {
     @Autowired
     private TableCategoryService tableCategoryService;
 
-
-
     @GetMapping("/AllTables")
     public List<TableCategoryDTO> index(){
         return tableCategoryService.getAllTablesCategories();

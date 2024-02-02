@@ -14,6 +14,7 @@ public class TableRequest {
     Long id;
     Integer status;
     LocalDateTime time_of_reservation;
+    Integer period_of_reservation;
     Long category_id;
     Long room_id;
 }

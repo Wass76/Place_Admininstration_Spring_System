@@ -1,6 +1,8 @@
 package com.example.PlaceAdminister.Repository;
 
+import com.example.PlaceAdminister.DTO.ReservationDTO;
 import com.example.PlaceAdminister.DTO.TableDTO;
+import com.example.PlaceAdminister.Request.MakeReservationRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
@@ -107,6 +109,23 @@ public class TableRepository {
 
         return tableDTO;
     }
+
+
+
+//    public ReservationDTO reserveTable(ReservationDTO reservationDTO ,String filePath){
+//        try {
+//            ObjectMapper objectMapper = new ObjectMapper();
+//
+//            List<TableDTO> tables= readFromJsonFile(filePath);
+//            reservationDTO.setId((long)tables.size()+1);
+//            tables.a;
+//
+//            objectMapper.writeValue(new File(filePath), tables);
+//        } catch (IOException e) {
+//            e.printStackTrace(); // Handle the exception appropriately in a production environment
+//        }
+//        return reservationDTO;
+//    }
 
 //    public List<TableDTO> searchData( Long room_id, String filePath) {
 //        List<TableDTO> dataList = readFromJsonFile(filePath);
