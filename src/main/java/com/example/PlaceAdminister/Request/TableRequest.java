@@ -13,5 +13,6 @@ public class TableRequest {
     Long id;
     Integer status;
     Time time_of_reservation;
-    Integer room_id;
+    Long category_id;
+    Long room_id;
 }

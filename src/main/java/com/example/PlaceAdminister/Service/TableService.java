@@ -2,94 +2,88 @@ package com.example.PlaceAdminister.Service;
 
 import com.example.PlaceAdminister.DTO.TableDTO;
 import com.example.PlaceAdminister.Model_Entitiy.TableEntity;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.example.PlaceAdminister.Repository.TableRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.sql.Time;
 import java.util.List;
 
 @Service
 public class TableService {
 
+    @Autowired
     private TableEntity tables;
+    @Autowired
+    private TableRepository tableRepository;
+    private String filepath = "src/main/resources/Tables.json";
 
-    public List<TableEntity> index(){
-        return List.of(tables);
+    public List<TableDTO> getAllTables(){
+
+        return tableRepository.readFromJsonFile(filepath);
+    }
+
+    public TableDTO store(TableDTO tableDTO){
+           return tableRepository.writeToJsonFile(tableDTO ,this.filepath);
+    }
+
+    public TableDTO show(Long id)
+    {
+        return tableRepository.searchDataById(id , this.filepath);
+    }
+
+    public List<TableDTO> showTablesByRoomId(Long id)
+    {
+        return  tableRepository.searchByRoomId(id , this.filepath);
+    }
+
+    public List<TableDTO> showTablesByCategoryId(Long id)
+    {
+        return  tableRepository.searchByCategoryId(id , this.filepath);
+    }
+
+    public TableDTO update(Long id , TableDTO tableDTO){
+        return tableRepository.UpdateById(id ,tableDTO,this.filepath);
     }
 
 
-
-    public static List<TableDTO> readFromJsonFile(String filePath) {
-//        try {
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            List<TableDTO> models = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
-//            return models;
-//        } catch (IOException e) {
-//            e.printStackTrace(); // Handle the exception appropriately in a production environment
-//            return null;
-//        }
-
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            File file = new File(filePath);
-            if (file.exists() && file.length() > 0) {
-                return objectMapper.readValue(file, objectMapper.getTypeFactory().constructCollectionType(List.class, TableDTO.class));
-            } else {
-                return new ArrayList<>();
-            }
-        } catch (IOException e) {
-            // Handle exception
-            e.printStackTrace();
-            return new ArrayList<>();
+    public TableDTO reserveTable(Long id , Time time){
+        TableDTO tableDTO = tableRepository.searchDataById(id ,filepath);
+        if(tableDTO != null){
+            tableDTO.setStatus(2);
+            tableDTO.setTime_of_reservation(time);
+            tableRepository.UpdateById(id,tableDTO,filepath);
+            return tableDTO;
+        }
+        else {
+            return null;
         }
     }
 
-    public List<TableDTO> writeToJsonFile(List<TableDTO>  models, String filePath) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.writeValue(new File(filePath), models);
-        } catch (IOException e) {
-            e.printStackTrace(); // Handle the exception appropriately in a production environment
+    public TableDTO cancelTableReservation(Long id ) {
+        TableDTO tableDTO = tableRepository.searchDataById(id, filepath);
+        if (tableDTO != null) {
+//            if(tableDTO.getStatus() == 2){
+            tableDTO.setStatus(1);
+            tableDTO.setTime_of_reservation(null);
+
+            tableRepository.UpdateById(id, tableDTO, filepath);
+            return tableDTO;
+        } else {
+            return null;
         }
-        return models;
     }
 
-    // Existing data in the JSON file
-
-    // New data to be added
-
-
-    // Combine existing and new data
-//    List<TableDTO> combinedData = new ArrayList<>(existingData);
-//        combinedData.add(newData);
-//
-//    // Write combined data back to the file
-//    writeDataToFile("Table.json", combinedData);
-
-
-    public static List<TableDTO> writeDataToFile(String fileName, List<TableDTO>  data) {
-
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-
-            List<TableDTO> existingData = readFromJsonFile(fileName);
-//            System.out.println(existingData.);
-            List<List<TableDTO> > combinedData = new ArrayList<>(List.of(existingData) );
-
-            combinedData.add(data);
-
-            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            ObjectWriter writer = objectMapper.writerWithDefaultPrettyPrinter();
-            writer.writeValue(new File(fileName), data);
-        } catch (IOException e) {
-            // Handle exception
-            e.printStackTrace();
+    public Boolean checkAvailableSeats(Long id){
+        TableDTO tableDTO = tableRepository.searchDataById(id,filepath);
+        if(tableDTO != null){
+            if(tableDTO.getAvailable_seats().size()>0 ) // findAny().equals(true)
+                 return tableDTO.getAvailable_seats().stream().filter(i->i.equals(true)).findFirst().orElse(null);
         }
-        return data;
+            return false;
+    }
+
+    public void delete(Long id){
+
     }
 }

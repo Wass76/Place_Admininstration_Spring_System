@@ -7,12 +7,7 @@ import com.example.PlaceAdminister.Service.TableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.Time;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -21,35 +16,50 @@ public class TableController {
 
     @Autowired
     private TableService tableService;
-    @Autowired
-    private TableEntity tableEntity;
 
-    @GetMapping("/reading")
-    public List<TableDTO> test() throws IOException {
-        String filepath = "src/main/resources/Tables.json";
-        return tableService.readFromJsonFile(filepath);
+
+    @GetMapping("/AllTables")
+    public List<TableDTO> index(){
+        return tableService.getAllTables();
     }
 
-//    record TableRequest(
-//            Long id,
-//            Integer status,
-//            Time time_of_reservation,
-//            Integer room_id
-//    ){}
+    @PostMapping("/newTable")
+    public TableDTO create(@RequestBody TableRequest request)
+    {
+        TableDTO tableDTO = new TableDTO(request);
+        return tableService.store(tableDTO);
+    }
 
-    @PostMapping("writing")
-    public List<TableDTO>  writeTest(@RequestBody TableRequest request){
+    @GetMapping("{id}")
+    public TableDTO show(@PathVariable("id") Long id){
+        return tableService.show(id);
+    }
+    @GetMapping("findByRoomId/{id}")
+    public List<TableDTO> showByRoomId(@PathVariable("id") Long id){
+        return tableService.showTablesByRoomId(id);
+    }
 
-        String filepath = "src/main/resources/Tables.json";
-//        TableEntity t = new TableEntity();
-//            t= (TableEntity) Arrays.asList(request);
-        TableDTO t = new TableDTO(request);
+    @GetMapping("findByCategoryId/{id}")
+    public List<TableDTO> showByCategoryId(@PathVariable("id") Long id){
+        return tableService.showTablesByCategoryId(id);
+    }
 
-        List<TableDTO> tableDTO = new ArrayList<>();
-        tableDTO.add(t);
-        System.out.println(tableDTO.toString());
+    @PutMapping("update/{id}")
+    public TableDTO edit(@PathVariable("id") Long id ,@RequestBody TableRequest request){
+        TableDTO tableDTO = new TableDTO(request);
+        return tableService.update(id ,tableDTO);
+    }
 
-        return tableService.writeDataToFile(filepath,tableDTO);
+    record ReserveTableRequest(Time time){
+    }
+
+    @PostMapping("/reservationtable/{id}")
+    public TableDTO reserveTable(@PathVariable("id") Long id ,@RequestBody TableRequest request){
+        return tableService.reserveTable(id,request.getTime_of_reservation());
+    }
+    @PostMapping("/cancelreserve/{id}")
+    public TableDTO cancelReserve(@PathVariable("id") Long id){
+        return tableService.cancelTableReservation(id);
     }
 
 

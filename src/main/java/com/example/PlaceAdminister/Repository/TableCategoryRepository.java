@@ -1,5 +1,6 @@
 package com.example.PlaceAdminister.Repository;
 
+import com.example.PlaceAdminister.DTO.TableCategoryDTO;
 import com.example.PlaceAdminister.DTO.TableDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,28 +16,28 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
-public class TableRepository {
 
-    public List<TableDTO> readFromJsonFile(String filePath) {
+public class TableCategoryRepository {
+
+    public List<TableCategoryDTO> readFromJsonFile(String filePath) {
         String filepath1 = "src/main/resources/Rooms.json";
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            List<TableDTO> models = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
+            List<TableCategoryDTO> models = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
             return models;
         } catch (IOException e) {
             return new ArrayList<>();
         }
     }
 
-    public TableDTO writeToJsonFile(TableDTO models, String filePath) {
+    public TableCategoryDTO writeToJsonFile(TableCategoryDTO models, String filePath) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
 
-            List<TableDTO> tables= readFromJsonFile(filePath);
+            List<TableCategoryDTO> tables= readFromJsonFile(filePath);
             models.setId((long)tables.size()+1);
             tables.add(models);
 
@@ -48,32 +49,15 @@ public class TableRepository {
     }
 
 
-    public TableDTO searchDataById(Long id , String filePath) {
-        List<TableDTO> dataList = readFromJsonFile(filePath);
+    public TableCategoryDTO searchDataById(Long id , String filePath) {
+        List<TableCategoryDTO> dataList = readFromJsonFile(filePath);
         return dataList.stream()
                 .filter(data -> data.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }
 
-    public List<TableDTO> searchByRoomId( Long room_id, String filePath) {
-        List<TableDTO> dataList = readFromJsonFile(filePath);
-         List<TableDTO> tableDTOList =  dataList.stream()
-                .filter(data -> data.getRoom_id().equals(room_id)).collect(Collectors.toList());
-         return tableDTOList;
-//                .orElse(null)) ;
-    }
-
-    public List<TableDTO> searchByCategoryId( Long category_id, String filePath) {
-        List<TableDTO> dataList = readFromJsonFile(filePath);
-        List<TableDTO> tableDTOList =  dataList.stream()
-                .filter(data -> data.getCategory_id().equals(category_id)).collect(Collectors.toList());
-        return tableDTOList;
-//                .orElse(null)) ;
-    }
-
-
-    public TableDTO UpdateById(Long id , TableDTO tableDTO , String filePath){
+    public TableCategoryDTO UpdateById(Long id , TableCategoryDTO tableCategoryDTO , String filePath){
         try {
             // Step 1: Read the JSON file and parse it
             File jsonFile = new File(filePath);
@@ -87,9 +71,8 @@ public class TableRepository {
                 if (element.getLong("id") == (id)) { // Assuming "id" is the identifier for the element
                     System.out.println(element.getInt("id"));
                     element.put("id" , id);
-                    element.put("status", tableDTO.getStatus());
-                    element.put("time_of_reservation", tableDTO.getTime_of_reservation());
-                    element.put("room_id" ,tableDTO.getRoom_id());
+                    element.put("shape", tableCategoryDTO.getShape());
+                    element.put("num_of_seats", tableCategoryDTO.getNum_of_seats());
                     // Add more modifications as needed
                 }
             }
@@ -105,16 +88,6 @@ public class TableRepository {
             throw new RuntimeException(e);
         }
 
-        return tableDTO;
+        return tableCategoryDTO;
     }
-
-//    public List<TableDTO> searchData( Long room_id, String filePath) {
-//        List<TableDTO> dataList = readFromJsonFile(filePath);
-//        return dataList.stream()
-//                .filter(data -> data.getName().contains(keyword))
-//                .collect(Collectors.toList());
-//    }
-
-
-
 }
