@@ -28,6 +28,9 @@ public class PlaceEntity {
     @JsonProperty("rooms")
     private List<String> rooms;
 
-
-
+    public PlaceEntity(String name, List<String> locations, List<String> rooms) {
+        this.name = name;
+        this.locations = locations;
+        this.rooms = rooms;
+    }
 }

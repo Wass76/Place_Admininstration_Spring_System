@@ -27,6 +27,5 @@ public class RoomCategoryController {
         return roomCategoryService.store(roomCategoryDTO);
     }
 
-    // Other endpoints as needed
 }
 
