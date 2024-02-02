@@ -1,7 +1,9 @@
 package com.example.PlaceAdminister.Controller;
 
+import com.example.PlaceAdminister.DTO.RoomDTO;
 import com.example.PlaceAdminister.Model_Entitiy.RoomCategoryEntity;
 import com.example.PlaceAdminister.Model_Entitiy.RoomEntity;
+import com.example.PlaceAdminister.Request.RoomRequest;
 import com.example.PlaceAdminister.Service.RoomService;
 import org.apache.coyote.Response;
 import org.hibernate.mapping.Set;
@@ -17,77 +19,118 @@ import java.util.List;
 public class RoomController {
     @Autowired
     private RoomService roomService=new RoomService();
-    @GetMapping
-    public List<RoomEntity> getAllRooms() {
+
+
+
+    @GetMapping("/AllRooms")
+    public List<RoomDTO> index(){
         return roomService.getAllRooms();
     }
 
-    record NewRoomRequset(int max_num_of_chairs, boolean status, HashSet<Integer> categoriesId,HashSet<Integer>tablesId){}
-    record NewRoomResponse(RoomEntity room){}
-    @PostMapping
-    public NewRoomResponse addRoom(@RequestBody   NewRoomRequset request)  {
-        RoomEntity room=new RoomEntity(request.max_num_of_chairs(), request.categoriesId(),request.tablesId(),false,null);
-        List<RoomEntity> rooms=roomService.readFromJsonFile("src/main/resources/Rooms.json");
-        room.setId(rooms.size()+1);
-        rooms.add(room);
-        roomService.writeToJsonFile(rooms,"src/main/resources/Rooms.json");
-        return new NewRoomResponse(room);
+    @PostMapping("/newRoom")
+    public RoomDTO create(@RequestBody RoomRequest request)
+    {
+        RoomDTO tableDTO = new RoomDTO(request);
+        return roomService.store(tableDTO);
     }
 
-    record AddCategoryToRoomRequset(int id,List<Integer>categoriesId){}
-    @PostMapping("/newCategory")
-    public RoomEntity addCategoryToRoom(@RequestBody   AddCategoryToRoomRequset requset){
-        List<RoomEntity> rooms=roomService.readFromJsonFile("src/main/resources/Rooms.json");
-        RoomEntity room=new RoomEntity();
-        for (RoomEntity thisRoom: rooms) {
-            if(thisRoom.getId()==requset.id()) {
-                thisRoom.addCategory(requset.categoriesId());
-                room=thisRoom;
-            }
-        }
-        roomService.writeToJsonFile(rooms,"src/main/resources/Rooms.json");
-        if(room.getId()==0){
-            return null;
-        }
-        return room;
-    }
-    record AddTableToRoomRequset(int id,List<Integer>tablesId){}
-    @PostMapping("/newTable")
-    public RoomEntity addTableToRoomRequset(@RequestBody   AddTableToRoomRequset requset){
-        List<RoomEntity> rooms=roomService.readFromJsonFile("src/main/resources/Rooms.json");
-        RoomEntity room=new RoomEntity();
-        for (RoomEntity thisRoom: rooms) {
-            if(thisRoom.getId()==requset.id()) {
-                thisRoom.addTables(requset.tablesId());
-                room=thisRoom;
-            }
-        }
-        roomService.writeToJsonFile(rooms,"src/main/resources/Rooms.json");
-        if(room.getId()==0){
-            return null;
-        }
-        return room;
+    @GetMapping("{id}")
+    public RoomDTO show(@PathVariable("id") Long id){
+        return roomService.show(id);
     }
 
-    record MakeRoomReservedRequset(int id){}
-    @PostMapping("/newTable")
-    public RoomEntity makeRoomReservedRequset(@RequestBody   MakeRoomReservedRequset requset){
-        List<RoomEntity> rooms=roomService.readFromJsonFile("src/main/resources/Rooms.json");
-        RoomEntity room=new RoomEntity();
-        for (RoomEntity thisRoom: rooms) {
-            if(thisRoom.getId()==requset.id()) {
-                thisRoom.setStatus(true);
-//                thisRoom.setTime_0f_reservation();
-                room=thisRoom;
-            }
-        }
-        roomService.writeToJsonFile(rooms,"src/main/resources/Rooms.json");
-        if(room.getId()==0){
-            return null;
-        }
-        return room;
+    @PutMapping("update/{id}")
+    public RoomDTO edit(@PathVariable("id") Long id ,@RequestBody RoomRequest request){
+        RoomDTO RoomDTO = new RoomDTO(request);
+        return roomService.update(id ,RoomDTO);
     }
 
+    record ReserveRoomRequest(Time time){
+    }
+
+    @PostMapping("/reservationRoom/{id}")
+    public RoomDTO reserveRoom(@PathVariable("id") Long id ,@RequestBody RoomRequest request){
+        return roomService.reserveRoom(id,request.getTime_of_reservation());
+    }
+    @PostMapping("/cancelreserve/{id}")
+    public RoomDTO cancelReserve(@PathVariable("id") Long id){
+        return roomService.cancelRoomReservation(id);
+    }
+
+
+
+//    @GetMapping("/AllRooms")
+//    public List<RoomDTO> getAllRooms() {
+//        return roomService.getAllRooms();
+//    }
+//
+//    @PostMapping("/newRoom")
+//    public RoomDTO addRoom(@RequestBody   RoomRequest request)  {
+//
+//        RoomDTO tableDTO = new RoomDTO(request);
+//        return RoomDTO.store(tableDTO);
+////        RoomEntity room=new RoomEntity(request.max_num_of_chairs(), request.categoriesId(),request.tablesId(),false,null);
+////        List<RoomEntity> rooms=roomService.readFromJsonFile("src/main/resources/Rooms.json");
+////        room.setId(rooms.size()+1);
+////        rooms.add(room);
+////        roomService.writeToJsonFile(rooms,"src/main/resources/Rooms.json");
+////        return room;
+//    }
+//    @GetMapping("{id}")
+//    public RoomDTO show(@PathVariable("id") Long id){
+//        return roomService.show(id);
+//    }
+//    @PostMapping("/newCategory")
+//    public RoomEntity addCategoryToRoom(@RequestBody RoomRequest.AddCategoryToRoomRequset requset){
+//        List<RoomEntity> rooms=roomService.readFromJsonFile("src/main/resources/Rooms.json");
+//        RoomEntity room=new RoomEntity();
+//        for (RoomEntity thisRoom: rooms) {
+//            if(thisRoom.getId()==requset.id()) {
+//                thisRoom.addCategory(requset.categoriesId());
+//                room=thisRoom;
+//            }
+//        }
+//        roomService.writeToJsonFile(rooms,"src/main/resources/Rooms.json");
+//        if(room.getId()==0){
+//            return null;
+//        }
+//        return room;
+//    }
+//    @PostMapping("/addTableToRoom")
+//    public RoomEntity addTableToRoomRequset(@RequestBody   RoomRequest.AddTableToRoomRequset requset){
+//        List<RoomEntity> rooms=roomService.readFromJsonFile("src/main/resources/Rooms.json");
+//        RoomEntity room=new RoomEntity();
+//        for (RoomEntity thisRoom: rooms) {
+//            if(thisRoom.getId()==requset.id()) {
+//                thisRoom.addTables(requset.tablesId());
+//                room=thisRoom;
+//            }
+//        }
+//        roomService.writeToJsonFile(rooms,"src/main/resources/Rooms.json");
+//        if(room.getId()==0){
+//            return null;
+//        }
+//        return room;
+//    }
+//
+//    @PostMapping("/newTable")
+//    public RoomEntity makeRoomReservedRequset(@RequestBody RoomRequest.MakeRoomReservedRequset requset){
+//        List<RoomEntity> rooms=roomService.readFromJsonFile("src/main/resources/Rooms.json");
+//        RoomEntity room=new RoomEntity();
+//        for (RoomEntity thisRoom: rooms) {
+//            if(thisRoom.getId()==requset.id()) {
+//                thisRoom.setStatus(true);
+////                thisRoom.setTime_0f_reservation();
+//                room=thisRoom;
+//            }
+//        }
+//        roomService.writeToJsonFile(rooms,"src/main/resources/Rooms.json");
+//        if(room.getId()==0){
+//            return null;
+//        }
+//        return room;
+//    }
+//
 
 }
 
