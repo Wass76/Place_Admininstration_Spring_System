@@ -74,9 +74,8 @@ public class RoomService {
             return null;
         }
     }
-//    public void delete(Long id){
-//        List<RoomDTO> rooms=getAllRooms();
-//        rooms.
-//    }
+    public void delete(Long id){
+        roomRepository.deleteById(id,this.filepath);
+    }
 }
 

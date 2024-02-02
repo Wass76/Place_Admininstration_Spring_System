@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,11 +30,11 @@ public class ReservationsEntity {
 
     @JsonProperty
     private Long table_id;
-    @JsonProperty()
-    private Long seat_id;
-    @JsonProperty
-    private LocalDateTime time;
-    @JsonProperty
+    @JsonProperty("num_of_seats")
+    private Long num_of_seats;
+    @JsonProperty("time")
+    private Time time;
+    @JsonProperty("period_of_reservations")
     private Integer period_of_reservations;
 
 //    public ReservationsEntity(Long id,Integer type,Long room_id,Long table_id,Long seat_id,LocalDateTime time,Integer period_of_reservations){

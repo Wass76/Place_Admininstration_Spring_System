@@ -1,7 +1,7 @@
 package com.example.PlaceAdminister.Repository;
 
-import com.example.PlaceAdminister.DTO.PlaceDTO;
-import com.example.PlaceAdminister.DTO.RoomCategoryDTO;
+import com.example.PlaceAdminister.DTO.ReservationDTO;
+import com.example.PlaceAdminister.DTO.TableDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
@@ -16,42 +16,37 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 @Component
-public class PlaceRepository extends AbstractRepository {
-    public List<PlaceDTO> readFromJsonFile(String filePath) {
+public class AbstractRepository {
+
+    public List<ReservationDTO> readFromJsonReservation(String filePath) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            List<PlaceDTO> models = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
+            List<ReservationDTO> models = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
             return models;
         } catch (IOException e) {
             return new ArrayList<>();
         }
     }
-    public PlaceDTO writeToJsonFile(PlaceDTO models, String filePath) {
+
+    public ReservationDTO writeToJsonReservation(ReservationDTO models, String filePath) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
 
-            List<PlaceDTO> place= readFromJsonFile(filePath);
-            Long id= Long.valueOf(1);
-            if(!(place.size()==0)) id=(Long)place.get(place.size()-1).getId()+1;
-            models.setId(id);
-            place.add(models);
+            List<ReservationDTO> tables= readFromJsonReservation(filePath);
+            models.setId((long)tables.size()+1);
+            tables.add(models);
 
-            objectMapper.writeValue(new File(filePath), place);
+            objectMapper.writeValue(new File(filePath), tables);
         } catch (IOException e) {
             e.printStackTrace(); // Handle the exception appropriately in a production environment
         }
         return models;
     }
 
-    public PlaceDTO searchDataById(Long id , String filePath) {
-        List<PlaceDTO> dataList = readFromJsonFile(filePath);
-        return dataList.stream()
-                .filter(data -> data.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
-    public PlaceDTO UpdateById(Long id , PlaceDTO place , String filePath){
+
+    public ReservationDTO UpdateById(Long id , ReservationDTO reservationDTO , String filePath){
         try {
             // Step 1: Read the JSON file and parse it
             File jsonFile = new File(filePath);
@@ -65,15 +60,16 @@ public class PlaceRepository extends AbstractRepository {
                 if (element.getLong("id") == (id)) { // Assuming "id" is the identifier for the element
                     System.out.println(element.getInt("id"));
                     element.put("id" , id);
-                    element.put("name" , place.getName());
-                    element.put("locations" , place.getLocations());
-                    element.put("rooms",place.getRooms());
-//                    element.put("shape", place.getShape());
-//                    element.put("num_of_seats", place.getNum_of_seats());
+                    element.put("period_of_reservations", reservationDTO.getPeriod_of_reservations());
+                    element.put("time", reservationDTO.getTime());
+                    element.put("room_id" ,reservationDTO.getRoom_id());
+                    element.put("table_id" ,reservationDTO.getTable_id());
+                    element.put("num_of_seats" , reservationDTO.getNum_of_seats());
                     // Add more modifications as needed
                 }
             }
 
+            // Step 4: Write the updated data back to the JSON file
             FileWriter fileWriter = new FileWriter(jsonFile);
             jsonArray.write(fileWriter);
             fileWriter.flush();
@@ -84,8 +80,7 @@ public class PlaceRepository extends AbstractRepository {
             throw new RuntimeException(e);
         }
 
-        return place;
+        return reservationDTO;
     }
-
 
 }

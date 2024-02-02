@@ -3,6 +3,8 @@ package com.example.PlaceAdminister.Request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDateTime;
 
 
@@ -19,9 +21,9 @@ public class MakeReservationRequest {
 
     private Long table_id;
 
-    private Long seat_id;
+    private Long num_of_seats;
 
-    private LocalDateTime time;
+    private Time time;
 
     private Integer period_of_reservations;
 }

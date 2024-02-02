@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class RoomCategoryRepository {
+public class RoomCategoryRepository extends AbstractRepository{
     public List<RoomCategoryDTO> readFromJsonFile(String filePath) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();

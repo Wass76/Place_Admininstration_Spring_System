@@ -13,7 +13,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RoomCategoryDTO {
+public class RoomCategoryDTO extends AbstractDTO{
     private Long id;
     private String type;
 

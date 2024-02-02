@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PlaceDTO {
+public class PlaceDTO extends AbstractDTO {
     private Long id;
     private String name;
     private List<String> locations;

@@ -19,7 +19,7 @@ import java.util.List;
 
 @Component
 
-public class TableCategoryRepository {
+public class TableCategoryRepository extends AbstractRepository{
 
     public List<TableCategoryDTO> readFromJsonFile(String filePath) {
         String filepath1 = "src/main/resources/Rooms.json";
@@ -89,5 +89,35 @@ public class TableCategoryRepository {
         }
 
         return tableCategoryDTO;
+    }
+
+    public void deleteById(Long id , String filePath){
+        try {
+            // Step 1: Read the JSON file and parse it
+            File jsonFile = new File(filePath);
+            FileInputStream fis = new FileInputStream(jsonFile);
+            JSONTokener tokener = new JSONTokener(fis);
+            JSONArray jsonArray = new JSONArray(tokener);
+            fis.close(); // Close the FileInputStream
+
+            // Step 2: Identify and remove the specific element
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject element = jsonArray.getJSONObject(i);
+                if (element.getLong("id") == id) {
+                    jsonArray.remove(i); // Remove the JSONObject at index i
+                    break; // Exit the loop once the element is removed
+                }
+            }
+
+            // Step 3: Write the updated data back to the JSON file
+            FileWriter fileWriter = new FileWriter(jsonFile);
+            jsonArray.write(fileWriter);
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -10,7 +10,7 @@ import java.util.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RoomDTO {
+public class RoomDTO extends AbstractDTO{
     private Long id;
     private int max_num_of_chairs;
     private Set<Long> categoriesId = new HashSet<>();

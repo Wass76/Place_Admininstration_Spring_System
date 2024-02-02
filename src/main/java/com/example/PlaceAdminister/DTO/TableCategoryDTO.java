@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TableCategoryDTO {
+public class TableCategoryDTO extends AbstractDTO{
 
     private Long id;
     private String Shape;
