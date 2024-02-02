@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.sound.midi.Sequence;
 import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,14 +49,14 @@ public class TableEntity extends TableCategoryEntity{
     private Integer status; //  1 = Available / 2 = Reserved / 3 =  Full
 
     @JsonProperty("time_of_reservation")
-    private Time time_of_reservation;
+    private LocalDateTime time_of_reservation;
 
     @JsonProperty("category_id")
     private Long category_id;
     @JsonProperty("room_id")
     private Long room_id;
 
-    public TableEntity(Integer status, Time time_of_reservation, Long room_id , Long category_id)  {
+    public TableEntity(Integer status, LocalDateTime time_of_reservation, Long room_id , Long category_id)  {
         this.status= status;
         this.time_of_reservation= time_of_reservation;
         this.room_id = room_id;

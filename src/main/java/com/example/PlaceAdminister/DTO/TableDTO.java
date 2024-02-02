@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
 public class TableDTO {
     private Long id;
     private Integer status;
-    private Time time_of_reservation;
+    private LocalDateTime time_of_reservation;
 
     private List<Boolean> available_seats = new ArrayList<>();
     private  Long category_id;

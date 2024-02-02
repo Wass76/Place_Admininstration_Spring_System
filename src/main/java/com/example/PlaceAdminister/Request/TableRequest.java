@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Time;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Getter
@@ -12,7 +13,7 @@ import java.sql.Time;
 public class TableRequest {
     Long id;
     Integer status;
-    Time time_of_reservation;
+    LocalDateTime time_of_reservation;
     Long category_id;
     Long room_id;
 }
