@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TableCategoryDTO {
+public class TableCategoryDTO extends AbstractDTO{
 
     private Long id;
     private String Shape;
@@ -20,5 +20,4 @@ public class TableCategoryDTO {
         this.setShape( request.getShape());
         this.setNum_of_seats(request.getNum_of_seats());
     }
-
 }

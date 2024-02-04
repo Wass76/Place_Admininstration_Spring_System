@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.mapping.Array;
+import org.hibernate.mapping.PrimitiveArray;
 import org.springframework.stereotype.Component;
 
 import javax.sound.midi.Sequence;
@@ -47,21 +48,25 @@ public class TableEntity extends TableCategoryEntity{
 
     @JsonProperty("status")
     private Integer status; //  1 = Available / 2 = Reserved / 3 =  Full
-
-    @JsonProperty("time_of_reservation")
-    private LocalDateTime time_of_reservation;
+//    @ElementCollection
+//    @JsonProperty("time_of_reservation")
+//    private List<LocalDateTime> time_of_reservation;
+//
+//    @ElementCollection
+//    @JsonProperty("period_of_reservation")
+//    private List<Integer> period_of_reservation ;
 
     @JsonProperty("category_id")
     private Long category_id;
     @JsonProperty("room_id")
     private Long room_id;
 
-    public TableEntity(Integer status, LocalDateTime time_of_reservation, Long room_id , Long category_id)  {
+    public TableEntity(Integer status, List<LocalDateTime> time_of_reservation, List<Integer> period_of_reservation, Long room_id , Long category_id)  {
         this.status= status;
-        this.time_of_reservation= time_of_reservation;
+//        this.time_of_reservation= time_of_reservation;
         this.room_id = room_id;
+//        this.period_of_reservation =period_of_reservation;
         this.category_id = category_id;
-
 
         TableCategoryRepository tableCategoryRepository = new TableCategoryRepository();
         TableCategoryDTO tableCategoryDTO =tableCategoryRepository.searchDataById(category_id ,"src/main/resources/TableCategory.json");

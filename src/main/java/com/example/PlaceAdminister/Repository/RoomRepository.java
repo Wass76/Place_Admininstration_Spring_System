@@ -1,7 +1,8 @@
 package com.example.PlaceAdminister.Repository;
 
-import com.example.PlaceAdminister.DTO.TableCategoryDTO;
-import com.example.PlaceAdminister.DTO.TableDTO;
+import com.example.PlaceAdminister.DTO.RoomCategoryDTO;
+import com.example.PlaceAdminister.DTO.RoomDTO;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
@@ -14,52 +15,44 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
-
-public class TableCategoryRepository extends AbstractRepository{
-
-    public List<TableCategoryDTO> readFromJsonFile(String filePath) {
-        String filepath1 = "src/main/resources/Rooms.json";
-
+public class RoomRepository extends AbstractRepository{
+    public List<RoomDTO> readFromJsonFile(String filePath) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            List<TableCategoryDTO> models = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
+            List<RoomDTO> models = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
             return models;
         } catch (IOException e) {
             return new ArrayList<>();
         }
     }
-
-    public TableCategoryDTO writeToJsonFile(TableCategoryDTO models, String filePath) {
+    public RoomDTO writeToJsonFile(RoomDTO models, String filePath) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
 
-            List<TableCategoryDTO> tables= readFromJsonFile(filePath);
+            List<RoomDTO> rooms= readFromJsonFile(filePath);
             Long id= Long.valueOf(1);
-            if(!(tables.size()==0)) id=(Long)tables.get(tables.size()-1).getId()+1;
+            if(!(rooms.size()==0)) id=(Long)rooms.get(rooms.size()-1).getId()+1;
             models.setId(id);
-            tables.add(models);
+            rooms.add(models);
 
-            objectMapper.writeValue(new File(filePath), tables);
+            objectMapper.writeValue(new File(filePath), rooms);
         } catch (IOException e) {
             e.printStackTrace(); // Handle the exception appropriately in a production environment
         }
         return models;
     }
-
-
-    public TableCategoryDTO searchDataById(Long id , String filePath) {
-        List<TableCategoryDTO> dataList = readFromJsonFile(filePath);
+    public RoomDTO searchDataById(Long id , String filePath) {
+        List<RoomDTO> dataList = readFromJsonFile(filePath);
         return dataList.stream()
                 .filter(data -> data.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }
-
-    public TableCategoryDTO UpdateById(Long id , TableCategoryDTO tableCategoryDTO , String filePath){
+    public RoomDTO UpdateById(Long id , RoomDTO roomDTO , String filePath) {
         try {
             // Step 1: Read the JSON file and parse it
             File jsonFile = new File(filePath);
@@ -71,11 +64,12 @@ public class TableCategoryRepository extends AbstractRepository{
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject element = jsonArray.getJSONObject(i);
                 if (element.getLong("id") == (id)) { // Assuming "id" is the identifier for the element
-                    System.out.println(element.getInt("id"));
-                    element.put("id" , id);
-                    element.put("shape", tableCategoryDTO.getShape());
-                    element.put("num_of_seats", tableCategoryDTO.getNum_of_seats());
-                    // Add more modifications as needed
+                    element.put("id", id);
+                    roomDTO.setId(id);
+                    element.put("status", roomDTO.getStatus());
+                    element.put("max_num_of_chairs", roomDTO.getMax_num_of_chairs());
+                    element.put("placeId", roomDTO.getPlaceId());
+
                 }
             }
 
@@ -90,7 +84,7 @@ public class TableCategoryRepository extends AbstractRepository{
             throw new RuntimeException(e);
         }
 
-        return tableCategoryDTO;
+        return roomDTO;
     }
 
     public void deleteById(Long id , String filePath){

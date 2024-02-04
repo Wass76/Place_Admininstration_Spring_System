@@ -1,20 +1,17 @@
 package com.example.PlaceAdminister.Request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Time;
-import java.time.LocalDateTime;
-
+import java.util.HashSet;
+import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
 @NoArgsConstructor
-public class TableRequest {
-    Long id;
-    Integer status;
-    Long category_id;
-    Long room_id;
+public class RoomCategoryRequest {
+    private String type;
 }

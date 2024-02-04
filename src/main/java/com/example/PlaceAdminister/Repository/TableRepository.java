@@ -1,6 +1,9 @@
 package com.example.PlaceAdminister.Repository;
 
+import com.example.PlaceAdminister.DTO.ReservationDTO;
+import com.example.PlaceAdminister.DTO.RoomDTO;
 import com.example.PlaceAdminister.DTO.TableDTO;
+import com.example.PlaceAdminister.Model_Entitiy.ReservationsEntity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
@@ -18,9 +21,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class TableRepository {
+public class TableRepository extends AbstractRepository{
 
-    public List<TableDTO> readFromJsonFile(String filePath) {
+    public List<TableDTO> readFromJsonTable(String filePath) {
         String filepath1 = "src/main/resources/Rooms.json";
 
         try {
@@ -32,12 +35,14 @@ public class TableRepository {
         }
     }
 
-    public TableDTO writeToJsonFile(TableDTO models, String filePath) {
+    public TableDTO writeToJsonTable(TableDTO models, String filePath) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
 
-            List<TableDTO> tables= readFromJsonFile(filePath);
-            models.setId((long)tables.size()+1);
+            List<TableDTO> tables= readFromJsonTable(filePath);
+            Long id= Long.valueOf(1);
+            if(!(tables.size()==0)) id=(Long)tables.get(tables.size()-1).getId()+1;
+            models.setId(id);
             tables.add(models);
 
             objectMapper.writeValue(new File(filePath), tables);
@@ -47,9 +52,8 @@ public class TableRepository {
         return models;
     }
 
-
     public TableDTO searchDataById(Long id , String filePath) {
-        List<TableDTO> dataList = readFromJsonFile(filePath);
+        List<TableDTO> dataList = readFromJsonTable(filePath);
         return dataList.stream()
                 .filter(data -> data.getId().equals(id))
                 .findFirst()
@@ -57,7 +61,7 @@ public class TableRepository {
     }
 
     public List<TableDTO> searchByRoomId( Long room_id, String filePath) {
-        List<TableDTO> dataList = readFromJsonFile(filePath);
+        List<TableDTO> dataList = readFromJsonTable(filePath);
          List<TableDTO> tableDTOList =  dataList.stream()
                 .filter(data -> data.getRoom_id().equals(room_id)).collect(Collectors.toList());
          return tableDTOList;
@@ -65,7 +69,7 @@ public class TableRepository {
     }
 
     public List<TableDTO> searchByCategoryId( Long category_id, String filePath) {
-        List<TableDTO> dataList = readFromJsonFile(filePath);
+        List<TableDTO> dataList = readFromJsonTable(filePath);
         List<TableDTO> tableDTOList =  dataList.stream()
                 .filter(data -> data.getCategory_id().equals(category_id)).collect(Collectors.toList());
         return tableDTOList;
@@ -88,7 +92,7 @@ public class TableRepository {
                     System.out.println(element.getInt("id"));
                     element.put("id" , id);
                     element.put("status", tableDTO.getStatus());
-                    element.put("time_of_reservation", tableDTO.getTime_of_reservation());
+//                    element.put("time_of_reservation", tableDTO.getTime_of_reservation());
                     element.put("room_id" ,tableDTO.getRoom_id());
                     // Add more modifications as needed
                 }
@@ -107,6 +111,38 @@ public class TableRepository {
 
         return tableDTO;
     }
+
+    public void deleteById(Long id , String filePath){
+        try {
+            // Step 1: Read the JSON file and parse it
+            File jsonFile = new File(filePath);
+            FileInputStream fis = new FileInputStream(jsonFile);
+            JSONTokener tokener = new JSONTokener(fis);
+            JSONArray jsonArray = new JSONArray(tokener);
+            fis.close(); // Close the FileInputStream
+
+            // Step 2: Identify and remove the specific element
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject element = jsonArray.getJSONObject(i);
+                if (element.getLong("id") == id) {
+                    jsonArray.remove(i); // Remove the JSONObject at index i
+                    break; // Exit the loop once the element is removed
+                }
+            }
+
+            // Step 3: Write the updated data back to the JSON file
+            FileWriter fileWriter = new FileWriter(jsonFile);
+            jsonArray.write(fileWriter);
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
 //    public List<TableDTO> searchData( Long room_id, String filePath) {
 //        List<TableDTO> dataList = readFromJsonFile(filePath);

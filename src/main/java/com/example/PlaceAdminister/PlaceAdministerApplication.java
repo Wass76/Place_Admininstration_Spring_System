@@ -10,14 +10,17 @@ import java.io.File;
 public class PlaceAdministerApplication {
 
 	public static void main(String[] args) {
-		try {
-			File file=new File("src/main/resources/Rooms.json");
-			file.delete();
-			file.createNewFile();
-		}catch (Exception e){
-
-		}
+//		createFiles("src/main/resources/Rooms.json");
+//		createFiles("src/main/resources/RoomCategories.json");
 		SpringApplication.run(PlaceAdministerApplication.class, args);
 	}
-
+	public static void createFiles(String filePath){
+//		try {
+//			File file=new File(filePath);
+//			file.delete();
+//			file.createNewFile();
+//		}catch (Exception e){
+//
+//		}
+	}
 }

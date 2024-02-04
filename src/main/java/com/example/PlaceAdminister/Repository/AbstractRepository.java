@@ -1,6 +1,6 @@
 package com.example.PlaceAdminister.Repository;
 
-import com.example.PlaceAdminister.DTO.TableCategoryDTO;
+import com.example.PlaceAdminister.DTO.ReservationDTO;
 import com.example.PlaceAdminister.DTO.TableDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,29 +18,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+public class AbstractRepository {
 
-public class TableCategoryRepository extends AbstractRepository{
-
-    public List<TableCategoryDTO> readFromJsonFile(String filePath) {
-        String filepath1 = "src/main/resources/Rooms.json";
-
+    public List<ReservationDTO> readFromJsonReservation(String filePath) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            List<TableCategoryDTO> models = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
+            List<ReservationDTO> models = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
             return models;
         } catch (IOException e) {
             return new ArrayList<>();
         }
     }
 
-    public TableCategoryDTO writeToJsonFile(TableCategoryDTO models, String filePath) {
+    public ReservationDTO writeToJsonReservation(ReservationDTO models, String filePath) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
 
-            List<TableCategoryDTO> tables= readFromJsonFile(filePath);
-            Long id= Long.valueOf(1);
-            if(!(tables.size()==0)) id=(Long)tables.get(tables.size()-1).getId()+1;
-            models.setId(id);
+            List<ReservationDTO> tables= readFromJsonReservation(filePath);
+            models.setId((long)tables.size()+1);
             tables.add(models);
 
             objectMapper.writeValue(new File(filePath), tables);
@@ -50,16 +45,32 @@ public class TableCategoryRepository extends AbstractRepository{
         return models;
     }
 
+    public ReservationDTO reserveTable(ReservationDTO reservationDTO , String filePath){
+        if(reservationDTO!= null){
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+//                System.out.println(reservationDTO.getPeriod_of_reservations());
+                List<ReservationDTO> tables= readFromJsonReservation(filePath);
+                if(tables.stream().
+                        filter(i ->i.getTable_id()
+                                .equals(reservationDTO.getTable_id()))
+                        .findFirst().stream().toList() !=null){
+                Long id= Long.valueOf(1);
+                if(!(tables.size()==0)) id=(Long)tables.get(tables.size()-1).getId()+1;
+                reservationDTO.setId(id);}
+                System.out.println();
+                tables.add(reservationDTO);
 
-    public TableCategoryDTO searchDataById(Long id , String filePath) {
-        List<TableCategoryDTO> dataList = readFromJsonFile(filePath);
-        return dataList.stream()
-                .filter(data -> data.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+                objectMapper.writeValue(new File(filePath), tables);
+            } catch (IOException e) {
+                e.printStackTrace(); // Handle the exception appropriately in a production environment
+            }
+            return reservationDTO;}
+        else
+            return  null;
     }
 
-    public TableCategoryDTO UpdateById(Long id , TableCategoryDTO tableCategoryDTO , String filePath){
+    public ReservationDTO UpdateById(Long id , ReservationDTO reservationDTO , String filePath){
         try {
             // Step 1: Read the JSON file and parse it
             File jsonFile = new File(filePath);
@@ -73,8 +84,11 @@ public class TableCategoryRepository extends AbstractRepository{
                 if (element.getLong("id") == (id)) { // Assuming "id" is the identifier for the element
                     System.out.println(element.getInt("id"));
                     element.put("id" , id);
-                    element.put("shape", tableCategoryDTO.getShape());
-                    element.put("num_of_seats", tableCategoryDTO.getNum_of_seats());
+                    element.put("period_of_reservations", reservationDTO.getPeriod_of_reservations());
+                    element.put("time", reservationDTO.getTime());
+                    element.put("room_id" ,reservationDTO.getRoom_id());
+                    element.put("table_id" ,reservationDTO.getTable_id());
+                    element.put("num_of_seats" , reservationDTO.getNum_of_seats());
                     // Add more modifications as needed
                 }
             }
@@ -90,7 +104,7 @@ public class TableCategoryRepository extends AbstractRepository{
             throw new RuntimeException(e);
         }
 
-        return tableCategoryDTO;
+        return reservationDTO;
     }
 
     public void deleteById(Long id , String filePath){

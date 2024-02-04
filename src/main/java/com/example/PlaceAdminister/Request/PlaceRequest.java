@@ -5,16 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Time;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @Getter
 @Setter
 @NoArgsConstructor
-public class TableRequest {
-    Long id;
-    Integer status;
-    Long category_id;
-    Long room_id;
+public class PlaceRequest {
+    private String name;
+    private List<String> locations;
+    private List<String> rooms;
 }

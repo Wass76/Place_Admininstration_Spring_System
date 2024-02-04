@@ -1,57 +1,38 @@
 package com.example.PlaceAdminister.Model_Entitiy;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Component
 public class RoomCategoryEntity {
 
 
+    @Id
+    @JsonProperty("id")
     private Long id;
-    private String name;
-    private Set<Long> roomIds = new HashSet<>();
+    @JsonProperty("type")
+    private String type;
 
-    public RoomCategoryEntity(Long id , String name) {
-        this.id = id;
-        this.name=name;
-    }
-    public RoomCategoryEntity(){}
 
-    public void setId(Long id) {
-        this.id = id;
+    public RoomCategoryEntity(String type) {
+        this.type=type;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<Long> getRoomIds() {
-        return roomIds;
-    }
-
-    public void setRoomIds(Set<Long> roomIds) {
-        this.roomIds = roomIds;
-    }
-
-    public java.util.List<RoomEntity> getRooms(){
-        List<RoomEntity> rooms=new ArrayList<>();
-        //JsonDealer.readFromJson(new File("src/main/resources/Rooms.json"));
-        for (Long id:roomIds) {
-
-
-        }
-        return rooms;
-    }
 
 }

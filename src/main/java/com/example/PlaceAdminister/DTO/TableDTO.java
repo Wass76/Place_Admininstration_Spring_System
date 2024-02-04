@@ -15,20 +15,21 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TableDTO {
+public class TableDTO extends AbstractDTO{
     private Long id;
     private Integer status;
-    private LocalDateTime time_of_reservation;
 
     private List<Boolean> available_seats = new ArrayList<>();
+
     private  Long category_id;
 
     private Long room_id;
 
+    private String message;
+
 
     public TableDTO(TableRequest tableRequest) {
         this.status = tableRequest.getStatus();
-        this.time_of_reservation = tableRequest.getTime_of_reservation();
         this.category_id = tableRequest.getCategory_id();
         this.room_id = tableRequest.getRoom_id();
 
@@ -40,8 +41,10 @@ public class TableDTO {
                 available_seats.add(true);
             }
         }
+    }
 
-//        info.add()
+    public TableDTO(String message){
+        this.message = message;
     }
 }
 

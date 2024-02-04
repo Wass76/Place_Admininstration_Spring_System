@@ -1,1 +1,1 @@
-[{"id":1,"num_of_seats":24,"shape":"Cycle"},{"id":2,"num_of_seats":12,"shape":"Squere"},{"id":3,"num_of_seats":15,"shape":"Rectangle"}]
+[{"id":1,"num_of_seats":5,"shape":"Cycle"},{"id":2,"num_of_seats":4,"shape":"Squere"},{"id":3,"num_of_seats":6,"shape":"Rectangle"},{"id":4,"num_of_seats":2,"shape":"semi-Rectangle"},{"id":5,"num_of_seats":40,"shape":"test"},{"id":6,"num_of_seats":40,"shape":"test"}]
