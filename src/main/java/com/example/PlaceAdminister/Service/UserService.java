@@ -6,8 +6,10 @@ import com.example.PlaceAdminister.DTO.UserDTO;
 import com.example.PlaceAdminister.Model_Entitiy.UserEntity;
 import com.example.PlaceAdminister.Repository.UserRepository;
 import com.example.PlaceAdminister.Request.UserRequest;
+import lombok.RequiredArgsConstructor;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.List;
 import static java.time.LocalTime.now;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     @Autowired
@@ -22,6 +25,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private final PasswordEncoder encoder;
 
     private String userFilePath = "src/main/resources/Users.json";
 
@@ -31,7 +35,9 @@ public class UserService {
     }
 
     public UserDTO store(UserDTO userDTO){
-        return userRepository.writeToJsonFile(userDTO ,this.userFilePath);
+        UserDTO newUser=userDTO;
+        newUser.setPassword(encoder.encode(newUser.getPassword()));
+        return userRepository.writeToJsonFile(newUser ,this.userFilePath);
     }
 
     public UserDTO show(Long id)

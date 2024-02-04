@@ -20,8 +20,7 @@ import java.util.List;
 
 @Component
 
-public class UserRepository extends AbstractRepository{
-
+public class UserRepository{
     public List<UserDTO> readFromJsonFile(String filePath) {
 
         try {
