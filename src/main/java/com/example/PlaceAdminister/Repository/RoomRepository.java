@@ -67,11 +67,8 @@ public class RoomRepository extends AbstractRepository{
                     element.put("id", id);
                     roomDTO.setId(id);
                     element.put("status", roomDTO.getStatus());
-                    element.put("time_of_reservation", roomDTO.getTime_of_reservation());
                     element.put("max_num_of_chairs", roomDTO.getMax_num_of_chairs());
                     element.put("placeId", roomDTO.getPlaceId());
-                    element.put("categoriesId", roomDTO.getCategoriesId());
-                    element.put("tablesIds", roomDTO.getTablesIds());
 
                 }
             }

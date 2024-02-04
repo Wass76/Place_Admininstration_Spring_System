@@ -38,7 +38,9 @@ public class TableCategoryRepository extends AbstractRepository{
             ObjectMapper objectMapper = new ObjectMapper();
 
             List<TableCategoryDTO> tables= readFromJsonFile(filePath);
-            models.setId((long)tables.size()+1);
+            Long id= Long.valueOf(1);
+            if(!(tables.size()==0)) id=(Long)tables.get(tables.size()-1).getId()+1;
+            models.setId(id);
             tables.add(models);
 
             objectMapper.writeValue(new File(filePath), tables);

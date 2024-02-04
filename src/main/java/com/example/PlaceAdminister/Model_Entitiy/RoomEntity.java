@@ -22,24 +22,15 @@ public class RoomEntity {
     @Id
     private Long id;
     @JsonProperty("max_num_of_chairs")
-    private int max_num_of_chairs;
-    @JsonProperty("categoriesId")
-    private Set<Long> categoriesId = new HashSet<>();
-    @JsonProperty("tableIds")
-    private List<Long> tablesIds = new ArrayList<>();
+    private Integer max_num_of_chairs;
     @JsonProperty("status")
-    private boolean status;
-    @JsonProperty("time_0f_reservation")
-    private Date time_0f_reservation;
+    private Integer status;
     @JsonProperty("time_0f_reservation")
     private int placeId;
 
-    public RoomEntity(int max_num_of_chairs, Set<Long> categoriesId, ArrayList<Long> tablesIds, boolean status, Date time_0f_reservation,int placeId) {
+    public RoomEntity(int max_num_of_chairs, Integer status, Date time_0f_reservation,int placeId) {
         this.max_num_of_chairs = max_num_of_chairs;
-        this.categoriesId = categoriesId;
-        this.tablesIds = tablesIds;
         this.status = status;
-        this.time_0f_reservation = time_0f_reservation;
         this.placeId=placeId;
     }
 

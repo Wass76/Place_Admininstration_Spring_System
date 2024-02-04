@@ -5,12 +5,8 @@ import com.example.PlaceAdminister.Request.MakeReservationRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import java.sql.Date;
 import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -30,6 +26,8 @@ public class ReservationDTO extends AbstractDTO {
     private Time time;
 
     private Integer period_of_reservations;
+    
+    private String message;
 
 
     public ReservationDTO(MakeReservationRequest request){
@@ -42,6 +40,23 @@ public class ReservationDTO extends AbstractDTO {
         period_of_reservations =request.getPeriod_of_reservations();
     }
 
+    public ReservationDTO(Long id ,Integer type , Long room_id , Long table_id, Long num_of_seats ,Time time, Integer period_of_reservations){
+       this.id = id;
+        this.type  = type;
+
+        if(type == 1){
+           this.room_id = id;
+            this.table_id = 0L;
+            this.num_of_seats = 0L;
+        } else {   // (request.getType() == 2)
+            this.table_id=id;
+            this. room_id =0L;
+            this. num_of_seats = num_of_seats;
+        }
+        this. time = time;
+        this. period_of_reservations =period_of_reservations;
+    }
+
     public ReservationDTO(ReservationsEntity reservationsEntity){
         id = reservationsEntity.getId();
         type  = reservationsEntity.getType();
@@ -50,6 +65,10 @@ public class ReservationDTO extends AbstractDTO {
         num_of_seats = reservationsEntity.getNum_of_seats();
         time = reservationsEntity.getTime();
         period_of_reservations =reservationsEntity.getPeriod_of_reservations();
+    }
+
+    public ReservationDTO(String message){
+        this.message = message;
     }
 
 }

@@ -12,19 +12,14 @@ import java.util.*;
 @NoArgsConstructor
 public class RoomDTO extends AbstractDTO{
     private Long id;
-    private int max_num_of_chairs;
-    private Set<Long> categoriesId = new HashSet<>();
-    private Set<Long> tablesIds = new HashSet<>();
-    private int status;
-    private Date time_of_reservation;
+    private Integer max_num_of_chairs;
+    private Integer status;
     private Long placeId;
 
     public RoomDTO(RoomRequest newRoomRequest) {
         this.status = newRoomRequest.getStatus();
-        this.time_of_reservation = newRoomRequest.getTime_of_reservation();
-        this.categoriesId = newRoomRequest.getCategoriesId();
-        this.tablesIds = newRoomRequest.getTablesIds();
         this.placeId=newRoomRequest.getPlaceId();
+        this.max_num_of_chairs=newRoomRequest.getMax_num_of_chairs();
     }
 
 }

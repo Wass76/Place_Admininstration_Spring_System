@@ -77,41 +77,6 @@ public class TableController {
 
     }
 
-    @PostMapping("/reservationtable/{id}")
-    public ReservationDTO reserveTable(@PathVariable("id") Long id , @RequestBody MakeReservationRequest request){
-        if(request.getType() == 1){
-            request.setRoom_id(id);
-        } else if (request.getType() == 2) {
-            request.setTable_id(id);
-        }
-        else{
-            request.setTable_id(id);
-        }
-        ReservationDTO reservationDTO = new ReservationDTO(request);
-        ReservationDTO  reservationDTO1=  tableService.reserveTable(reservationDTO);
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/mm/dd - hh:mm:ss");
-//        String formattedDate = dateFormat.format(reservationDTO1.getTime());
-
-//        Date date = request.getTime();
-//        LocalDateTime dateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = sdf.format(reservationDTO1.getTime());
-        System.out.println(formattedDate);
-
-
-//        reservationDTO1.getTime().toLocalDate();
-//        ReserveTableResponse reserveTableResponse = new ReserveTableResponse(reservationDTO1.getId(),reservationDTO1.getType(),reservationDTO1.getRoom_id(),reservationDTO1.getTable_id(),reservationDTO1.getNum_of_seats(),dateTime,reservationDTO1.getPeriod_of_reservations());
-
-        return reservationDTO1;
-    }
-    @PostMapping("/cancelreserve/{id}")
-    public void cancelReserve(@PathVariable("id") Long id){
-        tableService.cancelTableReservation(id);
-    }
-
 
     @PostMapping("/convertDateTime")
     public String convertDateTime(@RequestBody String inputDateTime) {

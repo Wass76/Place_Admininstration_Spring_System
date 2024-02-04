@@ -45,35 +45,35 @@ public class RoomService {
     }
 
 
-    public RoomDTO reserveRoom(Long id , Date date){
-        RoomDTO roomDTO = roomRepository.searchDataById(id ,filepath);
-        if(roomDTO != null){
-            if(roomDTO.getStatus()!=1) {
-                roomDTO.setStatus(2);
-                roomDTO.setTime_of_reservation(date);
-                roomRepository.UpdateById(id, roomDTO, filepath);
-                return roomDTO;
-            }
-            else return null;
-        }
-        else {
-            return null;
-        }
-    }
+//    public RoomDTO reserveRoom(Long id , Date date){
+//        RoomDTO roomDTO = roomRepository.searchDataById(id ,filepath);
+//        if(roomDTO != null){
+//            if(roomDTO.getStatus()!=1) {
+//                roomDTO.setStatus(2);
+//                roomDTO.setTime_of_reservation(date);
+//                roomRepository.UpdateById(id, roomDTO, filepath);
+//                return roomDTO;
+//            }
+//            else return null;
+//        }
+//        else {
+//            return null;
+//        }
+//    }
 
-    public RoomDTO cancelRoomReservation(Long id ) {
-        RoomDTO roomDTO = roomRepository.searchDataById(id, filepath);
-        if (roomDTO != null) {
-//            if(tableDTO.getStatus() == 2){
-            roomDTO.setStatus(1);
-            roomDTO.setTime_of_reservation(null);
-
-            roomRepository.UpdateById(id, roomDTO, filepath);
-            return roomDTO;
-        } else {
-            return null;
-        }
-    }
+//    public RoomDTO cancelRoomReservation(Long id ) {
+//        RoomDTO roomDTO = roomRepository.searchDataById(id, filepath);
+//        if (roomDTO != null) {
+////            if(tableDTO.getStatus() == 2){
+//            roomDTO.setStatus(1);
+//            roomDTO.setTime_of_reservation(null);
+//
+//            roomRepository.UpdateById(id, roomDTO, filepath);
+//            return roomDTO;
+//        } else {
+//            return null;
+//        }
+//    }
     public void delete(Long id){
         roomRepository.deleteById(id,this.filepath);
     }

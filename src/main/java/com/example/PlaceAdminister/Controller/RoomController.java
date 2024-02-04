@@ -30,6 +30,7 @@ public class RoomController {
     public RoomDTO create(@RequestBody RoomRequest request)
     {
         RoomDTO tableDTO = new RoomDTO(request);
+        System.out.println(request.getMax_num_of_chairs());
         return roomService.store(tableDTO);
     }
     //checked
@@ -48,14 +49,14 @@ public class RoomController {
         else return null;
     }
     //checked
-    @PostMapping("/reservationRoom/{id}")
-    public RoomDTO reserveRoom(@PathVariable("id") Long id ,@RequestBody RoomRequest request){
-        return roomService.reserveRoom(id,request.getTime_of_reservation());
-    }
-    @PostMapping("/cancelreserve/{id}")
-    public RoomDTO cancelReserve(@PathVariable("id") Long id){
-        return roomService.cancelRoomReservation(id);
-    }
+//    @PostMapping("/reservationRoom/{id}")
+//    public RoomDTO reserveRoom(@PathVariable("id") Long id ,@RequestBody RoomRequest request){
+//        return roomService.reserveRoom(id,request.getTime_of_reservation());
+//    }
+//    @PostMapping("/cancelreserve/{id}")
+//    public RoomDTO cancelReserve(@PathVariable("id") Long id){
+//        return roomService.cancelRoomReservation(id);
+//    }
 
 
     @DeleteMapping("delete/{id}")

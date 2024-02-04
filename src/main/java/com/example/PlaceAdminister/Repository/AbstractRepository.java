@@ -45,6 +45,30 @@ public class AbstractRepository {
         return models;
     }
 
+    public ReservationDTO reserveTable(ReservationDTO reservationDTO , String filePath){
+        if(reservationDTO!= null){
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+//                System.out.println(reservationDTO.getPeriod_of_reservations());
+                List<ReservationDTO> tables= readFromJsonReservation(filePath);
+                if(tables.stream().
+                        filter(i ->i.getTable_id()
+                                .equals(reservationDTO.getTable_id()))
+                        .findFirst().stream().toList() !=null){
+                Long id= Long.valueOf(1);
+                if(!(tables.size()==0)) id=(Long)tables.get(tables.size()-1).getId()+1;
+                reservationDTO.setId(id);}
+                System.out.println();
+                tables.add(reservationDTO);
+
+                objectMapper.writeValue(new File(filePath), tables);
+            } catch (IOException e) {
+                e.printStackTrace(); // Handle the exception appropriately in a production environment
+            }
+            return reservationDTO;}
+        else
+            return  null;
+    }
 
     public ReservationDTO UpdateById(Long id , ReservationDTO reservationDTO , String filePath){
         try {
@@ -83,4 +107,33 @@ public class AbstractRepository {
         return reservationDTO;
     }
 
+    public void deleteById(Long id , String filePath){
+        try {
+            // Step 1: Read the JSON file and parse it
+            File jsonFile = new File(filePath);
+            FileInputStream fis = new FileInputStream(jsonFile);
+            JSONTokener tokener = new JSONTokener(fis);
+            JSONArray jsonArray = new JSONArray(tokener);
+            fis.close(); // Close the FileInputStream
+
+            // Step 2: Identify and remove the specific element
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject element = jsonArray.getJSONObject(i);
+                if (element.getLong("id") == id) {
+                    jsonArray.remove(i); // Remove the JSONObject at index i
+                    break; // Exit the loop once the element is removed
+                }
+            }
+
+            // Step 3: Write the updated data back to the JSON file
+            FileWriter fileWriter = new FileWriter(jsonFile);
+            jsonArray.write(fileWriter);
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -52,8 +52,6 @@ public class TableRepository extends AbstractRepository{
         return models;
     }
 
-
-
     public TableDTO searchDataById(Long id , String filePath) {
         List<TableDTO> dataList = readFromJsonTable(filePath);
         return dataList.stream()
@@ -114,24 +112,6 @@ public class TableRepository extends AbstractRepository{
         return tableDTO;
     }
 
-    public ReservationDTO reserveTable(ReservationDTO reservationDTO , String filePath){
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-
-            List<ReservationDTO> tables= readFromJsonReservation(filePath)
-                    .stream().
-                    filter(i ->i.getTable_id()
-                    .equals(reservationDTO.getTable_id()))
-                    .findFirst().stream().toList();
-            reservationDTO.setId((long)tables.size()+1);
-            tables.add(reservationDTO);
-
-            objectMapper.writeValue(new File(filePath), tables);
-        } catch (IOException e) {
-            e.printStackTrace(); // Handle the exception appropriately in a production environment
-        }
-        return reservationDTO;
-    }
     public void deleteById(Long id , String filePath){
         try {
             // Step 1: Read the JSON file and parse it

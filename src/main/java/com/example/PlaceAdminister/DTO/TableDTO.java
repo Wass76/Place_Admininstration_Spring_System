@@ -21,10 +21,11 @@ public class TableDTO extends AbstractDTO{
 
     private List<Boolean> available_seats = new ArrayList<>();
 
-
     private  Long category_id;
 
     private Long room_id;
+
+    private String message;
 
 
     public TableDTO(TableRequest tableRequest) {
@@ -40,6 +41,10 @@ public class TableDTO extends AbstractDTO{
                 available_seats.add(true);
             }
         }
+    }
+
+    public TableDTO(String message){
+        this.message = message;
     }
 }
 
