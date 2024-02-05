@@ -1,6 +1,7 @@
 package com.example.PlaceAdminister.Service;
 
 import com.example.PlaceAdminister.DTO.RoomDTO;
+import com.example.PlaceAdminister.DTO.TableDTO;
 import com.example.PlaceAdminister.Model_Entitiy.RoomEntity;
 import com.example.PlaceAdminister.Repository.RoomRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -43,6 +44,11 @@ public class RoomService {
     public RoomDTO update(Long id , RoomDTO roomDTO){
         return roomRepository.UpdateById(id ,roomDTO,this.filepath);
     }
+
+//    public List<TableDTO> showRoomsByPlaceId(Long id)
+//    {
+//        return  roomRepository.searchByPlaceId(id , this.roomFilePath);
+//    }
 
 
 //    public RoomDTO reserveRoom(Long id , Date date){

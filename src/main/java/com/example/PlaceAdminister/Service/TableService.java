@@ -44,7 +44,7 @@ public class TableService {
 
     public List<TableDTO> getAllTables(){
 
-        List<TableDTO>  tableDTOList = tableRepository.readFromJsonTable(roomFilePath);
+        List<TableDTO>  tableDTOList = tableRepository.readFromJsonTable(tableFilePath);
         List<ReservationDTO> reservationDTOList = reservationService.getAllReservations();
 //        LocalTime time = now();
 //        if(reservationDTOList.stream().filter(i -> i.getTable_id()

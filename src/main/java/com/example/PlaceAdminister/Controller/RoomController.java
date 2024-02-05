@@ -29,9 +29,9 @@ public class RoomController {
     @PostMapping("/newRoom")
     public RoomDTO create(@RequestBody RoomRequest request)
     {
-        RoomDTO tableDTO = new RoomDTO(request);
+        RoomDTO roomDTO = new RoomDTO(request);
         System.out.println(request.getMax_num_of_chairs());
-        return roomService.store(tableDTO);
+        return roomService.store(roomDTO);
     }
     //checked
 

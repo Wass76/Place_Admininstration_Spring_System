@@ -65,7 +65,7 @@ public class RoomRepository extends AbstractRepository{
                 JSONObject element = jsonArray.getJSONObject(i);
                 if (element.getLong("id") == (id)) { // Assuming "id" is the identifier for the element
                     element.put("id", id);
-                    roomDTO.setId(id);
+//                    roomDTO.setId(id);
                     element.put("status", roomDTO.getStatus());
                     element.put("max_num_of_chairs", roomDTO.getMax_num_of_chairs());
                     element.put("placeId", roomDTO.getPlaceId());

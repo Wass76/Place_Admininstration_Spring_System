@@ -17,7 +17,7 @@ public class PlaceService {
     private PlaceEntity placeEntity;
     @Autowired
     private PlaceRepository placeRepository;
-    private String filepath = "src/main/resources/RoomCategories.json";
+    private final String filepath = "src/main/resources/Places.json";
 
 
     public List<PlaceDTO> getAllRoomCategories() {
