@@ -2,6 +2,7 @@ package com.example.PlaceAdminister.Repository;
 
 import com.example.PlaceAdminister.DTO.RoomCategoryDTO;
 import com.example.PlaceAdminister.DTO.RoomDTO;
+import com.example.PlaceAdminister.DTO.TableDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,7 +66,7 @@ public class RoomRepository extends AbstractRepository{
                 JSONObject element = jsonArray.getJSONObject(i);
                 if (element.getLong("id") == (id)) { // Assuming "id" is the identifier for the element
                     element.put("id", id);
-                    roomDTO.setId(id);
+//                    roomDTO.setId(id);
                     element.put("status", roomDTO.getStatus());
                     element.put("max_num_of_chairs", roomDTO.getMax_num_of_chairs());
                     element.put("placeId", roomDTO.getPlaceId());
@@ -116,4 +117,12 @@ public class RoomRepository extends AbstractRepository{
             throw new RuntimeException(e);
         }
     }
+
+    public List<RoomDTO> searchByPlaceId(Long room_id, String filePath) {
+        List<RoomDTO> dataList = readFromJsonFile(filePath);
+        List<RoomDTO> roomDTOList =  dataList.stream()
+                .filter(data -> data.getId().equals(room_id)).collect(Collectors.toList());
+        return roomDTOList;
+    }
+
 }

@@ -1,1 +1,1 @@
-[{"room_id":3,"category_id":1,"id":1,"message":null,"available_seats":[true,true,true,true,true],"status":4},{"room_id":3,"category_id":2,"id":2,"message":null,"available_seats":[true,true,true,true],"status":4},{"room_id":1,"category_id":2,"id":3,"message":null,"available_seats":[true,true,true,true],"status":4},{"room_id":1,"category_id":2,"id":5,"message":null,"available_seats":[true,true,true,true],"status":4}]
+[{"id":1,"max_num_of_chairs":17,"status":1,"placeId":1}]

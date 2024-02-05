@@ -67,10 +67,7 @@ public class PlaceRepository extends AbstractRepository {
                     element.put("id" , id);
                     element.put("name" , place.getName());
                     element.put("locations" , place.getLocations());
-                    element.put("rooms",place.getRooms());
-//                    element.put("shape", place.getShape());
-//                    element.put("num_of_seats", place.getNum_of_seats());
-                    // Add more modifications as needed
+
                 }
             }
 

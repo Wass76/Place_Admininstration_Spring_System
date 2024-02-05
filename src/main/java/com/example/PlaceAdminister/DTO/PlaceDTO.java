@@ -1,5 +1,7 @@
 package com.example.PlaceAdminister.DTO;
 
+import com.example.PlaceAdminister.Request.PlaceRequest;
+import com.example.PlaceAdminister.Service.PlaceService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,11 +15,13 @@ public class PlaceDTO extends AbstractDTO {
     private Long id;
     private String name;
     private List<String> locations;
-    private List<String> rooms;
 
-    public PlaceDTO(String name, List<String> locations, List<String> rooms) {
+    public PlaceDTO(String name, List<String> locations) {
         this.name = name;
         this.locations = locations;
-        this.rooms = rooms;
+    }
+    public PlaceDTO(PlaceRequest placeRequest){
+        this.name=placeRequest.getName();
+        this.locations=placeRequest.getLocations();
     }
 }

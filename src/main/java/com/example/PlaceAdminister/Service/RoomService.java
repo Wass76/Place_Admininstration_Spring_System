@@ -1,18 +1,12 @@
 package com.example.PlaceAdminister.Service;
 
 import com.example.PlaceAdminister.DTO.RoomDTO;
+import com.example.PlaceAdminister.DTO.TableDTO;
 import com.example.PlaceAdminister.Model_Entitiy.RoomEntity;
 import com.example.PlaceAdminister.Repository.RoomRepository;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -22,26 +16,32 @@ public class RoomService {
     private RoomEntity rooms;
     @Autowired
     private RoomRepository roomRepository;
-    private String filepath = "src/main/resources/Rooms.json";
+    private String roomFilepath = "src/main/resources/Rooms.json";
+    private String placeFilepath = "src/main/resources/Places.json";
 
 
     public List<RoomDTO> getAllRooms() {
-        return roomRepository.readFromJsonFile(filepath);
+        return roomRepository.readFromJsonFile(roomFilepath);
 
     }
 
     public RoomDTO store(RoomDTO roomDTO) {
-        return roomRepository.writeToJsonFile(roomDTO ,this.filepath);
+        return roomRepository.writeToJsonFile(roomDTO ,this.roomFilepath);
     }
 
     public RoomDTO show(Long id)
     {
-        return roomRepository.searchDataById(id , this.filepath);
+        return roomRepository.searchDataById(id , this.roomFilepath);
     }
 
 
     public RoomDTO update(Long id , RoomDTO roomDTO){
-        return roomRepository.UpdateById(id ,roomDTO,this.filepath);
+        return roomRepository.UpdateById(id ,roomDTO,this.roomFilepath);
+    }
+
+    public List<RoomDTO> showRoomsByPlaceId(Long id)
+    {
+        return  roomRepository.searchByPlaceId(id , this.placeFilepath);
     }
 
 
@@ -75,7 +75,7 @@ public class RoomService {
 //        }
 //    }
     public void delete(Long id){
-        roomRepository.deleteById(id,this.filepath);
+        roomRepository.deleteById(id,this.roomFilepath);
     }
 }
 
