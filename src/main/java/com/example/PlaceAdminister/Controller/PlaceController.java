@@ -7,6 +7,7 @@ import com.example.PlaceAdminister.Request.RoomCategoryRequest;
 import com.example.PlaceAdminister.Service.PlaceService;
 import com.example.PlaceAdminister.Service.RoomCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,13 +18,13 @@ public class PlaceController {
     private PlaceService placeService;
 
     @GetMapping("allplaces")
-    public List<PlaceDTO> getAllPlacess() {
-        return placeService.getAllRoomCategories();
+    public ResponseEntity getAllPlacess() {
+        return ResponseEntity.ok(placeService.getAllRoomCategories());
     }
 
     @PostMapping("newplace")
-    public PlaceDTO addPlace(@RequestBody PlaceRequest placeRequest) {
+    public ResponseEntity addPlace(@RequestBody PlaceRequest placeRequest) {
         PlaceDTO placeDTO = new PlaceDTO(placeRequest);
-        return placeService.store(placeDTO);
+        return ResponseEntity.ok(placeService.store(placeDTO));
     }
 }

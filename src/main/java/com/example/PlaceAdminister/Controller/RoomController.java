@@ -1,17 +1,13 @@
 package com.example.PlaceAdminister.Controller;
 
 import com.example.PlaceAdminister.DTO.RoomDTO;
-import com.example.PlaceAdminister.Model_Entitiy.RoomCategoryEntity;
-import com.example.PlaceAdminister.Model_Entitiy.RoomEntity;
 import com.example.PlaceAdminister.Request.RoomRequest;
 import com.example.PlaceAdminister.Service.RoomService;
-import org.apache.coyote.Response;
-import org.hibernate.mapping.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Time;
-import java.util.HashSet;
 import java.util.List;
 
 @RestController
@@ -21,47 +17,75 @@ public class RoomController {
     private RoomService roomService=new RoomService();
 
     @GetMapping("/AllRooms")
-    public List<RoomDTO> index(){
-        return roomService.getAllRooms();
+    public ResponseEntity index(){
+       List<RoomDTO> roomsList = roomService.getAllRooms() ;
+       if(roomsList.isEmpty()){
+           return ResponseEntity.status(200).body("there is no Rooms yet");
+       }
+        return ResponseEntity.ok(roomsList);
+
     }
     //checked
 
     @PostMapping("/newRoom")
-    public RoomDTO create(@RequestBody RoomRequest request)
+    public ResponseEntity create(@RequestBody RoomRequest request)
     {
+        if(request.getPlaceId() == null || request.getMax_num_of_chairs() == null || request.getCategory_id() == null){
+            return ResponseEntity.badRequest().body("validate your data please");
+        }
         RoomDTO roomDTO = new RoomDTO(request);
-        System.out.println(request.getMax_num_of_chairs());
-        return roomService.store(roomDTO);
+//        System.out.println(request.getMax_num_of_chairs());
+        RoomDTO room = roomService.store(roomDTO);
+        if(room == null){
+                return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("please try again");
+        }
+        return ResponseEntity.ok(room);
     }
     //checked
 
     @GetMapping("{id}")
-    public RoomDTO show(@PathVariable("id") Long id){
-        return roomService.show(id);
-    }
-    //checked
+    public ResponseEntity show(@PathVariable("id") Long id){
+        if(id == null || id<=0){
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("d");
+            return ResponseEntity.badRequest().body("Invalid Id");
+        }
+        RoomDTO room = roomService.getItem(id);
+        if(room == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+        }
+        else {
+            return  ResponseEntity.ok(room);
+        }
+         }
 
     @PutMapping("update/{id}")
-    public RoomDTO edit(@PathVariable("id") Long id ,@RequestBody RoomRequest request){
+    public ResponseEntity edit(@PathVariable("id") Long id ,@RequestBody RoomRequest request){
+        if(id == null || id<=0){
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("d");
+            return ResponseEntity.badRequest().body("Invalid Id");
+        }
+        if(request.getPlaceId() == null || request.getMax_num_of_chairs() == null || request.getCategory_id() == null){
+            return ResponseEntity.badRequest().body("validate your data please");
+        }
         RoomDTO roomDTO = new RoomDTO(request);
-        if(roomDTO!=null)
-            return roomService.update(id ,roomDTO);
-        else return null;
+        RoomDTO room = roomService.getItem(id);
+        if(room == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+        }
+        return ResponseEntity.ok(roomService.update(id ,roomDTO));
     }
-    //checked
-//    @PostMapping("/reservationRoom/{id}")
-//    public RoomDTO reserveRoom(@PathVariable("id") Long id ,@RequestBody RoomRequest request){
-//        return roomService.reserveRoom(id,request.getTime_of_reservation());
-//    }
-//    @PostMapping("/cancelreserve/{id}")
-//    public RoomDTO cancelReserve(@PathVariable("id") Long id){
-//        return roomService.cancelRoomReservation(id);
-//    }
-
 
     @DeleteMapping("delete/{id}")
-    public void delete(@PathVariable("id") Long id){
+    public ResponseEntity delete(@PathVariable("id") Long id){
+        if(id == null || id<=0){
+            return ResponseEntity.badRequest().body("Invalid Id");
+        }
+        RoomDTO room= roomService.getItem(id);
+        if(room == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+        }
         roomService.delete(id);
+        return ResponseEntity.ok("Delete Done successfully");
     }
 }
 

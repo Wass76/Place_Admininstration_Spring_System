@@ -1,7 +1,6 @@
 package com.example.PlaceAdminister.Service;
 
 import com.example.PlaceAdminister.DTO.RoomDTO;
-import com.example.PlaceAdminister.DTO.TableDTO;
 import com.example.PlaceAdminister.Model_Entitiy.RoomEntity;
 import com.example.PlaceAdminister.Repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +28,10 @@ public class RoomService {
         return roomRepository.writeToJsonFile(roomDTO ,this.roomFilepath);
     }
 
-    public RoomDTO show(Long id)
+    public RoomDTO getItem(Long id)
     {
-        return roomRepository.searchDataById(id , this.roomFilepath);
+      RoomDTO room =   roomRepository.searchDataById(id , this.roomFilepath);
+        return room;
     }
 
 
