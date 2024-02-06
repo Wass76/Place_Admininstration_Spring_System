@@ -16,9 +16,9 @@ public class RoomController {
     @Autowired
     private RoomService roomService=new RoomService();
 
-    @GetMapping("/AllRooms")
-    public ResponseEntity index(){
-       List<RoomDTO> roomsList = roomService.getAllRooms() ;
+    @GetMapping("/AllRooms/{place_id}")
+    public ResponseEntity index(@PathVariable("place_id") Long place_id){
+       List<RoomDTO> roomsList = roomService.getAllRooms(place_id);
        if(roomsList.isEmpty()){
            return ResponseEntity.status(200).body("there is no Rooms yet");
        }
@@ -27,9 +27,10 @@ public class RoomController {
     }
     //checked
 
-    @PostMapping("/newRoom")
-    public ResponseEntity create(@RequestBody RoomRequest request)
+    @PostMapping("/{place_id}/newRoom")
+    public ResponseEntity create(@RequestBody RoomRequest request , @PathVariable("place_id") Long place_id)
     {
+        request.setPlaceId(place_id);
         if(request.getPlaceId() == null || request.getMax_num_of_chairs() == null || request.getCategory_id() == null){
             return ResponseEntity.badRequest().body("validate your data please");
         }
@@ -43,8 +44,8 @@ public class RoomController {
     }
     //checked
 
-    @GetMapping("{id}")
-    public ResponseEntity show(@PathVariable("id") Long id){
+    @GetMapping("/{place_id}/{id}")
+    public ResponseEntity show(@PathVariable("id") Long id ,@PathVariable("place_id") Long place_id){
         if(id == null || id<=0){
 //            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("d");
             return ResponseEntity.badRequest().body("Invalid Id");
@@ -53,13 +54,16 @@ public class RoomController {
         if(room == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
         }
+        if(room.getPlaceId() != place_id){
+            return ResponseEntity.status(401).body("you don't have permission to enter to this data");
+        }
         else {
             return  ResponseEntity.ok(room);
         }
          }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity edit(@PathVariable("id") Long id ,@RequestBody RoomRequest request){
+    @PutMapping("/{place_id}/update/{id}")
+    public ResponseEntity edit(@PathVariable("id") Long id ,@RequestBody RoomRequest request ,@PathVariable("place_id") Long place_id){
         if(id == null || id<=0){
 //            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("d");
             return ResponseEntity.badRequest().body("Invalid Id");
@@ -72,11 +76,15 @@ public class RoomController {
         if(room == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
         }
+        if(room.getPlaceId() != place_id){
+            return ResponseEntity.status(401).body("you don't have permission to enter to this data");
+        }
+
         return ResponseEntity.ok(roomService.update(id ,roomDTO));
     }
 
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity delete(@PathVariable("id") Long id){
+    @DeleteMapping("/{place_id}/delete/{id}")
+    public ResponseEntity delete(@PathVariable("id") Long id ,@PathVariable("place_id") Long place_id){
         if(id == null || id<=0){
             return ResponseEntity.badRequest().body("Invalid Id");
         }
@@ -84,6 +92,10 @@ public class RoomController {
         if(room == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
         }
+        if(room.getPlaceId() != place_id){
+            return ResponseEntity.status(401).body("you don't have permission to enter to this data");
+        }
+
         roomService.delete(id);
         return ResponseEntity.ok("Delete Done successfully");
     }

@@ -108,7 +108,7 @@ public class ReservationService {
     }
 
     public ReservationDTO getReservation(Long id){
-        return abstractRepository.searchDataById(id ,reservationFilePath);
+        return abstractRepository.findDataById(id ,reservationFilePath);
     }
 
     public String cancelReservation(Long id){

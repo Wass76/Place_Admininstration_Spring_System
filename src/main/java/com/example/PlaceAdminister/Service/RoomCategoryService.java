@@ -18,8 +18,9 @@ public class RoomCategoryService {
 
 
     public List<RoomCategoryDTO> getAllRoomCategories() {
-        return roomCategoryRepository.readFromJsonFile(filepath);
-
+           List<RoomCategoryDTO> roomCategoryDTOList =    roomCategoryRepository.readFromJsonFile(filepath);
+//           List<RoomCategoryDTO> myRoomCategoryDTO = roomCategoryDTOList.stream().filter(i->i.getPlace_id().equals(id)).toList();
+           return roomCategoryDTOList;
     }
 
     public RoomCategoryDTO store(RoomCategoryDTO roomCategoryDTO) {
