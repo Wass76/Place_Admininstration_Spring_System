@@ -21,9 +21,6 @@ public class RoomDTO extends AbstractDTO{
         this.status = newRoomRequest.getStatus();
         this.category_id =newRoomRequest.getCategory_id();
         this.placeId=newRoomRequest.getPlaceId();
-        if(placeId == null){
-
-        }
         this.max_num_of_chairs=newRoomRequest.getMax_num_of_chairs();
     }
 

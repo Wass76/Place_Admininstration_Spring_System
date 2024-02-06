@@ -19,8 +19,10 @@ public class RoomService {
     private String placeFilepath = "src/main/resources/Places.json";
 
 
-    public List<RoomDTO> getAllRooms() {
-        return roomRepository.readFromJsonFile(roomFilepath);
+    public List<RoomDTO> getAllRooms(Long id) {
+         List<RoomDTO> roomList = roomRepository.readFromJsonFile(roomFilepath);
+         List<RoomDTO> myRoomList = roomList.stream().filter(i->i.getPlaceId().equals(id)).toList();
+        return myRoomList;
 
     }
 
