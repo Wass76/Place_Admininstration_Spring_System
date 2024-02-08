@@ -36,7 +36,7 @@ public class ReservationController {
         }
         ReservationDTO reservationResult = reservationService.reserve(reservationDTO);
         if(reservationResult.getMessage() != null){
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("sth is error, please try again");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(reservationResult.getMessage());
         }
         return ResponseEntity.ok(reservationResult);
     }

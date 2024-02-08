@@ -4,9 +4,11 @@ import com.example.PlaceAdminister.DTO.ReservationDTO;
 import com.example.PlaceAdminister.DTO.TableDTO;
 import com.example.PlaceAdminister.Repository.AbstractRepository;
 import com.example.PlaceAdminister.Repository.TableRepository;
+import com.pusher.rest.Pusher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 @Service
 public class ReservationService {
@@ -24,8 +26,6 @@ public class ReservationService {
     public List<ReservationDTO>  getAllReservations(){
         return abstractRepository.readFromJsonReservation(reservationFilePath);
     }
-
-
 
     public ReservationDTO reserve(ReservationDTO reservationDTO){
         String filePath = "src/main/resources/Reservations.json";
@@ -49,8 +49,11 @@ public class ReservationService {
                    .findFirst().orElse(null);
 
            TableDTO tableDTO = tableRepository.searchDataById(reservationDTO.getTable_id() ,TableFilePath);
-//           TableDTO tableDTO = tableDTOList.stream()
-//                   .filter(i->i.getRoom_id().equals(reservationDTO.))
+
+           if(tableDTO == null){
+               return new ReservationDTO("Sorry, we can't find this table in our place");
+           }
+
 
            ReservationDTO existedRoomReservation = reservationDTOList.stream()
                    .filter(i->i.getRoom_id().equals(tableDTO.getRoom_id()))
@@ -96,9 +99,16 @@ public class ReservationService {
            if (enoughSeatsCheck != null){
                return new ReservationDTO("Sorry, this table is only available for limited seats");
            }
-
        }
        ReservationDTO r = abstractRepository.reserveTable(reservationDTO,filePath);
+
+        Pusher pusher = new Pusher("1753712", "2d818fcce28a85b66b67", "54ca7ad665a3f290a976");
+        pusher.setCluster("ap1");
+        pusher.setEncrypted(true);
+        pusher.trigger("admin-channel", "new-reservation", Collections.singletonMap("message", "new reservation added on a table"));
+//        pusher.trigger("my-channel", "my-event", Collections.singletonMap("message", "hello world"));
+
+//        System.out.println("new reservation");
         return r;
 //
 
