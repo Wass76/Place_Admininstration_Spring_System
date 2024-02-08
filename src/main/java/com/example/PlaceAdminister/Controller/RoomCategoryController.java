@@ -19,18 +19,23 @@ public class RoomCategoryController {
     @Autowired
     private RoomCategoryService roomCategoryService;
 
-    @GetMapping("allRoomCategories")
-    public ResponseEntity getAllRoomCategories() {
-        List<RoomCategoryDTO> roomCategoryList = roomCategoryService.getAllRoomCategories();
+    @GetMapping("{place_id}/allRoomCategories")
+    public ResponseEntity getAllRoomCategories(@PathVariable("place_id") Long id) {
+        if(id == null || id<=0){
+            return ResponseEntity.badRequest().body("Invalid Id");
+        }
+        List<RoomCategoryDTO> roomCategoryList = roomCategoryService.getAllRoomCategories(id);
         if(roomCategoryList.isEmpty()){
             return ResponseEntity.status(200).body("there is no room category yet");
         }
         return ResponseEntity.ok(roomCategoryList);
     }
 
-    @PostMapping("newRoomCategory")
-    public ResponseEntity addRoomCategory(@RequestBody RoomCategoryRequest roomCategoryRequest) {
-        if(roomCategoryRequest.getType() == null){
+    @PostMapping("{place_id}/newRoomCategory")
+    public ResponseEntity addRoomCategory(@RequestBody RoomCategoryRequest roomCategoryRequest ,@PathVariable("place_id") Long place_id)
+    {
+        roomCategoryRequest.setPlace_id(place_id);
+        if(roomCategoryRequest.getType() == null || roomCategoryRequest.getPlace_id() ==null){
             return ResponseEntity.badRequest().body("validate your data please");
         }
         RoomCategoryDTO roomCategoryDTO = new RoomCategoryDTO(roomCategoryRequest);
@@ -41,42 +46,68 @@ public class RoomCategoryController {
         return ResponseEntity.ok(newRoomCategory);
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity show(@PathVariable("id") Long id){
+    @GetMapping("{place_id}/show/{id}")
+    public ResponseEntity show(@PathVariable("id") Long id,@PathVariable("place_id") Long place_id){
         if(id == null || id<=0){
             return ResponseEntity.badRequest().body("Invalid Id");
+        }
+        if(place_id == null || place_id<=0){
+            return ResponseEntity.badRequest().body("Invalid place_id");
         }
         RoomCategoryDTO roomCategory = roomCategoryService.getRoomCategory(id);
         if(roomCategory == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+        }
+        if(roomCategory.getPlace_id() !=place_id){
+            return ResponseEntity.status(403).body("you don't have permission to enter to this data");
         }
         return ResponseEntity.ok(roomCategory);
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity edit(@PathVariable("id") Long id ,@RequestBody RoomCategoryRequest request){
-        if(id == null || id<=0){
+    @PutMapping("{place_id}/update/{id}")
+    public ResponseEntity edit(@PathVariable("id") Long id ,@RequestBody RoomCategoryRequest request , @PathVariable("place_id") Long place_id){
+        if(id == null || id<=0)
+        {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
-        if(request.getType() == null){
+        if(place_id == null || place_id<=0)
+        {
+            return ResponseEntity.badRequest().body("Invalid place_id");
+        }
+        if(request.getType() == null)
+        {
             return ResponseEntity.badRequest().body("validate your data please");
         }
+        request.setPlace_id(place_id);
         RoomCategoryDTO roomCategoryDTO = new RoomCategoryDTO(request);
         RoomCategoryDTO roomCategory = roomCategoryService.getRoomCategory(id);
-        if(roomCategory == null){
+        if(roomCategory == null)
+        {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+        }
+        if(roomCategory.getPlace_id() !=place_id){
+            return ResponseEntity.status(403).body("you don't have permission to enter to this data");
         }
         return ResponseEntity.ok(roomCategoryService.update(id ,roomCategoryDTO));
     }
 
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity delete(@PathVariable("id") Long id){
-        if(id == null || id<=0){
+    @DeleteMapping("{place_id}/delete/{id}")
+    public ResponseEntity delete(@PathVariable("id") Long id , @PathVariable("place_id") Long place_id){
+        if(id == null || id<=0)
+        {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
+        if(place_id == null || place_id<=0)
+        {
+            return ResponseEntity.badRequest().body("Invalid place_id");
+        }
+
         RoomCategoryDTO roomCategory = roomCategoryService.getRoomCategory(id) ;
         if(roomCategory == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+        }
+        if(roomCategory.getPlace_id() != place_id){
+            return ResponseEntity.status(403).body("you don't have permission to enter to this data");
         }
         roomCategoryService.delete(id);
         return ResponseEntity.ok("Delete Done successfully");

@@ -17,10 +17,10 @@ public class RoomCategoryService {
     private String filepath = "src/main/resources/RoomCategories.json";
 
 
-    public List<RoomCategoryDTO> getAllRoomCategories() {
+    public List<RoomCategoryDTO> getAllRoomCategories(Long id) {
            List<RoomCategoryDTO> roomCategoryDTOList =    roomCategoryRepository.readFromJsonFile(filepath);
-//           List<RoomCategoryDTO> myRoomCategoryDTO = roomCategoryDTOList.stream().filter(i->i.getPlace_id().equals(id)).toList();
-           return roomCategoryDTOList;
+           List<RoomCategoryDTO> myRoomCategoryList = roomCategoryDTOList.stream().filter(i->i.getPlace_id().equals(id)).toList();
+           return myRoomCategoryList;
     }
 
     public RoomCategoryDTO store(RoomCategoryDTO roomCategoryDTO) {

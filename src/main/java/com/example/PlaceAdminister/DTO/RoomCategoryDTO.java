@@ -21,5 +21,6 @@ public class RoomCategoryDTO extends AbstractDTO{
 
     public RoomCategoryDTO(RoomCategoryRequest request) {
         this.type=request.getType();
+        this.place_id = request.getPlace_id();
     }
 }
