@@ -41,7 +41,11 @@ public class RoomController {
 //        System.out.println(request.getMax_num_of_chairs());
         RoomDTO room = roomService.store(roomDTO);
         if(room == null){
+            System.out.println("null room category");
                 return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("please try again");
+        }
+        if(room.getMessage() != null){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(room.getMessage());
         }
         return ResponseEntity.ok(room);
     }

@@ -50,6 +50,9 @@ public class TableController {
         if(newTable == null){
             return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("please try again");
         }
+        if(newTable.getMessage() != null){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(newTable.getMessage());
+        }
         return ResponseEntity.ok(newTable);
     }
 

@@ -57,6 +57,12 @@ public class TableService {
     //        if(room.getMax_num_of_chairs() < tableCategory.getNum_of_seats()  )
     //            return new TableDTO("can't add new table to this room because there is no space for it");
 
+        if(roomRepository.readFromJsonFile(roomFilePath).size() == 0){
+            return new TableDTO("you should add some rooms first");
+        }
+        if(tableCategoryRepository.readFromJsonFile(tableCategoryFilePath).size() == 0){
+            return new TableDTO("you should add table category first");
+        }
         return tableRepository.writeToJsonTable(tableDTO ,this.tableFilePath);
     }
 

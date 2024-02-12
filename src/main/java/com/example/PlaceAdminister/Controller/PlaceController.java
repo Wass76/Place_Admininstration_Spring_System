@@ -17,7 +17,7 @@ public class PlaceController {
 
     @GetMapping("allplaces")
     public ResponseEntity getAllPlacess() {
-        List<PlaceDTO> placeList  = placeService.getAllRoomCategories();
+        List<PlaceDTO> placeList  = placeService.getAllPlaces();
         if(placeList == null || placeList.isEmpty() ){
             return ResponseEntity.status(200).body("there is no Place yet");
         }
