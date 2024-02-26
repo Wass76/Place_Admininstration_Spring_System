@@ -22,7 +22,7 @@ public class PlaceRepository extends AbstractRepository {
     public List<PlaceDTO> readFromJsonFile(Resource resource) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            List<PlaceDTO> models = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {});
+            List<PlaceDTO> models = objectMapper.readValue(resource.getFile(), new TypeReference<>() {});
             return models;
         } catch (IOException e) {
             return new ArrayList<>();

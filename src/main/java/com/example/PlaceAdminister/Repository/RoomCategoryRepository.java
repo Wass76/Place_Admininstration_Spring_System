@@ -22,7 +22,7 @@ public class RoomCategoryRepository extends AbstractRepository{
     public List<RoomCategoryDTO> readFromJsonFile(Resource resource) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            List<RoomCategoryDTO> models = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {});
+            List<RoomCategoryDTO> models = objectMapper.readValue(resource.getFile(), new TypeReference<>() {});
             return models;
         } catch (IOException e) {
             return new ArrayList<>();

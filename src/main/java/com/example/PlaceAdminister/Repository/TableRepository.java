@@ -29,7 +29,7 @@ public class TableRepository extends AbstractRepository{
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            List<TableDTO> models = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {});
+            List<TableDTO> models = objectMapper.readValue(resource.getFile(), new TypeReference<>() {});
             return models;
         } catch (IOException e) {
             return new ArrayList<>();

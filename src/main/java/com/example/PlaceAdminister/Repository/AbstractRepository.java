@@ -24,7 +24,7 @@ public class AbstractRepository {
     public List<ReservationDTO> readFromJsonReservation(Resource resource) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            List<ReservationDTO> models = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {});
+            List<ReservationDTO> models = objectMapper.readValue(resource.getFile(), new TypeReference<>() {});
             return models;
         } catch (IOException e) {
             return new ArrayList<>();

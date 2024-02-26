@@ -25,7 +25,7 @@ public class RoomRepository extends AbstractRepository{
     public List<RoomDTO> readFromJsonFile(Resource resource) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            List<RoomDTO> models = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {});
+            List<RoomDTO> models = objectMapper.readValue(resource.getFile(), new TypeReference<>() {});
             return models;
         } catch (IOException e) {
             return new ArrayList<>();
