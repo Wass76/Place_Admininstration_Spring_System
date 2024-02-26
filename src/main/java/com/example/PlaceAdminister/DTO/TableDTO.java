@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TableDTO extends AbstractDTO{
+public class    TableDTO extends AbstractDTO{
     private Long id;
     private Integer status;
 

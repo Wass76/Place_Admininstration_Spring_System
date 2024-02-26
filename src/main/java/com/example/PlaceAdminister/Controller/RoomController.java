@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/v1/rooms")
 public class RoomController {
     @Autowired
-    private RoomService roomService=new RoomService();
+    private RoomService roomService;
 
     @GetMapping("{place_id}/AllRooms")
     public ResponseEntity index(@PathVariable("place_id") Long place_id){

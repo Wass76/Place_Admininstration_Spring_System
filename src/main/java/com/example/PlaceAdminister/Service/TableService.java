@@ -7,6 +7,7 @@ import com.example.PlaceAdminister.Repository.RoomRepository;
 import com.example.PlaceAdminister.Repository.TableCategoryRepository;
 import com.example.PlaceAdminister.Repository.TableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,11 +32,18 @@ public class TableService {
     private ReservationService reservationService;
 
 
+    private final ResourceLoader resourceLoader;
+
 
     private String tableFilePath = "src/main/resources/Tables.json";
     private String roomFilePath = "src/main/resources/Rooms.json";
 
+    private RoomService roomService;
     private String tableCategoryFilePath = "src/main/resources/TableCategory.json";
+
+    public TableService(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
 
 
     public List<TableDTO> getAllTables(){
@@ -57,9 +65,10 @@ public class TableService {
     //        if(room.getMax_num_of_chairs() < tableCategory.getNum_of_seats()  )
     //            return new TableDTO("can't add new table to this room because there is no space for it");
 
-        if(roomRepository.readFromJsonFile(roomFilePath).size() == 0){
-            return new TableDTO("you should add some rooms first");
-        }
+
+//        if(roomRepository.readFromJsonFile().size() == 0){
+//            return new TableDTO("you should add some rooms first");
+//        }
         if(tableCategoryRepository.readFromJsonFile(tableCategoryFilePath).size() == 0){
             return new TableDTO("you should add table category first");
         }

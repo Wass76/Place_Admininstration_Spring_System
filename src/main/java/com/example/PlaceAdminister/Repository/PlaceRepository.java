@@ -4,6 +4,7 @@ import com.example.PlaceAdminister.DTO.PlaceDTO;
 import com.example.PlaceAdminister.DTO.RoomCategoryDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.io.Resource;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,43 +19,49 @@ import java.util.ArrayList;
 import java.util.List;
 @Component
 public class PlaceRepository extends AbstractRepository {
-    public List<PlaceDTO> readFromJsonFile(String filePath) {
+    public List<PlaceDTO> readFromJsonFile(Resource resource) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            List<PlaceDTO> models = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
+            List<PlaceDTO> models = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {});
             return models;
         } catch (IOException e) {
             return new ArrayList<>();
         }
     }
-    public PlaceDTO writeToJsonFile(PlaceDTO models, String filePath) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
+    public PlaceDTO writeToJsonFile(PlaceDTO models, Resource resource) {
 
-            List<PlaceDTO> place= readFromJsonFile(filePath);
-            Long id= Long.valueOf(1);
-            if(!(place.size()==0)) id=(Long)place.get(place.size()-1).getId()+1;
-            models.setId(id);
-            place.add(models);
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
 
-            objectMapper.writeValue(new File(filePath), place);
-        } catch (IOException e) {
-            e.printStackTrace(); // Handle the exception appropriately in a production environment
+                // Read existing data from the JSON file
+                List<PlaceDTO> places = readFromJsonFile(resource);
+
+                // Generate ID for the new model
+                Long id = places.isEmpty() ? 1 : places.get(places.size() - 1).getId() + 1;
+                models.setId(id);
+
+                // Add the new model to the existing list
+                places.add(models);
+
+                // Write the updated list back to the JSON file
+                objectMapper.writeValue(new File(resource.getURI()), places);
+            } catch (IOException e) {
+                e.printStackTrace(); // Handle the exception appropriately in a production environment
+            }
+            return models;
         }
-        return models;
-    }
 
-    public PlaceDTO searchDataById(Long id , String filePath) {
-        List<PlaceDTO> dataList = readFromJsonFile(filePath);
+    public PlaceDTO searchDataById(Long id , Resource resource) {
+        List<PlaceDTO> dataList = readFromJsonFile(resource);
         return dataList.stream()
                 .filter(data -> data.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }
-    public PlaceDTO UpdateById(Long id , PlaceDTO place , String filePath){
+    public PlaceDTO UpdateById(Long id , PlaceDTO place , Resource resource){
         try {
             // Step 1: Read the JSON file and parse it
-            File jsonFile = new File(filePath);
+            File jsonFile = new File(resource.getFilename());
             FileInputStream fis = new FileInputStream(jsonFile);
             JSONTokener tokener = new JSONTokener(fis);
             JSONArray jsonArray = new JSONArray(tokener);

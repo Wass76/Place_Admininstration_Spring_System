@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -21,42 +22,42 @@ import java.util.stream.Collectors;
 
 @Component
 public class RoomRepository extends AbstractRepository{
-    public List<RoomDTO> readFromJsonFile(String filePath) {
+    public List<RoomDTO> readFromJsonFile(Resource resource) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            List<RoomDTO> models = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
+            List<RoomDTO> models = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {});
             return models;
         } catch (IOException e) {
             return new ArrayList<>();
         }
     }
-    public RoomDTO writeToJsonFile(RoomDTO models, String filePath) {
+    public RoomDTO writeToJsonFile(RoomDTO models, Resource resource) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
 
-            List<RoomDTO> rooms= readFromJsonFile(filePath);
+            List<RoomDTO> rooms= readFromJsonFile(resource);
             Long id= Long.valueOf(1);
             if(!(rooms.size()==0)) id=(Long)rooms.get(rooms.size()-1).getId()+1;
             models.setId(id);
             rooms.add(models);
 
-            objectMapper.writeValue(new File(filePath), rooms);
+            objectMapper.writeValue(new File(resource.getURI()), rooms);
         } catch (IOException e) {
             e.printStackTrace(); // Handle the exception appropriately in a production environment
         }
         return models;
     }
-    public RoomDTO searchDataById(Long id , String filePath) {
-        List<RoomDTO> dataList = readFromJsonFile(filePath);
+    public RoomDTO searchDataById(Long id , Resource resource) {
+        List<RoomDTO> dataList = readFromJsonFile(resource);
         return dataList.stream()
                 .filter(data -> data.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }
-    public RoomDTO UpdateById(Long id , RoomDTO roomDTO , String filePath) {
+    public RoomDTO UpdateById(Long id , RoomDTO roomDTO ,Resource resource) {
         try {
             // Step 1: Read the JSON file and parse it
-            File jsonFile = new File(filePath);
+            File jsonFile = new File(resource.getURI());
             FileInputStream fis = new FileInputStream(jsonFile);
             JSONTokener tokener = new JSONTokener(fis);
             JSONArray jsonArray = new JSONArray(tokener);
@@ -88,10 +89,10 @@ public class RoomRepository extends AbstractRepository{
         return roomDTO;
     }
 
-    public void deleteById(Long id , String filePath){
+    public void deleteById(Long id , Resource resource){
         try {
             // Step 1: Read the JSON file and parse it
-            File jsonFile = new File(filePath);
+            File jsonFile = new File(resource.getURI());
             FileInputStream fis = new FileInputStream(jsonFile);
             JSONTokener tokener = new JSONTokener(fis);
             JSONArray jsonArray = new JSONArray(tokener);
@@ -118,8 +119,8 @@ public class RoomRepository extends AbstractRepository{
         }
     }
 
-    public List<RoomDTO> searchByPlaceId(Long room_id, String filePath) {
-        List<RoomDTO> dataList = readFromJsonFile(filePath);
+    public List<RoomDTO> searchByPlaceId(Long room_id, Resource resource) {
+        List<RoomDTO> dataList = readFromJsonFile(resource);
         List<RoomDTO> roomDTOList =  dataList.stream()
                 .filter(data -> data.getId().equals(room_id)).collect(Collectors.toList());
         return roomDTOList;
