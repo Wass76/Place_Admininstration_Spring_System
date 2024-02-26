@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -21,29 +22,31 @@ import java.util.List;
 
 public class TableCategoryRepository extends AbstractRepository{
 
-    public List<TableCategoryDTO> readFromJsonFile(String filePath) {
+    public List<TableCategoryDTO> readFromJsonFile(Resource resource) {
         String filepath1 = "src/main/resources/Rooms.json";
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            List<TableCategoryDTO> models = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
+            List<TableCategoryDTO> models = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {});
             return models;
         } catch (IOException e) {
             return new ArrayList<>();
         }
     }
 
-    public TableCategoryDTO writeToJsonFile(TableCategoryDTO models, String filePath) {
+    public TableCategoryDTO writeToJsonFile(TableCategoryDTO models, Resource resource) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
 
-            List<TableCategoryDTO> tables= readFromJsonFile(filePath);
+            List<TableCategoryDTO> tables= readFromJsonFile(resource);
             Long id= Long.valueOf(1);
             if(!(tables.size()==0)) id=(Long)tables.get(tables.size()-1).getId()+1;
             models.setId(id);
             tables.add(models);
 
-            objectMapper.writeValue(new File(filePath), tables);
+            File file = resource.getFile();
+
+            objectMapper.writeValue(file, tables);
         } catch (IOException e) {
             e.printStackTrace(); // Handle the exception appropriately in a production environment
         }
@@ -51,18 +54,18 @@ public class TableCategoryRepository extends AbstractRepository{
     }
 
 
-    public TableCategoryDTO searchDataById(Long id , String filePath) {
-        List<TableCategoryDTO> dataList = readFromJsonFile(filePath);
+    public TableCategoryDTO searchDataById(Long id , Resource resource) {
+        List<TableCategoryDTO> dataList = readFromJsonFile(resource);
         return dataList.stream()
                 .filter(data -> data.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }
 
-    public TableCategoryDTO UpdateById(Long id , TableCategoryDTO tableCategoryDTO , String filePath){
+    public TableCategoryDTO UpdateById(Long id , TableCategoryDTO tableCategoryDTO , Resource resource){
         try {
             // Step 1: Read the JSON file and parse it
-            File jsonFile = new File(filePath);
+            File jsonFile = resource.getFile();
             FileInputStream fis = new FileInputStream(jsonFile);
             JSONTokener tokener = new JSONTokener(fis);
             JSONArray jsonArray = new JSONArray(tokener);
@@ -93,10 +96,10 @@ public class TableCategoryRepository extends AbstractRepository{
         return tableCategoryDTO;
     }
 
-    public void deleteById(Long id , String filePath){
+    public void deleteById(Long id , Resource resource){
         try {
             // Step 1: Read the JSON file and parse it
-            File jsonFile = new File(filePath);
+            File jsonFile = resource.getFile();
             FileInputStream fis = new FileInputStream(jsonFile);
             JSONTokener tokener = new JSONTokener(fis);
             JSONArray jsonArray = new JSONArray(tokener);

@@ -6,6 +6,8 @@ import com.example.PlaceAdminister.Repository.AbstractRepository;
 import com.example.PlaceAdminister.Repository.TableRepository;
 import com.pusher.rest.Pusher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -22,15 +24,24 @@ public class ReservationService {
     private String reservationFilePath = "src/main/resources/Reservations.json";
     private String TableFilePath = "src/main/resources/Tables.json";
 
+    private final ResourceLoader resourceLoader;
+
+    public ReservationService(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
+
 
     public List<ReservationDTO>  getAllReservations(){
-        return abstractRepository.readFromJsonReservation(reservationFilePath);
+        Resource resource = resourceLoader.getResource("classpath:Reservations.json");
+        return abstractRepository.readFromJsonReservation(resource);
     }
 
     public ReservationDTO reserve(ReservationDTO reservationDTO){
+        Resource resource = resourceLoader.getResource("classpath:Reservations.json");
+
         String filePath = "src/main/resources/Reservations.json";
 //        System.out.println(reservationDTO.getNum_of_seats());
-       List<ReservationDTO> reservationDTOList =  abstractRepository.readFromJsonReservation(filePath);
+       List<ReservationDTO> reservationDTOList =  abstractRepository.readFromJsonReservation(resource);
 
        if(reservationDTO.getType() ==1){
             ReservationDTO existedReservation=  reservationDTOList.stream()
@@ -45,10 +56,12 @@ public class ReservationService {
        else if (reservationDTO.getType() == 2){
            ReservationDTO existedReservation = reservationDTOList.stream()
                    .filter(i->i.getTable_id().equals(reservationDTO.getTable_id()))
-                   .filter(j -> (j.getTime().getHours() == reservationDTO.getTime().getHours()) || (j.getTime().getHours() + j.getPeriod_of_reservations() -1 == reservationDTO.getTime().getHours()))
+                   .filter(j -> (j.getTime().getHours() == reservationDTO.getTime().getHours())
+                           || (j.getTime().getHours() + j.getPeriod_of_reservations() -1 == reservationDTO.getTime().getHours()))
                    .findFirst().orElse(null);
 
-           TableDTO tableDTO = tableRepository.searchDataById(reservationDTO.getTable_id() ,TableFilePath);
+           Resource tableResource = resourceLoader.getResource("classpath:Tables.json");
+           TableDTO tableDTO = tableRepository.searchDataById(reservationDTO.getTable_id() ,tableResource);
 
            if(tableDTO == null){
                return new ReservationDTO("Sorry, we can't find this table in our place");
@@ -57,7 +70,8 @@ public class ReservationService {
 
            ReservationDTO existedRoomReservation = reservationDTOList.stream()
                    .filter(i->i.getRoom_id().equals(tableDTO.getRoom_id()))
-                   .filter(j -> (j.getTime().getHours() == reservationDTO.getTime().getHours()) || (j.getTime().getHours() + j.getPeriod_of_reservations() -1 == reservationDTO.getTime().getHours()))
+                   .filter(j -> (j.getTime().getHours() == reservationDTO.getTime().getHours())
+                           || (j.getTime().getHours() + j.getPeriod_of_reservations() -1 == reservationDTO.getTime().getHours()))
                    .findFirst().orElse(null);
 
            if(existedReservation != null){
@@ -78,7 +92,7 @@ public class ReservationService {
                    .findFirst().orElse(null);
 
            // if number of available seats is enough
-           TableDTO tableDTO = tableRepository.searchDataById(reservationDTO.getTable_id() ,TableFilePath);
+           TableDTO tableDTO = tableRepository.searchDataById(reservationDTO.getTable_id() ,resource);
 //           TableDTO tableDTO = tableDTOList.stream()
 //                   .filter(i->i.getRoom_id().equals(reservationDTO.))
 
@@ -100,7 +114,7 @@ public class ReservationService {
                return new ReservationDTO("Sorry, this table is only available for limited seats");
            }
        }
-       ReservationDTO r = abstractRepository.reserveTable(reservationDTO,filePath);
+       ReservationDTO r = abstractRepository.reserveTable(reservationDTO,resource);
 
         Pusher pusher = new Pusher("1753712", "2d818fcce28a85b66b67", "54ca7ad665a3f290a976");
         pusher.setCluster("ap1");
@@ -114,15 +128,19 @@ public class ReservationService {
 
     }
     public ReservationDTO update(Long id , ReservationDTO reservationDTO){
-        return abstractRepository.UpdateById(id ,reservationDTO, reservationFilePath);
+        Resource resource = resourceLoader.getResource("classpath:Reservations.json");
+        return abstractRepository.UpdateById(id ,reservationDTO, resource);
     }
 
     public ReservationDTO getReservation(Long id){
-        return abstractRepository.findDataById(id ,reservationFilePath);
+        Resource resource = resourceLoader.getResource("classpath:Reservations.json");
+        return abstractRepository.findDataById(id ,resource);
     }
 
     public String cancelReservation(Long id){
-        abstractRepository.deleteById(id ,reservationFilePath);
+        Resource resource = resourceLoader.getResource("classpath:Reservations.json");
+
+        abstractRepository.deleteById(id ,resource);
         return "Deleted Done successfully";
     }
 

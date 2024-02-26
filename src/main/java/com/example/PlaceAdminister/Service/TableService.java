@@ -7,6 +7,7 @@ import com.example.PlaceAdminister.Repository.RoomRepository;
 import com.example.PlaceAdminister.Repository.TableCategoryRepository;
 import com.example.PlaceAdminister.Repository.TableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
@@ -46,9 +47,11 @@ public class TableService {
     }
 
 
-    public List<TableDTO> getAllTables(){
+    public List<TableDTO> getAllTables()
+    {
+        Resource resource = resourceLoader.getResource("classpath:Tables.json");
 
-        List<TableDTO>  tableDTOList = tableRepository.readFromJsonTable(tableFilePath);
+        List<TableDTO>  tableDTOList = tableRepository.readFromJsonTable(resource);
         List<ReservationDTO> reservationDTOList = reservationService.getAllReservations();
 //        LocalTime time = now();
 //        if(reservationDTOList.stream().filter(i -> i.getTable_id()
@@ -56,42 +59,41 @@ public class TableService {
         return tableDTOList;
     }
 
-    public TableDTO store(TableDTO tableDTO){
-    //        RoomDTO room = roomRepository.searchDataById(tableDTO.getRoom_id(),roomFilePath);
-    //        System.out.println(tableDTO.getRoom_id());
-    //        System.out.println(room);
-    //        TableCategoryDTO tableCategory =  tableCategoryRepository.searchDataById(tableDTO.getCategory_id(),tableCategoryFilePath);
-    //
-    //        if(room.getMax_num_of_chairs() < tableCategory.getNum_of_seats()  )
-    //            return new TableDTO("can't add new table to this room because there is no space for it");
-
-
+    public TableDTO store(TableDTO tableDTO)
+    {
+        Resource resource = resourceLoader.getResource("classpath:Tables.json");
+        Resource categoryResource = resourceLoader.getResource("classpath:TableCategory.json");
 //        if(roomRepository.readFromJsonFile().size() == 0){
 //            return new TableDTO("you should add some rooms first");
 //        }
-        if(tableCategoryRepository.readFromJsonFile(tableCategoryFilePath).size() == 0){
+        if(tableCategoryRepository.readFromJsonFile(categoryResource).size() == 0){
             return new TableDTO("you should add table category first");
         }
-        return tableRepository.writeToJsonTable(tableDTO ,this.tableFilePath);
+        return tableRepository.writeToJsonTable(tableDTO ,resource);
     }
 
     public TableDTO getTable(Long id)
     {
-        return tableRepository.searchDataById(id , this.tableFilePath);
+        Resource resource = resourceLoader.getResource("classpath:Tables.json");
+        return tableRepository.searchDataById(id , resource);
     }
 
     public List<TableDTO> showTablesByRoomId(Long id)
     {
-        return  tableRepository.searchByRoomId(id , this.tableFilePath);
+        Resource resource = resourceLoader.getResource("classpath:Tables.json");
+        return  tableRepository.searchByRoomId(id , resource);
     }
 
     public List<TableDTO> showTablesByCategoryId(Long id)
     {
-        return  tableRepository.searchByCategoryId(id , this.tableFilePath);
+        Resource resource = resourceLoader.getResource("classpath:Tables.json");
+        return  tableRepository.searchByCategoryId(id , resource);
     }
 
-    public TableDTO update(Long id , TableDTO tableDTO){
-        return tableRepository.UpdateById(id ,tableDTO,this.tableFilePath);
+    public TableDTO update(Long id , TableDTO tableDTO)
+    {
+        Resource resource = resourceLoader.getResource("classpath:Tables.json");
+        return tableRepository.UpdateById(id ,tableDTO,resource);
     }
 
 
@@ -105,6 +107,7 @@ public class TableService {
 //    }
 
     public void delete(Long id){
-        tableRepository.deleteById(id,this.tableFilePath);
+        Resource resource = resourceLoader.getResource("classpath:Tables.json");
+        tableRepository.deleteById(id,resource);
     }
 }

@@ -37,15 +37,20 @@ public class PlaceRepository extends AbstractRepository {
                 List<PlaceDTO> places = readFromJsonFile(resource);
 
                 // Generate ID for the new model
-                Long id = places.isEmpty() ? 1 : places.get(places.size() - 1).getId() + 1;
+                Long id = places.size()==0 ? 1 : places.get(places.size() - 1).getId() + 1;
                 models.setId(id);
 
                 // Add the new model to the existing list
                 places.add(models);
 
                 // Write the updated list back to the JSON file
-                objectMapper.writeValue(new File(resource.getURI()), places);
-            } catch (IOException e) {
+
+                File file = resource.getFile();
+
+                objectMapper.writeValue(file, places);
+//                System.out.println(file);
+            }
+            catch (IOException e) {
                 e.printStackTrace(); // Handle the exception appropriately in a production environment
             }
             return models;
@@ -61,7 +66,7 @@ public class PlaceRepository extends AbstractRepository {
     public PlaceDTO UpdateById(Long id , PlaceDTO place , Resource resource){
         try {
             // Step 1: Read the JSON file and parse it
-            File jsonFile = new File(resource.getFilename());
+            File jsonFile = resource.getFile();
             FileInputStream fis = new FileInputStream(jsonFile);
             JSONTokener tokener = new JSONTokener(fis);
             JSONArray jsonArray = new JSONArray(tokener);
@@ -77,7 +82,6 @@ public class PlaceRepository extends AbstractRepository {
 
                 }
             }
-
             FileWriter fileWriter = new FileWriter(jsonFile);
             jsonArray.write(fileWriter);
             fileWriter.flush();

@@ -75,7 +75,8 @@ public class RoomService {
     }
 
     public void delete(Long id){
-        roomRepository.deleteById(id,this.roomFilepath);
+        Resource resource = resourceLoader.getResource("classpath:Rooms.json");
+        roomRepository.deleteById(id,resource);
     }
 }
 

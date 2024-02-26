@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -23,63 +24,67 @@ import java.util.stream.Collectors;
 @Component
 public class TableRepository extends AbstractRepository{
 
-    public List<TableDTO> readFromJsonTable(String filePath) {
+    public List<TableDTO> readFromJsonTable(Resource resource) {
         String filepath1 = "src/main/resources/Rooms.json";
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            List<TableDTO> models = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
+            List<TableDTO> models = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {});
             return models;
         } catch (IOException e) {
             return new ArrayList<>();
         }
     }
 
-    public TableDTO writeToJsonTable(TableDTO models, String filePath) {
+    public TableDTO writeToJsonTable(TableDTO models, Resource resource) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
 
-            List<TableDTO> tables= readFromJsonTable(filePath);
+            List<TableDTO> tables= readFromJsonTable(resource);
             Long id= Long.valueOf(1);
             if(!(tables.size()==0)) id=(Long)tables.get(tables.size()-1).getId()+1;
             models.setId(id);
             tables.add(models);
 
-            objectMapper.writeValue(new File(filePath), tables);
+            File file = resource.getFile();
+
+            objectMapper.writeValue(file, tables);
+
         } catch (IOException e) {
             e.printStackTrace(); // Handle the exception appropriately in a production environment
         }
         return models;
     }
 
-    public TableDTO searchDataById(Long id , String filePath) {
-        List<TableDTO> dataList = readFromJsonTable(filePath);
+    public TableDTO searchDataById(Long id , Resource resource) {
+        List<TableDTO> dataList = readFromJsonTable(resource);
         return dataList.stream()
                 .filter(data -> data.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }
 
-    public List<TableDTO> searchByRoomId( Long room_id, String filePath) {
-        List<TableDTO> dataList = readFromJsonTable(filePath);
+    public List<TableDTO> searchByRoomId( Long room_id, Resource resource) {
+        List<TableDTO> dataList = readFromJsonTable(resource);
          List<TableDTO> tableDTOList =  dataList.stream()
                 .filter(data -> data.getRoom_id().equals(room_id)).collect(Collectors.toList());
          return tableDTOList;
 //                .orElse(null)) ;
     }
 
-    public List<TableDTO> searchByCategoryId( Long category_id, String filePath) {
-        List<TableDTO> dataList = readFromJsonTable(filePath);
+    public List<TableDTO> searchByCategoryId( Long category_id, Resource resource)
+    {
+        List<TableDTO> dataList = readFromJsonTable(resource);
         List<TableDTO> tableDTOList =  dataList.stream()
                 .filter(data -> data.getCategory_id().equals(category_id)).collect(Collectors.toList());
         return tableDTOList;
 //                .orElse(null)) ;
     }
 
-    public TableDTO UpdateById(Long id , TableDTO tableDTO , String filePath){
+    public TableDTO UpdateById(Long id , TableDTO tableDTO , Resource resource){
         try {
             // Step 1: Read the JSON file and parse it
-            File jsonFile = new File(filePath);
+            File jsonFile = resource.getFile();
             FileInputStream fis = new FileInputStream(jsonFile);
             JSONTokener tokener = new JSONTokener(fis);
             JSONArray jsonArray = new JSONArray(tokener);
@@ -111,10 +116,10 @@ public class TableRepository extends AbstractRepository{
         return tableDTO;
     }
 
-    public void deleteById(Long id , String filePath){
+    public void deleteById(Long id , Resource resource){
         try {
             // Step 1: Read the JSON file and parse it
-            File jsonFile = new File(filePath);
+            File jsonFile = resource.getFile();
             FileInputStream fis = new FileInputStream(jsonFile);
             JSONTokener tokener = new JSONTokener(fis);
             JSONArray jsonArray = new JSONArray(tokener);
@@ -140,16 +145,6 @@ public class TableRepository extends AbstractRepository{
             throw new RuntimeException(e);
         }
     }
-
-
-
-//    public List<TableDTO> searchData( Long room_id, String filePath) {
-//        List<TableDTO> dataList = readFromJsonFile(filePath);
-//        return dataList.stream()
-//                .filter(data -> data.getName().contains(keyword))
-//                .collect(Collectors.toList());
-//    }
-
 
 
 }

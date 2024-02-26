@@ -61,21 +61,24 @@ public class TableEntity extends TableCategoryEntity{
     @JsonProperty("room_id")
     private Long room_id;
 
-    public TableEntity(Integer status, List<LocalDateTime> time_of_reservation, List<Integer> period_of_reservation, Long room_id , Long category_id)  {
+
+    public TableEntity(Integer status, List<LocalDateTime> time_of_reservation, List<Integer> period_of_reservation, Long room_id , Long category_id)
+    {
         this.status= status;
 //        this.time_of_reservation= time_of_reservation;
         this.room_id = room_id;
 //        this.period_of_reservation =period_of_reservation;
         this.category_id = category_id;
 
-        TableCategoryRepository tableCategoryRepository = new TableCategoryRepository();
-        TableCategoryDTO tableCategoryDTO =tableCategoryRepository.searchDataById(category_id ,"src/main/resources/TableCategory.json");
-        if( tableCategoryDTO !=null){
-            Integer size = tableCategoryDTO.getNum_of_seats();
-            for(int i =0;i<size;i++){
-                available_seats.add(true);
-            }
-        }
+
+//        TableCategoryDTO tableCategoryDTO = tableCategoryService.getTableCategory(category_id);
+////                tableCategoryRepository.searchDataById(category_id ,"src/main/resources/TableCategory.json");
+////        if( tableCategoryDTO !=null){
+//            Integer size = tableCategoryDTO.getNum_of_seats();
+//            for(int i =0;i<size;i++){
+//                available_seats.add(true);
+//            }
+//        }
 
 //        int size = super.getNum_of_seats(); // Specify the size of the list
 //

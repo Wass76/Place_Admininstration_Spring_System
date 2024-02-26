@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -18,42 +19,44 @@ import java.util.List;
 
 @Component
 public class RoomCategoryRepository extends AbstractRepository{
-    public List<RoomCategoryDTO> readFromJsonFile(String filePath) {
+    public List<RoomCategoryDTO> readFromJsonFile(Resource resource) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            List<RoomCategoryDTO> models = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
+            List<RoomCategoryDTO> models = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {});
             return models;
         } catch (IOException e) {
             return new ArrayList<>();
         }
     }
-    public RoomCategoryDTO writeToJsonFile(RoomCategoryDTO models, String filePath) {
+    public RoomCategoryDTO writeToJsonFile(RoomCategoryDTO models, Resource resource) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
 
-            List<RoomCategoryDTO> roomCategory= readFromJsonFile(filePath);
+            List<RoomCategoryDTO> roomCategory= readFromJsonFile(resource);
             Long id= Long.valueOf(1);
             if(!(roomCategory.size()==0)) id=(Long)roomCategory.get(roomCategory.size()-1).getId()+1;
             models.setId(id);
             roomCategory.add(models);
 
-            objectMapper.writeValue(new File(filePath), roomCategory);
+            File file = resource.getFile();
+
+            objectMapper.writeValue(file, roomCategory);
         } catch (IOException e) {
             e.printStackTrace(); // Handle the exception appropriately in a production environment
         }
         return models;
     }
-    public RoomCategoryDTO searchDataById(Long id , String filePath) {
-        List<RoomCategoryDTO> dataList = readFromJsonFile(filePath);
+    public RoomCategoryDTO searchDataById(Long id , Resource resource) {
+        List<RoomCategoryDTO> dataList = readFromJsonFile(resource);
         return dataList.stream()
                 .filter(data -> data.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }
-    public RoomCategoryDTO UpdateById(Long id , RoomCategoryDTO roomCategoryDTO , String filePath){
+    public RoomCategoryDTO UpdateById(Long id , RoomCategoryDTO roomCategoryDTO , Resource resource){
         try {
             // Step 1: Read the JSON file and parse it
-            File jsonFile = new File(filePath);
+            File jsonFile = resource.getFile();
             FileInputStream fis = new FileInputStream(jsonFile);
             JSONTokener tokener = new JSONTokener(fis);
             JSONArray jsonArray = new JSONArray(tokener);

@@ -49,6 +49,7 @@ public class PlaceService {
     }
 
     public void delete(Long id){
-        placeRepository.deleteById(id ,this.filepath);
+        Resource resource = resourceLoader.getResource("classpath:Places.json");
+        placeRepository.deleteById(id ,resource);
     }
 }

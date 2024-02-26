@@ -30,10 +30,15 @@ public class ReservationController {
 
     @PostMapping("/reservation/{id}")
     public ResponseEntity reserve(@PathVariable("id") Long id , @RequestBody MakeReservationRequest request){
-        ReservationDTO reservationDTO = new ReservationDTO(id ,request.getType() ,request.getRoom_id(),request.getTable_id(),request.getNum_of_seats(),request.getTime(),request.getPeriod_of_reservations());
+        ReservationDTO reservationDTO = new ReservationDTO(id
+                ,request.getType()
+                ,request.getRoom_id(),request.getTable_id()
+                ,request.getNum_of_seats(),request.getTime()
+                ,request.getPeriod_of_reservations());
         if(request.getType() == null || request.getPeriod_of_reservations() == null || request.getTime() == null){
                 return ResponseEntity.badRequest().body("validate your data please");
         }
+        System.out.println(reservationDTO.getTable_id());
         ReservationDTO reservationResult = reservationService.reserve(reservationDTO);
         if(reservationResult.getMessage() != null){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(reservationResult.getMessage());

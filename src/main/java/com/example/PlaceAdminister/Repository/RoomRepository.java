@@ -41,7 +41,12 @@ public class RoomRepository extends AbstractRepository{
             models.setId(id);
             rooms.add(models);
 
-            objectMapper.writeValue(new File(resource.getURI()), rooms);
+
+            File file = resource.getFile();
+
+            objectMapper.writeValue(file, rooms);
+
+//            objectMapper.writeValue(new File(resource.getURI()), rooms);
         } catch (IOException e) {
             e.printStackTrace(); // Handle the exception appropriately in a production environment
         }

@@ -4,6 +4,8 @@ import com.example.PlaceAdminister.DTO.TableCategoryDTO;
 import com.example.PlaceAdminister.Model_Entitiy.TableCategoryEntity;
 import com.example.PlaceAdminister.Repository.TableCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,30 +19,42 @@ public class TableCategoryService {
     @Autowired
     private TableCategoryRepository tableCategoryRepository;
 
+    private final ResourceLoader resourceLoader;
+
     private String filepath = "src/main/resources/TableCategory.json";
+
+    public TableCategoryService(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
+
 
 
     public List<TableCategoryDTO> getAllTablesCategories(){
-
-        return tableCategoryRepository.readFromJsonFile(this.filepath);
+        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
+        return tableCategoryRepository.readFromJsonFile(resource);
     }
 
     public TableCategoryDTO store(TableCategoryDTO tableCategoryDTO){
-        return tableCategoryRepository.writeToJsonFile(tableCategoryDTO ,this.filepath);
+        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
+        return tableCategoryRepository.writeToJsonFile(tableCategoryDTO ,resource);
     }
 
     public TableCategoryDTO getTableCategory(Long id)
     {
-        return tableCategoryRepository.searchDataById(id , this.filepath);
+        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
+        return tableCategoryRepository.searchDataById(id , resource);
     }
 
 
-    public TableCategoryDTO update(Long id , TableCategoryDTO tableCategoryDTO){
-        return tableCategoryRepository.UpdateById(id ,tableCategoryDTO,this.filepath);
+    public TableCategoryDTO update(Long id , TableCategoryDTO tableCategoryDTO)
+    {
+        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
+        return tableCategoryRepository.UpdateById(id ,tableCategoryDTO,resource);
     }
 
     public void delete(Long id){
-         tableCategoryRepository.deleteById(id,filepath);
+        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
+         tableCategoryRepository.deleteById(id,resource);
     }
 
 

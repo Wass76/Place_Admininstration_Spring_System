@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -20,45 +21,47 @@ import java.util.List;
 @Component
 public class AbstractRepository {
 
-    public List<ReservationDTO> readFromJsonReservation(String filePath) {
+    public List<ReservationDTO> readFromJsonReservation(Resource resource) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            List<ReservationDTO> models = objectMapper.readValue(new File(filePath), new TypeReference<>() {});
+            List<ReservationDTO> models = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {});
             return models;
         } catch (IOException e) {
             return new ArrayList<>();
         }
     }
 
-    public ReservationDTO writeToJsonReservation(ReservationDTO models, String filePath) {
+    public ReservationDTO writeToJsonReservation(ReservationDTO models, Resource resource) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
 
-            List<ReservationDTO> tables= readFromJsonReservation(filePath);
-            models.setId((long)tables.size()+1);
-            tables.add(models);
+            List<ReservationDTO> reservations= readFromJsonReservation(resource);
+            models.setId((long)reservations.size()+1);
+            reservations.add(models);
 
-            objectMapper.writeValue(new File(filePath), tables);
+            File file = resource.getFile();
+
+            objectMapper.writeValue(file, reservations);
         } catch (IOException e) {
             e.printStackTrace(); // Handle the exception appropriately in a production environment
         }
         return models;
     }
 
-    public ReservationDTO findDataById(Long id , String filePath) {
-        List<ReservationDTO> dataList = readFromJsonReservation(filePath);
+    public ReservationDTO findDataById(Long id , Resource resource) {
+        List<ReservationDTO> dataList = readFromJsonReservation(resource);
         return dataList.stream()
                 .filter(data -> data.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }
 
-    public ReservationDTO reserveTable(ReservationDTO reservationDTO , String filePath){
+    public ReservationDTO reserveTable(ReservationDTO reservationDTO , Resource resource){
         if(reservationDTO!= null){
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
 //                System.out.println(reservationDTO.getPeriod_of_reservations());
-                List<ReservationDTO> tables= readFromJsonReservation(filePath);
+                List<ReservationDTO> tables= readFromJsonReservation(resource);
                 if(tables.stream().
                         filter(i ->i.getTable_id()
                                 .equals(reservationDTO.getTable_id()))
@@ -69,7 +72,9 @@ public class AbstractRepository {
                 System.out.println();
                 tables.add(reservationDTO);
 
-                objectMapper.writeValue(new File(filePath), tables);
+                File file = resource.getFile();
+
+                objectMapper.writeValue(file, tables);
             } catch (IOException e) {
                 e.printStackTrace(); // Handle the exception appropriately in a production environment
             }
@@ -78,10 +83,10 @@ public class AbstractRepository {
             return  null;
     }
 
-    public ReservationDTO UpdateById(Long id , ReservationDTO reservationDTO , String filePath){
+    public ReservationDTO UpdateById(Long id , ReservationDTO reservationDTO , Resource resource){
         try {
             // Step 1: Read the JSON file and parse it
-            File jsonFile = new File(filePath);
+            File jsonFile = resource.getFile();
             FileInputStream fis = new FileInputStream(jsonFile);
             JSONTokener tokener = new JSONTokener(fis);
             JSONArray jsonArray = new JSONArray(tokener);
@@ -115,10 +120,10 @@ public class AbstractRepository {
         return reservationDTO;
     }
 
-    public void deleteById(Long id , String filePath){
+    public void deleteById(Long id , Resource resource){
         try {
             // Step 1: Read the JSON file and parse it
-            File jsonFile = new File(filePath);
+            File jsonFile = resource.getFile();
             FileInputStream fis = new FileInputStream(jsonFile);
             JSONTokener tokener = new JSONTokener(fis);
             JSONArray jsonArray = new JSONArray(tokener);
