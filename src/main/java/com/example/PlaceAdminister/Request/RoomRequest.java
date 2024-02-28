@@ -1,5 +1,6 @@
 package com.example.PlaceAdminister.Request;
 
+import com.example.PlaceAdminister.Model_Entitiy.PlaceEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

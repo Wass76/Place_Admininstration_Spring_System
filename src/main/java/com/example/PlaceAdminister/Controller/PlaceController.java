@@ -1,6 +1,7 @@
 package com.example.PlaceAdminister.Controller;
 
 import com.example.PlaceAdminister.DTO.PlaceDTO;
+import com.example.PlaceAdminister.Model_Entitiy.PlaceEntity;
 import com.example.PlaceAdminister.Request.PlaceRequest;
 import com.example.PlaceAdminister.Service.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class PlaceController {
 
     @GetMapping("allplaces")
     public ResponseEntity getAllPlacess() {
-        List<PlaceDTO> placeList  = placeService.getAllPlaces();
+        List<PlaceEntity> placeList  = placeService.getAllPlaces();
         if(placeList == null || placeList.isEmpty() ){
             return ResponseEntity.status(200).body("there is no Place yet");
         }
@@ -30,7 +31,7 @@ public class PlaceController {
             return ResponseEntity.badRequest().body("validate your data please");
         }
         PlaceDTO placeDTO = new PlaceDTO(placeRequest);
-        PlaceDTO place = placeService.store(placeDTO);
+        PlaceEntity place = placeService.store(placeDTO);
         if(place == null){
             return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("please try again");
         }
@@ -44,7 +45,7 @@ public class PlaceController {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
 
-        PlaceDTO placeDTO = placeService.getById(id);
+        PlaceEntity placeDTO = placeService.getById(id);
         if (placeDTO == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
         }
@@ -61,7 +62,7 @@ public class PlaceController {
             return ResponseEntity.badRequest().body("validate your data please");
         }
         PlaceDTO placeDTO = new PlaceDTO(request);
-        PlaceDTO place = placeService.getById(id);
+        PlaceEntity place = placeService.getById(id);
         if(place == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
         }
@@ -74,7 +75,7 @@ public class PlaceController {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
 
-        PlaceDTO placeDTO = placeService.getById(id);
+        PlaceEntity placeDTO = placeService.getById(id);
         if(placeDTO == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
         }

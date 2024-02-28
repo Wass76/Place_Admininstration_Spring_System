@@ -14,9 +14,9 @@ import java.util.List;
 public class PlaceDTO extends AbstractDTO {
     private Long id;
     private String name;
-    private List<String> locations;
+    private String locations;
 
-    public PlaceDTO(String name, List<String> locations) {
+    public PlaceDTO(String name, String locations) {
         this.name = name;
         this.locations = locations;
     }

@@ -29,32 +29,41 @@ public class TableCategoryService {
 
 
 
-    public List<TableCategoryDTO> getAllTablesCategories(){
-        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
-        return tableCategoryRepository.readFromJsonFile(resource);
+    public List<TableCategoryEntity> getAllTablesCategories(){
+//        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
+        return tableCategoryRepository.findAll();
     }
 
-    public TableCategoryDTO store(TableCategoryDTO tableCategoryDTO){
-        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
-        return tableCategoryRepository.writeToJsonFile(tableCategoryDTO ,resource);
+    public TableCategoryEntity store(TableCategoryDTO tableCategoryDTO){
+//        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
+        TableCategoryEntity tableCategory = new TableCategoryEntity(tableCategoryDTO);
+        return tableCategoryRepository.save(tableCategory );
     }
 
-    public TableCategoryDTO getTableCategory(Long id)
+    public TableCategoryEntity getTableCategory(Long id)
     {
-        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
-        return tableCategoryRepository.searchDataById(id , resource);
+//        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
+        return tableCategoryRepository.getById(id);
     }
 
 
-    public TableCategoryDTO update(Long id , TableCategoryDTO tableCategoryDTO)
+    public TableCategoryEntity update(Long id , TableCategoryDTO tableCategoryDTO)
     {
-        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
-        return tableCategoryRepository.UpdateById(id ,tableCategoryDTO,resource);
+//        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
+            TableCategoryEntity tableCategory = tableCategoryRepository.getById(id);
+            if(tableCategory != null){
+                tableCategory.setShape(tableCategoryDTO.getShape());
+                tableCategory.setNum_of_seats(tableCategoryDTO.getNum_of_seats());
+                tableCategory.setPlace(tableCategoryDTO.getPlace());
+                tableCategoryRepository.save(tableCategory);
+            }
+            return tableCategory;
     }
 
     public void delete(Long id){
-        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
-         tableCategoryRepository.deleteById(id,resource);
+//        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
+        TableCategoryEntity tableCategory = tableCategoryRepository.getReferenceById(id);
+         tableCategoryRepository.deleteById(id);
     }
 
 

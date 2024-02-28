@@ -4,7 +4,6 @@ import com.example.PlaceAdminister.DTO.PlaceDTO;
 import com.example.PlaceAdminister.Model_Entitiy.PlaceEntity;
 import com.example.PlaceAdminister.Repository.PlaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
@@ -14,42 +13,48 @@ public class PlaceService {
 
     @Autowired
     private PlaceEntity placeEntity;
-    private final ResourceLoader resourceLoader;
     @Autowired
     private PlaceRepository placeRepository;
     private final String filepath = "src/main/resources/Places.json";
 
-    public PlaceService(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
 
 
-    public List<PlaceDTO> getAllPlaces() {
-        Resource resource = resourceLoader.getResource("classpath:Places.json");
-
-        return placeRepository.readFromJsonFile(resource);
+    public List<PlaceEntity> getAllPlaces() {
+//        Resource resource = resourceLoader.getResource("classpath:Places.json");
+        return placeRepository.findAll();
 
     }
 
-    public PlaceDTO store(PlaceDTO placeDTO) {
-        Resource resource = resourceLoader.getResource("classpath:Places.json");
-        return placeRepository.writeToJsonFile(placeDTO ,resource);
+    public PlaceEntity store(PlaceDTO placeDTO) {
+        PlaceEntity place = new PlaceEntity(placeDTO);
+//        Resource resource = resourceLoader.getResource("classpath:Places.json");
+        return placeRepository.save(place);
     }
 
-    public PlaceDTO getById(Long id)
+    public PlaceEntity getById(Long id)
     {
-        Resource resource = resourceLoader.getResource("classpath:Places.json");
-        return placeRepository.searchDataById(id , resource);
+//        Resource resource = resourceLoader.getResource("classpath:Places.json");
+        System.out.println( id);
+        return placeRepository.getById(id);
+
     }
 
 
-    public PlaceDTO update(Long id , PlaceDTO placeDTO){
-        Resource resource = resourceLoader.getResource("classpath:Places.json");
-        return placeRepository.UpdateById(id ,placeDTO,resource);
+    public PlaceEntity update(Long id , PlaceDTO placeDTO){
+//        Resource resource = resourceLoader.getResource("classpath:Places.json");
+            PlaceEntity place =placeRepository.getById(id);
+            if(place != null){
+                place.setName(placeDTO.getName());
+                place.setLocation(placeDTO.getLocations());
+                placeRepository.save(place);
+            }
+            return place;
     }
 
     public void delete(Long id){
-        Resource resource = resourceLoader.getResource("classpath:Places.json");
-        placeRepository.deleteById(id ,resource);
+//        Resource resource = resourceLoader.getResource("classpath:Places.json");
+
+        PlaceEntity place = placeRepository.getReferenceById(id);
+        placeRepository.delete(place);
     }
 }

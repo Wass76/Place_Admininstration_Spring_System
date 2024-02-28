@@ -1,5 +1,6 @@
 package com.example.PlaceAdminister.DTO;
 
+import com.example.PlaceAdminister.Model_Entitiy.PlaceEntity;
 import com.example.PlaceAdminister.Repository.RoomCategoryRepository;
 import com.example.PlaceAdminister.Request.RoomRequest;
 import lombok.Getter;
@@ -14,7 +15,7 @@ public class RoomDTO extends AbstractDTO{
     private Long id;
     private Integer max_num_of_chairs;
     private Integer status;
-    private Long placeId;
+    private Long place_id;
     private Long category_id;
 
     private String message;
@@ -22,7 +23,6 @@ public class RoomDTO extends AbstractDTO{
     public RoomDTO(RoomRequest newRoomRequest) {
         this.status = newRoomRequest.getStatus();
         this.category_id =newRoomRequest.getCategory_id();
-        this.placeId=newRoomRequest.getPlaceId();
         this.max_num_of_chairs=newRoomRequest.getMax_num_of_chairs();
     }
 

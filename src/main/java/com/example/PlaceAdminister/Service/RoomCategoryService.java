@@ -2,6 +2,7 @@ package com.example.PlaceAdminister.Service;
 
 import com.example.PlaceAdminister.DTO.RoomCategoryDTO;
 import com.example.PlaceAdminister.Model_Entitiy.RoomCategoryEntity;
+import com.example.PlaceAdminister.Repository.PlaceRepository;
 import com.example.PlaceAdminister.Repository.RoomCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -17,41 +18,55 @@ public class RoomCategoryService {
     @Autowired
     private RoomCategoryRepository roomCategoryRepository;
 
-    private final ResourceLoader resourceLoader;
     private String filepath = "src/main/resources/RoomCategories.json";
 
-    public RoomCategoryService(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
+    @Autowired
+    private PlaceRepository placeRepository;
 
 
-    public List<RoomCategoryDTO> getAllRoomCategories(Long id) {
-        Resource resource = resourceLoader.getResource("classpath:RoomCategories.json");
-
-        List<RoomCategoryDTO> roomCategoryDTOList =    roomCategoryRepository.readFromJsonFile(resource);
-           List<RoomCategoryDTO> myRoomCategoryList = roomCategoryDTOList.stream().filter(i->i.getPlace_id().equals(id)).toList();
-           return myRoomCategoryList;
-    }
-
-    public RoomCategoryDTO store(RoomCategoryDTO roomCategoryDTO) {
-        Resource resource = resourceLoader.getResource("classpath:RoomCategories.json");
-        return roomCategoryRepository.writeToJsonFile(roomCategoryDTO ,resource);
-    }
-
-    public RoomCategoryDTO getRoomCategory(Long id)
+    public List<RoomCategoryEntity> getAllRoomCategories(Long id)
     {
-        Resource resource = resourceLoader.getResource("classpath:RoomCategories.json");
-        return roomCategoryRepository.searchDataById(id , resource);
+//        Resource resource = resourceLoader.getResource("classpath:RoomCategories.json");
+
+        List<RoomCategoryEntity> roomCategoryList = roomCategoryRepository.findByPlaceId(id);
+//        List<RoomCategoryEntity> roomCategoryEntityList = roomCategoryList.stream().filter(i->i.getPlace().getId().equals(id)).toList();
+//        if(roomCategoryDTOList != null)
+//            List<RoomCategoryEntity> myRoomCategoryList = roomCategoryDTOList.stream().filter(i->i.getPlace().getId().equals(id)).toList();
+//           List<RoomCategoryEntity> myRoomCategoryList = roomCategoryDTOList.stream().filter(i->i.getPlace().getId().equals(id)).toList();
+           return roomCategoryList;
     }
 
-    public RoomCategoryDTO update(Long id , RoomCategoryDTO roomCategoryDTO){
-        Resource resource = resourceLoader.getResource("classpath:RoomCategories.json");
-        return roomCategoryRepository.UpdateById(id ,roomCategoryDTO,resource);
+    public RoomCategoryEntity store(RoomCategoryDTO roomCategoryDTO) {
+//        Resource resource = resourceLoader.getResource("classpath:RoomCategories.json");
+
+        RoomCategoryEntity roomCategory = new RoomCategoryEntity(roomCategoryDTO);
+        roomCategory.setPlace(placeRepository.getById(roomCategoryDTO.getPlace_id()));
+
+        return roomCategoryRepository.save(roomCategory);
+    }
+
+    public RoomCategoryEntity getRoomCategory(Long id)
+    {
+//        Resource resource = resourceLoader.getResource("classpath:RoomCategories.json");
+        return roomCategoryRepository.getById(id);
+    }
+
+    public RoomCategoryEntity update(Long id , RoomCategoryDTO roomCategoryDTO){
+//        Resource resource = resourceLoader.getResource("classpath:RoomCategories.json");
+            RoomCategoryEntity roomCategory = roomCategoryRepository.getById(id);
+            if(roomCategory != null){
+//                roomCategory.setPlace(roomCategoryDTO.getPlace_id());
+                roomCategory.setType(roomCategoryDTO.getType());
+                roomCategory.setNum_of_seats(roomCategoryDTO.getNum_of_seats());
+                roomCategoryRepository.save(roomCategory);
+            }
+        return roomCategory;
     }
 
     public void delete(Long id){
-        Resource resource = resourceLoader.getResource("classpath:RoomCategories.json");
-        roomCategoryRepository.deleteById(id,resource);
+//        Resource resource = resourceLoader.getResource("classpath:RoomCategories.json");
+
+        roomCategoryRepository.deleteById(id);
     }
 
 }

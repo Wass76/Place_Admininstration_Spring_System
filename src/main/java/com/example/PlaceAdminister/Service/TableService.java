@@ -47,11 +47,11 @@ public class TableService {
     }
 
 
-    public List<TableDTO> getAllTables()
+    public List<TableEntity> getAllTables()
     {
         Resource resource = resourceLoader.getResource("classpath:Tables.json");
 
-        List<TableDTO>  tableDTOList = tableRepository.readFromJsonTable(resource);
+        List<TableEntity> tableDTOList = tableRepository.findAll();
         List<ReservationDTO> reservationDTOList = reservationService.getAllReservations();
 //        LocalTime time = now();
 //        if(reservationDTOList.stream().filter(i -> i.getTable_id()
@@ -59,41 +59,52 @@ public class TableService {
         return tableDTOList;
     }
 
-    public TableDTO store(TableDTO tableDTO)
+    public TableEntity store(TableDTO tableDTO)
     {
         Resource resource = resourceLoader.getResource("classpath:Tables.json");
         Resource categoryResource = resourceLoader.getResource("classpath:TableCategory.json");
 //        if(roomRepository.readFromJsonFile().size() == 0){
 //            return new TableDTO("you should add some rooms first");
 //        }
-        if(tableCategoryRepository.readFromJsonFile(categoryResource).size() == 0){
-            return new TableDTO("you should add table category first");
+//        if(tableCategoryRepository.findAll().size() == 0){
+//            return new TableDTO("you should add table category first");
+//        }
+
+        TableEntity table = new TableEntity(tableDTO);
+        return tableRepository.save(table);
+    }
+
+    public TableEntity getTable(Long id)
+    {
+//        Resource resource = resourceLoader.getResource("classpath:Tables.json");
+        return tableRepository.getById(id);
+    }
+
+    public List<TableEntity> showTablesByRoomId(Long id)
+    {
+//        Resource resource = resourceLoader.getResource("classpath:Tables.json");
+        return  tableRepository.findAll().stream().filter(i->i.getRoom().getId().equals(id)).toList();
+    }
+
+    public List<TableEntity> showTablesByCategoryId(Long id)
+    {
+//        Resource resource = resourceLoader.getResource("classpath:Tables.json");
+        return  tableRepository.findAll().stream().filter(i->i.getTable_category().getId().equals(id)).toList();
+    }
+
+    public TableEntity update(Long id , TableDTO tableDTO)
+    {
+//        Resource resource = resourceLoader.getResource("classpath:Tables.json");
+        TableEntity table = tableRepository.getById(id);
+        if(table != null){
+            table.setAvailable_seats(tableDTO.getAvailable_seats());
+            table.setStatus(tableDTO.getStatus());
+            table.setRoom(tableDTO.getRoom_id());
+            table.setTable_category(tableDTO.getCategory_id());
+            table.setPlace(tableDTO.getCategory_id().getPlace());
+            tableRepository.save(table);
         }
-        return tableRepository.writeToJsonTable(tableDTO ,resource);
-    }
-
-    public TableDTO getTable(Long id)
-    {
-        Resource resource = resourceLoader.getResource("classpath:Tables.json");
-        return tableRepository.searchDataById(id , resource);
-    }
-
-    public List<TableDTO> showTablesByRoomId(Long id)
-    {
-        Resource resource = resourceLoader.getResource("classpath:Tables.json");
-        return  tableRepository.searchByRoomId(id , resource);
-    }
-
-    public List<TableDTO> showTablesByCategoryId(Long id)
-    {
-        Resource resource = resourceLoader.getResource("classpath:Tables.json");
-        return  tableRepository.searchByCategoryId(id , resource);
-    }
-
-    public TableDTO update(Long id , TableDTO tableDTO)
-    {
-        Resource resource = resourceLoader.getResource("classpath:Tables.json");
-        return tableRepository.UpdateById(id ,tableDTO,resource);
+        return table;
     }
 
 
@@ -107,7 +118,11 @@ public class TableService {
 //    }
 
     public void delete(Long id){
-        Resource resource = resourceLoader.getResource("classpath:Tables.json");
-        tableRepository.deleteById(id,resource);
+//        Resource resource = resourceLoader.getResource("classpath:Tables.json");
+        TableEntity table = tableRepository.getReferenceById(id);
+        if(table!= null){
+            tableRepository.deleteById(id);
+        }
+//        tableRepository.deleteById(id,resource);
     }
 }

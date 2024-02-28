@@ -1,5 +1,6 @@
 package com.example.PlaceAdminister.DTO;
 
+import com.example.PlaceAdminister.Model_Entitiy.PlaceEntity;
 import com.example.PlaceAdminister.Request.TableCategoryRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Id;
@@ -15,6 +16,8 @@ public class TableCategoryDTO extends AbstractDTO{
     private Long id;
     private String Shape;
     private Integer num_of_seats;
+
+    private PlaceEntity place;
 
     public TableCategoryDTO(TableCategoryRequest request){
         this.setShape( request.getShape());

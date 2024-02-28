@@ -3,6 +3,9 @@ package com.example.PlaceAdminister.Controller;
 import com.example.PlaceAdminister.DTO.RoomDTO;
 import com.example.PlaceAdminister.DTO.TableCategoryDTO;
 import com.example.PlaceAdminister.DTO.TableDTO;
+import com.example.PlaceAdminister.Model_Entitiy.RoomEntity;
+import com.example.PlaceAdminister.Model_Entitiy.TableCategoryEntity;
+import com.example.PlaceAdminister.Model_Entitiy.TableEntity;
 import com.example.PlaceAdminister.Request.TableRequest;
 import com.example.PlaceAdminister.Service.RoomService;
 import com.example.PlaceAdminister.Service.TableCategoryService;
@@ -30,7 +33,7 @@ public class TableController {
 
     @GetMapping("/AllTables")
     public ResponseEntity index(){
-        List<TableDTO> tablesList = tableService.getAllTables();
+        List<TableEntity> tablesList = tableService.getAllTables();
         if(tablesList.isEmpty()){
             return ResponseEntity.status(200).body("there are no tables yet");
         }
@@ -46,13 +49,13 @@ public class TableController {
             return ResponseEntity.badRequest().body("validate your data please");
         }
         TableDTO tableDTO = new TableDTO(request);
-        TableDTO newTable = tableService.store(tableDTO);
+        TableEntity newTable = tableService.store(tableDTO);
         if(newTable == null){
             return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("please try again");
         }
-        if(newTable.getMessage() != null){
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(newTable.getMessage());
-        }
+//        if(newTable.getMessage() != null){
+//            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(newTable.getMessage());
+//        }
         return ResponseEntity.ok(newTable);
     }
 
@@ -61,7 +64,7 @@ public class TableController {
         if(id == null || id<=0){
             return ResponseEntity.badRequest().body("Invalid id");
         }
-        TableDTO table = tableService.getTable(id);
+        TableEntity table = tableService.getTable(id);
         if(table == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
         }
@@ -72,13 +75,13 @@ public class TableController {
         if(id == null || id<=0){
             return ResponseEntity.badRequest().body("Invalid room id");
         }
-        RoomDTO roomDTO = roomService.getItem(id);
+        RoomEntity roomDTO = roomService.getItem(id);
 
         if(roomDTO == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this room");
         }
 
-        List<TableDTO> tableRoomsList =tableService.showTablesByRoomId(id);
+        List<TableEntity> tableRoomsList =tableService.showTablesByRoomId(id);
         if(tableRoomsList == null){
             return ResponseEntity.status(200).body("there is no tables in this room yet");
         }
@@ -90,11 +93,11 @@ public class TableController {
         if(id == null || id<=0){
             return ResponseEntity.badRequest().body("Invalid room id");
         }
-        TableCategoryDTO tableCategory = tableCategoryService.getTableCategory(id);
+        TableCategoryEntity tableCategory = tableCategoryService.getTableCategory(id);
         if(tableCategory == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this table category");
         }
-        List<TableDTO> tableList = tableService.showTablesByCategoryId(id);
+        List<TableEntity> tableList = tableService.showTablesByCategoryId(id);
         if(tableList == null){
             return ResponseEntity.status(200).body("there is no tables in this category yet");
         }
@@ -111,7 +114,7 @@ public class TableController {
             return ResponseEntity.badRequest().body("validate your data please");
         }
         TableDTO tableDTO = new TableDTO(request);
-        TableDTO table = tableService.getTable(id);
+        TableEntity table = tableService.getTable(id);
         if(table == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
         }
@@ -124,7 +127,7 @@ public class TableController {
             return ResponseEntity.badRequest().body("Invalid Id");
         }
 
-        TableDTO table = tableService.getTable(id);
+        TableEntity table = tableService.getTable(id);
         if(table == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
         }

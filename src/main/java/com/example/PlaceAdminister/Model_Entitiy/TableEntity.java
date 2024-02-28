@@ -1,8 +1,10 @@
 package com.example.PlaceAdminister.Model_Entitiy;
 
 import com.example.PlaceAdminister.DTO.TableCategoryDTO;
+import com.example.PlaceAdminister.DTO.TableDTO;
 import com.example.PlaceAdminister.Repository.TableCategoryRepository;
 import com.example.PlaceAdminister.Service.TableCategoryService;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,6 +29,8 @@ import java.util.List;
 @Setter
 @Component
 //@Table(name = "table")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
+
 public class TableEntity extends TableCategoryEntity{
 
     @Id
@@ -39,14 +43,13 @@ public class TableEntity extends TableCategoryEntity{
             strategy = GenerationType.SEQUENCE,
             generator = "table_id"
     )
-    @JsonProperty("id")
+    @Column(name = "id")
     private Long id;
 //
-    @ElementCollection
-    @JsonProperty("available_seats")
-    private List<Boolean> available_seats = new ArrayList<>();
+    @Column(name = "available_seats")
+    private Integer available_seats ;
 
-    @JsonProperty("status")
+    @Column(name = "status")
     private Integer status; //  1 = Available / 2 = Reserved / 3 =  Full
 //    @ElementCollection
 //    @JsonProperty("time_of_reservation")
@@ -56,19 +59,34 @@ public class TableEntity extends TableCategoryEntity{
 //    @JsonProperty("period_of_reservation")
 //    private List<Integer> period_of_reservation ;
 
-    @JsonProperty("category_id")
-    private Long category_id;
-    @JsonProperty("room_id")
-    private Long room_id;
+    @ManyToOne
+    @JoinColumn(name = "table_category_id")
+    private TableCategoryEntity table_category;
 
 
-    public TableEntity(Integer status, List<LocalDateTime> time_of_reservation, List<Integer> period_of_reservation, Long room_id , Long category_id)
-    {
-        this.status= status;
-//        this.time_of_reservation= time_of_reservation;
-        this.room_id = room_id;
-//        this.period_of_reservation =period_of_reservation;
-        this.category_id = category_id;
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    private RoomEntity room;
+
+    @ManyToOne
+    @JoinColumn(name = "place_id")
+    private PlaceEntity place;
+
+    public TableEntity(TableDTO tableDTO){
+        available_seats = tableDTO.getAvailable_seats();
+        status = tableDTO.getStatus();
+//        table_category = tableDTO.getCategory_id();
+//        room = tableDTO.getRoom_id();
+//        place = tableDTO.getCategory_id().getPlace();
+    }
+
+//    public TableEntity(Integer status, List<LocalDateTime> time_of_reservation, List<Integer> period_of_reservation, Long room_id , Long category_id)
+//    {
+//        this.status= status;
+////        this.time_of_reservation= time_of_reservation;
+//        this.room_id = room_id;
+////        this.period_of_reservation =period_of_reservation;
+//        this.category_id = category_id;
 
 
 //        TableCategoryDTO tableCategoryDTO = tableCategoryService.getTableCategory(category_id);
@@ -88,5 +106,5 @@ public class TableEntity extends TableCategoryEntity{
 //        List<Boolean> booleanList = Arrays.asList(initialValues);
 
 //        this.available_seats=;
-    }
+//    }
 }

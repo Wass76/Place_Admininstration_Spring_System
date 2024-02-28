@@ -1,6 +1,7 @@
 package com.example.PlaceAdminister.Controller;
 
 import com.example.PlaceAdminister.DTO.TableCategoryDTO;
+import com.example.PlaceAdminister.Model_Entitiy.TableCategoryEntity;
 import com.example.PlaceAdminister.Request.TableCategoryRequest;
 import com.example.PlaceAdminister.Service.TableCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class TableCategoryController {
 
     @GetMapping("/AllTables")
     public ResponseEntity index(){
-        List<TableCategoryDTO> tableCategoryList = tableCategoryService.getAllTablesCategories();
+        List<TableCategoryEntity> tableCategoryList = tableCategoryService.getAllTablesCategories();
         if(tableCategoryList.isEmpty()){
             return ResponseEntity.status(200).body("there is no table category yet");
         }
@@ -33,7 +34,7 @@ public class TableCategoryController {
             return ResponseEntity.badRequest().body("validate your data please");
         }
         TableCategoryDTO tableDTO = new TableCategoryDTO(request);
-        TableCategoryDTO newTableCategory = tableCategoryService.store(tableDTO);
+        TableCategoryEntity newTableCategory = tableCategoryService.store(tableDTO);
         if(newTableCategory == null){
             return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("please try again");
         }
@@ -44,7 +45,7 @@ public class TableCategoryController {
         if(id == null || id<=0){
             return ResponseEntity.badRequest().body("Invalid Id");
         }
-        TableCategoryDTO tableCategory = tableCategoryService.getTableCategory(id);
+        TableCategoryEntity tableCategory = tableCategoryService.getTableCategory(id);
         if(tableCategory == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
         }
@@ -60,7 +61,7 @@ public class TableCategoryController {
             return ResponseEntity.badRequest().body("validate your data please");
         }
         TableCategoryDTO tableDTO = new TableCategoryDTO(request);
-        TableCategoryDTO tableCategory = tableCategoryService.getTableCategory(id);
+        TableCategoryEntity tableCategory = tableCategoryService.getTableCategory(id);
         if(tableCategory == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
         }
@@ -72,7 +73,7 @@ public class TableCategoryController {
         if(id == null || id<=0){
             return ResponseEntity.badRequest().body("Invalid Id");
         }
-        TableCategoryDTO tableCategory = tableCategoryService.getTableCategory(id);
+        TableCategoryEntity tableCategory = tableCategoryService.getTableCategory(id);
         if(tableCategory == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
         }

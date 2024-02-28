@@ -15,4 +15,5 @@ import java.util.Set;
 public class RoomCategoryRequest {
     private String type;
     private Long place_id;
+    private Integer num_of_seats;
 }

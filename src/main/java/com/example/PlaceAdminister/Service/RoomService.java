@@ -1,13 +1,18 @@
 package com.example.PlaceAdminister.Service;
 
 import com.example.PlaceAdminister.DTO.RoomDTO;
+import com.example.PlaceAdminister.Model_Entitiy.PlaceEntity;
+import com.example.PlaceAdminister.Model_Entitiy.RoomCategoryEntity;
 import com.example.PlaceAdminister.Model_Entitiy.RoomEntity;
+import com.example.PlaceAdminister.Repository.PlaceRepository;
+import com.example.PlaceAdminister.Repository.RoomCategoryRepository;
 import com.example.PlaceAdminister.Repository.RoomRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -19,64 +24,89 @@ public class RoomService {
     private RoomRepository roomRepository;
 
     @Autowired
-    private RoomCategoryService roomCategoryService;
+    private RoomCategoryRepository roomCategoryRepository;
 
-    private final ResourceLoader resourceLoader;
+    @Autowired
+    private PlaceRepository placeRepository;
 
     @Autowired
     private PlaceService placeService;
     private String roomFilepath = "src/main/resources/Rooms.json";
     private String placeFilepath = "src/main/resources/Places.json";
 
-    public RoomService(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
 
 
-    public List<RoomDTO> getAllRooms(Long id) {
-        Resource resource = resourceLoader.getResource("classpath:Rooms.json");
+    public List<RoomEntity> getAllRooms(Long id) {
+//        Resource resource = resourceLoader.getResource("classpath:Rooms.json");
 
-        List<RoomDTO> roomList = roomRepository.readFromJsonFile(resource);
-         List<RoomDTO> myRoomList = roomList.stream().filter(i->i.getPlaceId().equals(id)).toList();
-        return myRoomList;
+        List<RoomEntity> roomList = roomRepository.findByPlaceId(id);
+//        List<RoomEntity> myRoomList = roomList.stream().filter(i->i.getPlace().equals(id)).toList();
+//         List<RoomDTO> myRoomList = roomList.stream().filter(i->i.getPlaceId().equals(id)).toList();
+        return roomList;
 
     }
 
-    public RoomDTO store(RoomDTO roomDTO)
+    public RoomEntity store(RoomDTO roomDTO)
     {
-        Resource resource = resourceLoader.getResource("classpath:Rooms.json");
+//        RoomEntity room = new RoomEntity(roomDTO);
+//
+//        System.out.println("place: " + roomDTO.getPlace_id());
+//        System.out.println("room category: " +roomDTO.getCategory_id() );
+//        room.setPlace(placeRepository.getById(roomDTO.getPlace_id()));
+//        room.setRoomCategory(roomCategoryRepository.getById(roomDTO.getCategory_id()));
+//        System.out.println(room.getRoomCategory().getId());
+//
+////        RoomCategoryEntity roomCategory =  roomCategoryRepository.getReferenceById(roomDTO.getCategory_id());
+////        roomCategory.setRooms();
+//        return roomRepository.save(room);
 
-        if(roomCategoryService.getAllRoomCategories(roomDTO.getPlaceId()).size() == 0){
-            return new RoomDTO("you should add some room category first");
+        try {
+            PlaceEntity place = placeRepository.getById(roomDTO.getPlace_id()); // Might throw EntityNotFoundException
+            RoomCategoryEntity roomCategory = roomCategoryRepository.getById(roomDTO.getCategory_id()); // Might throw EntityNotFoundException
+
+            RoomEntity room = new RoomEntity(roomDTO);
+            room.setPlace(place);
+            room.setRoomCategory(roomCategory);
+
+            return roomRepository.save(room);
+        } catch (EntityNotFoundException e) {
+            // Handle missing references gracefully, e.g., log the error and return a null or error response
         }
-        if(placeService.getAllPlaces().size() ==0){
-            return new RoomDTO("you should add some place first");
-        }
-        return roomRepository.writeToJsonFile(roomDTO ,resource);
+        return  null;
     }
 
-    public RoomDTO getItem(Long id)
+    public RoomEntity getItem(Long id)
     {
-        Resource resource = resourceLoader.getResource("classpath:Rooms.json");
-        RoomDTO room =   roomRepository.searchDataById(id , resource);
+//        Resource resource = resourceLoader.getResource("classpath:Rooms.json");
+        RoomEntity room =   roomRepository.getById(id );
         return room;
     }
 
 
-    public RoomDTO update(Long id , RoomDTO roomDTO){
-        Resource resource = resourceLoader.getResource("classpath:Rooms.json");
-        return roomRepository.UpdateById(id ,roomDTO,resource);
+    public RoomEntity update(Long id , RoomDTO roomDTO){
+//        Resource resource = resourceLoader.getResource("classpath:Rooms.json");
+        RoomEntity room = roomRepository.getById(id);
+        if(room != null)
+        {
+          PlaceEntity place = placeService.getById(roomDTO.getPlace_id());
+            room.setStatus(roomDTO.getStatus());
+            room.setMax_num_of_chairs(roomDTO.getMax_num_of_chairs());
+            room.setRoomCategory(roomCategoryRepository.getById(roomDTO.getCategory_id()));
+            roomRepository.save(room);
+        }
+        return room;
     }
 
-    public List<RoomDTO> showRoomsByPlaceId(Long id)
+    public List<RoomEntity> showRoomsByPlaceId(Long id)
     {
-        Resource resource = resourceLoader.getResource("classpath:Rooms.json");
-        return  roomRepository.searchByPlaceId(id , resource);
+//        Resource resource = resourceLoader.getResource("classpath:Rooms.json");
+        return  roomRepository.findAll().stream().filter(i->i.getPlace().getId().equals(id)).toList();
     }
 
     public void delete(Long id){
-        Resource resource = resourceLoader.getResource("classpath:Rooms.json");
-        roomRepository.deleteById(id,resource);
+//        Resource resource = resourceLoader.getResource("classpath:Rooms.json");
+        RoomEntity room = roomRepository.getReferenceById(id);
+        roomRepository.deleteById(id);
     }
 }
 

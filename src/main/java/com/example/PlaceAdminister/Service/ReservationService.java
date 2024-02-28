@@ -2,6 +2,7 @@ package com.example.PlaceAdminister.Service;
 
 import com.example.PlaceAdminister.DTO.ReservationDTO;
 import com.example.PlaceAdminister.DTO.TableDTO;
+import com.example.PlaceAdminister.Model_Entitiy.TableEntity;
 import com.example.PlaceAdminister.Repository.AbstractRepository;
 import com.example.PlaceAdminister.Repository.TableRepository;
 import com.pusher.rest.Pusher;
@@ -61,7 +62,7 @@ public class ReservationService {
                    .findFirst().orElse(null);
 
            Resource tableResource = resourceLoader.getResource("classpath:Tables.json");
-           TableDTO tableDTO = tableRepository.searchDataById(reservationDTO.getTable_id() ,tableResource);
+           TableEntity tableDTO = tableRepository.getById(reservationDTO.getTable_id());
 
            if(tableDTO == null){
                return new ReservationDTO("Sorry, we can't find this table in our place");
@@ -69,7 +70,7 @@ public class ReservationService {
 
 
            ReservationDTO existedRoomReservation = reservationDTOList.stream()
-                   .filter(i->i.getRoom_id().equals(tableDTO.getRoom_id()))
+                   .filter(i->i.getRoom_id().equals(tableDTO.getRoom()))
                    .filter(j -> (j.getTime().getHours() == reservationDTO.getTime().getHours())
                            || (j.getTime().getHours() + j.getPeriod_of_reservations() -1 == reservationDTO.getTime().getHours()))
                    .findFirst().orElse(null);
@@ -84,36 +85,36 @@ public class ReservationService {
 
 
        // this case 3 did not hand perfectly
-       if(reservationDTO.getType() == 3){
-           // if table is reserved..
-           ReservationDTO existedReservation = reservationDTOList.stream()
-                   .filter(i->i.getTable_id().equals(reservationDTO.getTable_id()))
-                   .filter(j -> j.getTime().getHours() == reservationDTO.getTime().getHours())
-                   .findFirst().orElse(null);
-
-           // if number of available seats is enough
-           TableDTO tableDTO = tableRepository.searchDataById(reservationDTO.getTable_id() ,resource);
-//           TableDTO tableDTO = tableDTOList.stream()
-//                   .filter(i->i.getRoom_id().equals(reservationDTO.))
-
-           ReservationDTO enoughSeatsCheck = reservationDTOList.stream()
-                                                    //table size            -    available seats on this table  = num of available size
-                   .filter(i->i.getNum_of_seats() <= tableDTO.getAvailable_seats().size())
-//                           - tableDTO.getAvailable_seats()
-//                           .stream().filter(j->j.equals(false)).count())
-                   // in this time
-                   .filter(x -> x.getTime().getHours() == reservationDTO.getTime().getHours())
-                   .findFirst().orElse(null);
-
-
-           // maxofSeats on this table - existedReservation.getNum_of_seats() < reservationDTO.getNum_of_seats()
-           if(existedReservation != null){
-               return new ReservationDTO("Sorry, this table is already reserved in this time");
-           }
-           if (enoughSeatsCheck != null){
-               return new ReservationDTO("Sorry, this table is only available for limited seats");
-           }
-       }
+//       if(reservationDTO.getType() == 3){
+//           // if table is reserved..
+//           ReservationDTO existedReservation = reservationDTOList.stream()
+//                   .filter(i->i.getTable_id().equals(reservationDTO.getTable_id()))
+//                   .filter(j -> j.getTime().getHours() == reservationDTO.getTime().getHours())
+//                   .findFirst().orElse(null);
+//
+//           // if number of available seats is enough
+//           TableEntity tableDTO = tableRepository.getById(reservationDTO.getTable_id() );
+////           TableDTO tableDTO = tableDTOList.stream()
+////                   .filter(i->i.getRoom_id().equals(reservationDTO.))
+//
+//           ReservationDTO enoughSeatsCheck = reservationDTOList.stream()
+//                                                    //table size            -    available seats on this table  = num of available size
+//                   .filter(i->i.getNum_of_seats() <= tableDTO.getAvailable_seats().size())
+////                           - tableDTO.getAvailable_seats()
+////                           .stream().filter(j->j.equals(false)).count())
+//                   // in this time
+//                   .filter(x -> x.getTime().getHours() == reservationDTO.getTime().getHours())
+//                   .findFirst().orElse(null);
+//
+//
+//           // maxofSeats on this table - existedReservation.getNum_of_seats() < reservationDTO.getNum_of_seats()
+//           if(existedReservation != null){
+//               return new ReservationDTO("Sorry, this table is already reserved in this time");
+//           }
+//           if (enoughSeatsCheck != null){
+//               return new ReservationDTO("Sorry, this table is only available for limited seats");
+//           }
+//       }
        ReservationDTO r = abstractRepository.reserveTable(reservationDTO,resource);
 
         Pusher pusher = new Pusher("1753712", "2d818fcce28a85b66b67", "54ca7ad665a3f290a976");

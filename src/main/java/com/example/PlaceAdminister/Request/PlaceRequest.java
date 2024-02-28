@@ -13,6 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 public class PlaceRequest {
     private String name;
-    private List<String> locations;
-    private List<String> rooms;
+    private String locations;
+    private String rooms;
 }

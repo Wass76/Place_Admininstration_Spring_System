@@ -1,5 +1,7 @@
 package com.example.PlaceAdminister.DTO;
 
+import com.example.PlaceAdminister.Model_Entitiy.RoomEntity;
+import com.example.PlaceAdminister.Model_Entitiy.TableCategoryEntity;
 import com.example.PlaceAdminister.Model_Entitiy.TableEntity;
 import com.example.PlaceAdminister.Repository.TableCategoryRepository;
 import com.example.PlaceAdminister.Request.TableRequest;
@@ -16,23 +18,23 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class    TableDTO extends AbstractDTO{
+public class TableDTO extends AbstractDTO{
     private Long id;
     private Integer status;
 
-    private List<Boolean> available_seats = new ArrayList<>();
+    private Integer available_seats ;
 
-    private  Long category_id;
+    private TableCategoryEntity category_id;
 
-    private Long room_id;
+    private RoomEntity room_id;
 
     private String message;
 
 
     public TableDTO(TableRequest tableRequest) {
         this.status = tableRequest.getStatus();
-        this.category_id = tableRequest.getCategory_id();
-        this.room_id = tableRequest.getRoom_id();
+//        this.category_id = tableRequest.getCategory_id();
+//        this.room_id = tableRequest.getRoom_id();
 
 
 //        TableCategoryService tableCategoryService = null;

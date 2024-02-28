@@ -1,5 +1,8 @@
 package com.example.PlaceAdminister.Model_Entitiy;
 
+import com.example.PlaceAdminister.DTO.RoomCategoryDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,20 +23,43 @@ import java.util.Set;
 @Getter
 @Setter
 @Component
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
+
 public class RoomCategoryEntity {
-
-
     @Id
-    @JsonProperty("id")
+    @SequenceGenerator(
+            name = "room_category_id"
+            ,sequenceName = "room_category_id"
+            ,allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "room_category_id"
+    )
     private Long id;
-    @JsonProperty("type")
+    @Column(name = "type")
     private String type;
+    @Column(name = "num_of_seats")
     private Integer num_of_seats;
 
-    private Long place_id;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "place_id" )
+    private PlaceEntity place;
+
+    @JsonIgnore
+    @OneToMany
+    @JoinColumn(name = "room_id")
+    private Set<RoomEntity> rooms;
 
     public RoomCategoryEntity(String type) {
         this.type=type;
+    }
+
+
+    public RoomCategoryEntity(RoomCategoryDTO roomCategoryDTO){
+        type = roomCategoryDTO.getType();
+        num_of_seats  = roomCategoryDTO.getNum_of_seats();
     }
 
 
