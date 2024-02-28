@@ -43,12 +43,12 @@ public class RoomEntity {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "place_id" )
+    @JoinColumn(name = "place_id",nullable = false )
     private PlaceEntity place;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "room_category_id" )
+    @JoinColumn(name = "room_category_id",nullable = false )
     private RoomCategoryEntity roomCategory;
 
 

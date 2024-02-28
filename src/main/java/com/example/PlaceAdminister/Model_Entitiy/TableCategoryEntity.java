@@ -2,6 +2,7 @@ package com.example.PlaceAdminister.Model_Entitiy;
 
 
 import com.example.PlaceAdminister.DTO.TableCategoryDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -9,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
@@ -17,6 +19,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@Component
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 
 public class TableCategoryEntity {
@@ -38,8 +41,10 @@ public class TableCategoryEntity {
     private String Shape;
     @Column(name = "num_of_seats")
     private Integer num_of_seats = 4;
+
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "place_id")
+    @JoinColumn(name = "place_id",nullable = false)
     private PlaceEntity place;
 
     @OneToMany
@@ -50,7 +55,6 @@ public class TableCategoryEntity {
     public TableCategoryEntity(TableCategoryDTO tableCategoryDTO){
         Shape = tableCategoryDTO.getShape();
         num_of_seats = tableCategoryDTO.getNum_of_seats();
-        place = tableCategoryDTO.getPlace();
     }
 
 //    public TableCategoryEntity(){

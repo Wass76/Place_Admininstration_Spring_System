@@ -4,6 +4,7 @@ import com.example.PlaceAdminister.DTO.TableCategoryDTO;
 import com.example.PlaceAdminister.DTO.TableDTO;
 import com.example.PlaceAdminister.Repository.TableCategoryRepository;
 import com.example.PlaceAdminister.Service.TableCategoryService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -31,8 +32,7 @@ import java.util.List;
 //@Table(name = "table")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 
-public class TableEntity extends TableCategoryEntity{
-
+public class TableEntity {
     @Id
     @SequenceGenerator(
             name = "table_id"
@@ -59,21 +59,22 @@ public class TableEntity extends TableCategoryEntity{
 //    @JsonProperty("period_of_reservation")
 //    private List<Integer> period_of_reservation ;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "table_category_id")
     private TableCategoryEntity table_category;
 
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "room_id")
     private RoomEntity room;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "place_id")
+    @JoinColumn(name = "place_id",nullable = false)
     private PlaceEntity place;
 
     public TableEntity(TableDTO tableDTO){
-        available_seats = tableDTO.getAvailable_seats();
         status = tableDTO.getStatus();
 //        table_category = tableDTO.getCategory_id();
 //        room = tableDTO.getRoom_id();

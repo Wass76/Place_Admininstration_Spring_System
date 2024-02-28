@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 public interface RoomRepository extends JpaRepository<RoomEntity,Long> {
 
     List<RoomEntity> findByPlaceId(Long id);
+
+    List<RoomEntity> findByRoomCategoryId(Long id);
 //    public List<RoomDTO> readFromJsonFile(Resource resource) {
 //        try {
 //            ObjectMapper objectMapper = new ObjectMapper();

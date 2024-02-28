@@ -2,7 +2,11 @@ package com.example.PlaceAdminister.Service;
 
 import com.example.PlaceAdminister.DTO.ReservationDTO;
 import com.example.PlaceAdminister.DTO.TableDTO;
+import com.example.PlaceAdminister.Model_Entitiy.PlaceEntity;
+import com.example.PlaceAdminister.Model_Entitiy.RoomEntity;
+import com.example.PlaceAdminister.Model_Entitiy.TableCategoryEntity;
 import com.example.PlaceAdminister.Model_Entitiy.TableEntity;
+import com.example.PlaceAdminister.Repository.PlaceRepository;
 import com.example.PlaceAdminister.Repository.RoomRepository;
 import com.example.PlaceAdminister.Repository.TableCategoryRepository;
 import com.example.PlaceAdminister.Repository.TableRepository;
@@ -31,6 +35,9 @@ public class TableService {
 
     @Autowired
     private ReservationService reservationService;
+
+    @Autowired
+    private PlaceRepository placeRepository;
 
 
     private final ResourceLoader resourceLoader;
@@ -61,16 +68,16 @@ public class TableService {
 
     public TableEntity store(TableDTO tableDTO)
     {
-        Resource resource = resourceLoader.getResource("classpath:Tables.json");
-        Resource categoryResource = resourceLoader.getResource("classpath:TableCategory.json");
-//        if(roomRepository.readFromJsonFile().size() == 0){
-//            return new TableDTO("you should add some rooms first");
-//        }
-//        if(tableCategoryRepository.findAll().size() == 0){
-//            return new TableDTO("you should add table category first");
-//        }
-
         TableEntity table = new TableEntity(tableDTO);
+        TableCategoryEntity tableCategory = tableCategoryRepository.getById(tableDTO.getCategory_id());
+        PlaceEntity place =placeRepository.getById(tableDTO.getPlace_id());
+        RoomEntity room = roomRepository.getById(tableDTO.getRoom_id());
+        Integer seats = tableCategory.getNum_of_seats();
+
+        table.setTable_category(tableCategory);
+        table.setRoom(room);
+        table.setPlace(place);
+        table.setAvailable_seats(seats);
         return tableRepository.save(table);
     }
 
@@ -97,11 +104,15 @@ public class TableService {
 //        Resource resource = resourceLoader.getResource("classpath:Tables.json");
         TableEntity table = tableRepository.getById(id);
         if(table != null){
-            table.setAvailable_seats(tableDTO.getAvailable_seats());
-            table.setStatus(tableDTO.getStatus());
-            table.setRoom(tableDTO.getRoom_id());
-            table.setTable_category(tableDTO.getCategory_id());
-            table.setPlace(tableDTO.getCategory_id().getPlace());
+            TableCategoryEntity tableCategory = tableCategoryRepository.getById(tableDTO.getCategory_id());
+            PlaceEntity place =placeRepository.getById(tableDTO.getPlace_id());
+            RoomEntity room = roomRepository.getById(tableDTO.getRoom_id());
+            Integer seats = tableCategory.getNum_of_seats();
+
+            table.setTable_category(tableCategory);
+            table.setRoom(room);
+            table.setPlace(place);
+            table.setAvailable_seats(seats);
             tableRepository.save(table);
         }
         return table;

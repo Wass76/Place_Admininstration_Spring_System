@@ -24,29 +24,19 @@ public class TableDTO extends AbstractDTO{
 
     private Integer available_seats ;
 
-    private TableCategoryEntity category_id;
+    private Long category_id;
 
-    private RoomEntity room_id;
+    private Long room_id;
+
+    private Long place_id;
 
     private String message;
 
 
     public TableDTO(TableRequest tableRequest) {
         this.status = tableRequest.getStatus();
-//        this.category_id = tableRequest.getCategory_id();
-//        this.room_id = tableRequest.getRoom_id();
-
-
-//        TableCategoryService tableCategoryService = null;
-
-//        TableCategoryRepository tableCategoryRepository = new TableCategoryRepository();
-//
-//        TableCategoryDTO tableCategoryDTO = tableCategoryService.getTableCategory(category_id);
-////                tableCategoryRepository.searchDataById(category_id ,"src/main/resources/TableCategory.json");        if( tableCategoryDTO !=null){
-//            Integer size = tableCategoryDTO.getNum_of_seats();
-//            for(int i =0;i<size;i++){
-//                available_seats.add(true);
-//            }
+        this.setCategory_id(tableRequest.getCategory_id());
+        this.setRoom_id(tableRequest.getRoom_id());
         }
 
     public TableDTO(String message){

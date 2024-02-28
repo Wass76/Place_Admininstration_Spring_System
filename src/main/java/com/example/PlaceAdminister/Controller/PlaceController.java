@@ -41,32 +41,49 @@ public class PlaceController {
 
     @GetMapping("show/{id}")
     public ResponseEntity show(@PathVariable("id") Long id){
-        if(id == null || id<=0){
-            return ResponseEntity.badRequest().body("Invalid Id");
+        try {
+            if(id == null || id<=0){
+                return ResponseEntity.badRequest().body("Invalid Id");
+            }
+
+            PlaceEntity placeDTO = placeService.getById(id);
+            if (placeDTO == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+            }
+            return ResponseEntity.ok(placeDTO);
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body("An error occurred while updating the place, maybe place_id is not correct");
         }
 
-        PlaceEntity placeDTO = placeService.getById(id);
-        if (placeDTO == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
-        }
-        return ResponseEntity.ok(placeDTO);
     }
 
     @PutMapping ("edit/{id}")
     public ResponseEntity edit(@PathVariable("id") Long id ,@RequestBody PlaceRequest request){
-        if(id == null || id<=0)
-        {
-            return ResponseEntity.badRequest().body("Invalid Id");
+        try {
+            if(id == null || id<=0)
+           {
+              return ResponseEntity.badRequest().body("Invalid Id");
+            }
+            if(request.getName() == null || request.getLocations() == null || request.getLocations().isEmpty()){
+                return ResponseEntity.badRequest().body("validate your data please");
+             }
+             PlaceDTO placeDTO = new PlaceDTO(request);
+
+            PlaceEntity place = placeService.getById(id);
+            if(place == null){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+            }
+           PlaceEntity newPlace =  placeService.update(id ,placeDTO);
+            if(newPlace == null){
+                return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("please try again");
+            }
+            return ResponseEntity.ok(newPlace);
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body("An error occurred while updating the place, maybe place_id is not correct");
+
         }
-        if(request.getName() == null || request.getLocations() == null || request.getLocations().isEmpty()){
-            return ResponseEntity.badRequest().body("validate your data please");
-        }
-        PlaceDTO placeDTO = new PlaceDTO(request);
-        PlaceEntity place = placeService.getById(id);
-        if(place == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
-        }
-        return ResponseEntity.ok(placeService.update(id ,placeDTO));
+
+
     }
 
     @DeleteMapping("delete/{id}")

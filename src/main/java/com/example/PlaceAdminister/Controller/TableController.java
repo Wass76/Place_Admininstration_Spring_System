@@ -31,8 +31,8 @@ public class TableController {
     private TableCategoryService tableCategoryService;
 
 
-    @GetMapping("/AllTables")
-    public ResponseEntity index(){
+    @GetMapping("/{place_id}/AllTables")
+    public ResponseEntity index(@PathVariable("place_id") Long place_id){
         List<TableEntity> tablesList = tableService.getAllTables();
         if(tablesList.isEmpty()){
             return ResponseEntity.status(200).body("there are no tables yet");
@@ -42,33 +42,41 @@ public class TableController {
     }
 
 
-    @PostMapping("/newTable")
-    public ResponseEntity create(@RequestBody TableRequest request)
+    @PostMapping("/{place_id}/newTable")
+    public ResponseEntity create(@RequestBody TableRequest request , @PathVariable("place_id") Long place_id)
     {
         if(request.getRoom_id() == null ||request.getCategory_id() == null ){
             return ResponseEntity.badRequest().body("validate your data please");
         }
         TableDTO tableDTO = new TableDTO(request);
-        TableEntity newTable = tableService.store(tableDTO);
-        if(newTable == null){
-            return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("please try again");
+        try {
+            tableDTO.setPlace_id(place_id);
+            TableEntity newTable = tableService.store(tableDTO);
+
+            if(newTable == null){
+                return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("Failed to create table");
+            }
+            return ResponseEntity.ok(newTable);
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body("An error occurred while creating the room, maybe room_id or category_id not correct");
         }
-//        if(newTable.getMessage() != null){
-//            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(newTable.getMessage());
-//        }
-        return ResponseEntity.ok(newTable);
     }
 
     @GetMapping("{id}")
     public ResponseEntity show(@PathVariable("id") Long id){
-        if(id == null || id<=0){
-            return ResponseEntity.badRequest().body("Invalid id");
+        try {
+            if(id == null || id<=0){
+                return ResponseEntity.badRequest().body("Invalid id");
+            }
+            TableEntity table = tableService.getTable(id);
+            if(table == null){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+            }
+            return ResponseEntity.ok(table);
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body("An error occurred, maybe place_id or id are not correct");
         }
-        TableEntity table = tableService.getTable(id);
-        if(table == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
-        }
-        return ResponseEntity.ok(table);
+
     }
     @GetMapping("findByRoomId/{id}")
     public ResponseEntity showByRoomId(@PathVariable("id") Long id){
@@ -104,21 +112,28 @@ public class TableController {
         return ResponseEntity.ok(tableList) ; //
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity edit(@PathVariable("id") Long id ,@RequestBody TableRequest request){
-        if(id == null || id<=0){
+    @PutMapping("{place_id}/update/{id}")
+    public ResponseEntity edit(@PathVariable("id") Long id ,@RequestBody TableRequest request ,@PathVariable("place_id") Long place_id){
+        try {
+            if(id == null || id<=0){
 //            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("d");
-            return ResponseEntity.badRequest().body("Invalid Id");
+                return ResponseEntity.badRequest().body("Invalid Id");
+            }
+            if(request.getRoom_id() == null ||request.getCategory_id() == null ){
+                return ResponseEntity.badRequest().body("validate your data please");
+            }
+            TableDTO tableDTO = new TableDTO(request);
+            tableDTO.setPlace_id(place_id);
+            TableEntity table = tableService.getTable(id);
+            if(table == null){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+            }
+            return ResponseEntity.ok(tableService.update(id ,tableDTO));
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body("An error occurred while updating the table, maybe place_id or id or category_id are not correct");
+
         }
-        if(request.getRoom_id() == null ||request.getCategory_id() == null ){
-            return ResponseEntity.badRequest().body("validate your data please");
-        }
-        TableDTO tableDTO = new TableDTO(request);
-        TableEntity table = tableService.getTable(id);
-        if(table == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
-        }
-        return ResponseEntity.ok(tableService.update(id ,tableDTO));
+
     }
 
     @DeleteMapping("delete/{id}")

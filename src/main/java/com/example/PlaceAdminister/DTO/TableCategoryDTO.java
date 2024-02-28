@@ -17,7 +17,7 @@ public class TableCategoryDTO extends AbstractDTO{
     private String Shape;
     private Integer num_of_seats;
 
-    private PlaceEntity place;
+    private Long place;
 
     public TableCategoryDTO(TableCategoryRequest request){
         this.setShape( request.getShape());

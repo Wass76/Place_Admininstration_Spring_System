@@ -82,6 +82,12 @@ public class RoomService {
         return room;
     }
 
+    public List<RoomEntity>  getByCategory(Long id)
+    {
+//        Resource resource = resourceLoader.getResource("classpath:Rooms.json");
+       List<RoomEntity>  rooms =   roomRepository.findByRoomCategoryId(id );
+        return rooms;
+    }
 
     public RoomEntity update(Long id , RoomDTO roomDTO){
 //        Resource resource = resourceLoader.getResource("classpath:Rooms.json");

@@ -8,6 +8,8 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class PlaceService {
 
@@ -34,8 +36,14 @@ public class PlaceService {
     public PlaceEntity getById(Long id)
     {
 //        Resource resource = resourceLoader.getResource("classpath:Places.json");
-        System.out.println( id);
-        return placeRepository.getById(id);
+//        System.out.println( id);
+
+        PlaceEntity place = (placeRepository.getReferenceById(id));
+//        if(place.isPresent())
+             return placeRepository.getById(id);
+//        else
+//            return null;
+
 
     }
 

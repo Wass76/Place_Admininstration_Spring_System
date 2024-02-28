@@ -18,8 +18,8 @@ public class TableCategoryController {
     @Autowired
     private TableCategoryService tableCategoryService;
 
-    @GetMapping("/AllTables")
-    public ResponseEntity index(){
+    @GetMapping("{place_id}/AllTables")
+    public ResponseEntity index(@PathVariable("place_id") Long place_id){
         List<TableCategoryEntity> tableCategoryList = tableCategoryService.getAllTablesCategories();
         if(tableCategoryList.isEmpty()){
             return ResponseEntity.status(200).body("there is no table category yet");
@@ -27,45 +27,64 @@ public class TableCategoryController {
         return ResponseEntity.ok(tableCategoryList);
     }
 
-    @PostMapping("/newTable")
-    public ResponseEntity create(@RequestBody TableCategoryRequest request)
+    @PostMapping("/{place_id}/newTable")
+    public ResponseEntity create(@RequestBody TableCategoryRequest request ,@PathVariable("place_id") Long place_id)
     {
+        if(place_id == null ||  place_id <=0 ){
+            return ResponseEntity.badRequest().body("validate your place_id please");
+        }
         if(request.getShape() == null || request.getNum_of_seats() == null ){
             return ResponseEntity.badRequest().body("validate your data please");
         }
         TableCategoryDTO tableDTO = new TableCategoryDTO(request);
-        TableCategoryEntity newTableCategory = tableCategoryService.store(tableDTO);
-        if(newTableCategory == null){
-            return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("please try again");
+        tableDTO.setPlace(place_id);
+        try {
+            TableCategoryEntity newTableCategory = tableCategoryService.store(tableDTO);
+            if(newTableCategory == null){
+                return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("please try again");
+            }
+            return ResponseEntity.ok(newTableCategory);
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body("An error occurred while creating the table category, maybe place_id is not correct");
         }
-        return ResponseEntity.ok(newTableCategory) ;
     }
-    @GetMapping("{id}")
-    public ResponseEntity show(@PathVariable("id") Long id){
-        if(id == null || id<=0){
-            return ResponseEntity.badRequest().body("Invalid Id");
+    @GetMapping("{place_id}/view-table-category/{id}")
+    public ResponseEntity show(@PathVariable("id") Long id ,@PathVariable("place_id") Long place_id){
+        try{
+            if(id == null || id<=0){
+                return ResponseEntity.badRequest().body("Invalid Id");
+            }
+            TableCategoryEntity tableCategory = tableCategoryService.getTableCategory(id);
+            if(tableCategory == null){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+            }
+            return ResponseEntity.ok(tableCategory) ;
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body("An error occurred, maybe place_id or id are not correct");
         }
-        TableCategoryEntity tableCategory = tableCategoryService.getTableCategory(id);
-        if(tableCategory == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
-        }
-        return ResponseEntity.ok(tableCategory) ;
+
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity edit(@PathVariable("id") Long id ,@RequestBody TableCategoryRequest request){
-        if(id == null || id<=0){
-            return ResponseEntity.badRequest().body("Invalid Id");
+    @PutMapping("{place_id}/update/{id}")
+    public ResponseEntity edit(@PathVariable("id") Long id ,@RequestBody TableCategoryRequest request,@PathVariable("place_id") Long place_id){
+        try {
+            if(id == null || id<=0){
+                return ResponseEntity.badRequest().body("Invalid Id");
+            }
+            if(request.getShape() == null || request.getNum_of_seats() == null ){
+                return ResponseEntity.badRequest().body("validate your data please");
+            }
+            TableCategoryDTO tableDTO = new TableCategoryDTO(request);
+            tableDTO.setPlace(place_id);
+            TableCategoryEntity tableCategory = tableCategoryService.getTableCategory(id);
+            if(tableCategory == null){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+            }
+            return ResponseEntity.ok(tableCategoryService.update(id ,tableDTO));
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body("An error occurred while updating the table category, maybe place_id or id are not correct");
         }
-        if(request.getShape() == null || request.getNum_of_seats() == null ){
-            return ResponseEntity.badRequest().body("validate your data please");
-        }
-        TableCategoryDTO tableDTO = new TableCategoryDTO(request);
-        TableCategoryEntity tableCategory = tableCategoryService.getTableCategory(id);
-        if(tableCategory == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
-        }
-        return ResponseEntity.ok(tableCategoryService.update(id ,tableDTO));
+
     }
 
     @DeleteMapping("delete/{id}")

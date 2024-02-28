@@ -1,7 +1,9 @@
 package com.example.PlaceAdminister.Service;
 
 import com.example.PlaceAdminister.DTO.TableCategoryDTO;
+import com.example.PlaceAdminister.Model_Entitiy.PlaceEntity;
 import com.example.PlaceAdminister.Model_Entitiy.TableCategoryEntity;
+import com.example.PlaceAdminister.Repository.PlaceRepository;
 import com.example.PlaceAdminister.Repository.TableCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -18,6 +20,8 @@ public class TableCategoryService {
 
     @Autowired
     private TableCategoryRepository tableCategoryRepository;
+    @Autowired
+    private PlaceRepository placeRepository;
 
     private final ResourceLoader resourceLoader;
 
@@ -35,8 +39,13 @@ public class TableCategoryService {
     }
 
     public TableCategoryEntity store(TableCategoryDTO tableCategoryDTO){
-//        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
         TableCategoryEntity tableCategory = new TableCategoryEntity(tableCategoryDTO);
+        tableCategory.setPlace(placeRepository.getById(tableCategoryDTO.getPlace()));
+        System.out.println( "id: "+tableCategory.getId());
+        System.out.println( "shape: "+tableCategory.getShape());
+        System.out.println( "Num_of_seats: "+tableCategory.getNum_of_seats());
+        System.out.println( "place: "+tableCategory.getPlace());
+
         return tableCategoryRepository.save(tableCategory );
     }
 
@@ -49,12 +58,12 @@ public class TableCategoryService {
 
     public TableCategoryEntity update(Long id , TableCategoryDTO tableCategoryDTO)
     {
-//        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
             TableCategoryEntity tableCategory = tableCategoryRepository.getById(id);
             if(tableCategory != null){
+                PlaceEntity place = placeRepository.getById(tableCategoryDTO.getPlace());
                 tableCategory.setShape(tableCategoryDTO.getShape());
                 tableCategory.setNum_of_seats(tableCategoryDTO.getNum_of_seats());
-                tableCategory.setPlace(tableCategoryDTO.getPlace());
+                tableCategory.setPlace(place);
                 tableCategoryRepository.save(tableCategory);
             }
             return tableCategory;

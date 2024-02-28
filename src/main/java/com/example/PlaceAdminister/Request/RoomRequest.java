@@ -19,6 +19,5 @@ import java.util.Set;
 public class RoomRequest {
     private Integer status;
     private Integer max_num_of_chairs;
-    private Long placeId;
     private Long category_id;
 }

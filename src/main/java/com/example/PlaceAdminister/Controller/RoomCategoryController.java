@@ -42,61 +42,72 @@ public class RoomCategoryController {
         if(roomCategoryRequest.getType() == null || roomCategoryRequest.getPlace_id() == null ){
             return ResponseEntity.badRequest().body("validate your data please");
         }
-        if(placeService.getById(place_id) == null){
-            return ResponseEntity.badRequest().body("No such this place");
-        }
         RoomCategoryDTO roomCategoryDTO = new RoomCategoryDTO(roomCategoryRequest);
-//        roomCategoryDTO
-        RoomCategoryEntity newRoomCategory = roomCategoryService.store(roomCategoryDTO);
-        if(newRoomCategory == null){
-            return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("please try again");
+        try {
+            RoomCategoryEntity newRoomCategory = roomCategoryService.store(roomCategoryDTO);
+            if(newRoomCategory == null){
+                return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("please try again");
+            }
+            return ResponseEntity.ok(newRoomCategory);
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body("An error occurred while creating the room, maybe place_id is not correct");
+
         }
-        return ResponseEntity.ok(newRoomCategory);
     }
 
     @GetMapping("{place_id}/show/{id}")
     public ResponseEntity show(@PathVariable("id") Long id,@PathVariable("place_id") Long place_id){
-        if(id == null || id<=0){
-            return ResponseEntity.badRequest().body("Invalid Id");
+        try {
+            if(id == null || id<=0){
+                return ResponseEntity.badRequest().body("Invalid Id");
+            }
+            if(place_id == null || place_id<=0){
+                return ResponseEntity.badRequest().body("Invalid place_id");
+            }
+            RoomCategoryEntity roomCategory = roomCategoryService.getRoomCategory(id);
+            if(roomCategory == null){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+            }
+            if(roomCategory.getPlace().getId() !=place_id){
+                return ResponseEntity.status(403).body("you don't have permission to enter to this data");
+            }
+            return ResponseEntity.ok(roomCategory);
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body("An error occurred , maybe place_id or category id are not correct");
+
         }
-        if(place_id == null || place_id<=0){
-            return ResponseEntity.badRequest().body("Invalid place_id");
-        }
-        RoomCategoryEntity roomCategory = roomCategoryService.getRoomCategory(id);
-        if(roomCategory == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
-        }
-        if(roomCategory.getPlace().getId() !=place_id){
-            return ResponseEntity.status(403).body("you don't have permission to enter to this data");
-        }
-        return ResponseEntity.ok(roomCategory);
     }
 
     @PutMapping("{place_id}/update/{id}")
     public ResponseEntity edit(@PathVariable("id") Long id ,@RequestBody RoomCategoryRequest request , @PathVariable("place_id") Long place_id){
-        if(id == null || id<=0)
-        {
-            return ResponseEntity.badRequest().body("Invalid Id");
+        try {
+            if(id == null || id<=0)
+            {
+                return ResponseEntity.badRequest().body("Invalid Id");
+            }
+            if(place_id == null || place_id<=0)
+            {
+                return ResponseEntity.badRequest().body("Invalid place_id");
+            }
+            if(request.getType() == null)
+            {
+                return ResponseEntity.badRequest().body("validate your data please");
+            }
+            request.setPlace_id(place_id);
+            RoomCategoryDTO roomCategoryDTO = new RoomCategoryDTO(request);
+            RoomCategoryEntity roomCategory = roomCategoryService.getRoomCategory(id);
+            if(roomCategory == null)
+            {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+            }
+            if(roomCategory.getPlace().getId() !=place_id){
+                return ResponseEntity.status(403).body("you don't have permission to enter to this data");
+            }
+            return ResponseEntity.ok(roomCategoryService.update(id ,roomCategoryDTO));
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body("An error occurred while updating the room category, maybe place_id or id are not correct");
         }
-        if(place_id == null || place_id<=0)
-        {
-            return ResponseEntity.badRequest().body("Invalid place_id");
-        }
-        if(request.getType() == null)
-        {
-            return ResponseEntity.badRequest().body("validate your data please");
-        }
-        request.setPlace_id(place_id);
-        RoomCategoryDTO roomCategoryDTO = new RoomCategoryDTO(request);
-        RoomCategoryEntity roomCategory = roomCategoryService.getRoomCategory(id);
-        if(roomCategory == null)
-        {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
-        }
-        if(roomCategory.getPlace().getId() !=place_id){
-            return ResponseEntity.status(403).body("you don't have permission to enter to this data");
-        }
-        return ResponseEntity.ok(roomCategoryService.update(id ,roomCategoryDTO));
+
     }
 
     @DeleteMapping("{place_id}/delete/{id}")

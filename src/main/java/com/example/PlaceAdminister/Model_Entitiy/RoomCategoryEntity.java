@@ -44,7 +44,7 @@ public class RoomCategoryEntity {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "place_id" )
+    @JoinColumn(name = "place_id" ,nullable = false)
     private PlaceEntity place;
 
     @JsonIgnore
