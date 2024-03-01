@@ -40,13 +40,19 @@ public class TableCategoryService {
 
     public TableCategoryEntity store(TableCategoryDTO tableCategoryDTO){
         TableCategoryEntity tableCategory = new TableCategoryEntity(tableCategoryDTO);
-        tableCategory.setPlace(placeRepository.getById(tableCategoryDTO.getPlace()));
-        System.out.println( "id: "+tableCategory.getId());
-        System.out.println( "shape: "+tableCategory.getShape());
-        System.out.println( "Num_of_seats: "+tableCategory.getNum_of_seats());
-        System.out.println( "place: "+tableCategory.getPlace());
 
+        if(placeRepository.existsById(tableCategoryDTO.getPlace())){
+        PlaceEntity place = placeRepository.getById(tableCategoryDTO.getPlace());
+
+        tableCategory.setPlace(place);
+        tableCategory.setPlace(placeRepository.getById(tableCategoryDTO.getPlace()));
+//        System.out.println( "id: "+tableCategory.getId());
+//        System.out.println( "shape: "+tableCategory.getShape());
+//        System.out.println( "Num_of_seats: "+tableCategory.getNum_of_seats());
+//        System.out.println( "place: "+tableCategory.getPlace());
         return tableCategoryRepository.save(tableCategory );
+        }
+        return null;
     }
 
     public TableCategoryEntity getTableCategory(Long id)
