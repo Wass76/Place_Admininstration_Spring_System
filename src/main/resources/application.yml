@@ -9,6 +9,6 @@ spring:
       ddl-auto: update
     show-sql: true
   datasource:
-    url: jdbc:postgresql://wassem:btbZpeQ3OVt4FTh0JuzAdNUVE95RBwYj@dpg-cngsf6v109ks7386npgg-a/place_administration_17l5
+    url: jdbc:postgresql://dpg-cngsf6v109ks7386npgg-a.oregon-postgres.render.com/place_administration_17l5
     username: wassem
     password: btbZpeQ3OVt4FTh0JuzAdNUVE95RBwYj
