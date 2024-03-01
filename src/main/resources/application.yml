@@ -11,4 +11,4 @@ spring:
   datasource:
     url: jdbc:postgresql://wassem:btbZpeQ3OVt4FTh0JuzAdNUVE95RBwYj@dpg-cngsf6v109ks7386npgg-a/place_administration_17l5
     username: wassem
-    password: ZkBgyHXWV0MbOI7O2JH6vXumEw6mBI87
+    password: btbZpeQ3OVt4FTh0JuzAdNUVE95RBwYj
