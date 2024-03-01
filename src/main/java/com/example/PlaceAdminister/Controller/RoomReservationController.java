@@ -54,7 +54,7 @@ public class RoomReservationController {
         }
         List<RoomReservation> roomReservationList = roomReservationService.getAllByPlaceIdAtTime(place_id ,localDateTime);
         if(roomReservationList.isEmpty()){
-            return ResponseEntity.status(200).body("There is no reservation yet");
+            return ResponseEntity.status(200).body(roomReservationList);
         }
         return ResponseEntity.ok(roomReservationList);
     }

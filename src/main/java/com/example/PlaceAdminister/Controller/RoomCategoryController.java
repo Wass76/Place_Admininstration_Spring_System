@@ -30,7 +30,7 @@ public class RoomCategoryController {
         }
         List<RoomCategoryEntity> roomCategoryList = roomCategoryService.getAllRoomCategories(id);
         if(roomCategoryList.isEmpty()){
-            return ResponseEntity.status(200).body("there is no room category yet");
+            return ResponseEntity.status(200).body(roomCategoryList);
         }
         return ResponseEntity.ok(roomCategoryList);
     }

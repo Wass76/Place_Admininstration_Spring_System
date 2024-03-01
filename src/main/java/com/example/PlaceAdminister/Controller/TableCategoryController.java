@@ -22,7 +22,7 @@ public class TableCategoryController {
     public ResponseEntity index(@PathVariable("place_id") Long place_id){
         List<TableCategoryEntity> tableCategoryList = tableCategoryService.getAllTablesCategories();
         if(tableCategoryList.isEmpty()){
-            return ResponseEntity.status(200).body("there is no table category yet");
+            return ResponseEntity.status(200).body(tableCategoryList);
         }
         return ResponseEntity.ok(tableCategoryList);
     }

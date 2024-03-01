@@ -35,7 +35,7 @@ public class RoomController {
         }
        List<RoomEntity> roomsList = roomService.getAllRooms(place_id);
        if(roomsList.isEmpty()){
-           return ResponseEntity.status(200).body("there is no Rooms yet");
+           return ResponseEntity.status(200).body(roomsList);
        }
         return ResponseEntity.ok(roomsList);
 

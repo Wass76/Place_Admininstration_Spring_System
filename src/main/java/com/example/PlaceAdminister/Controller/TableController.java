@@ -35,7 +35,7 @@ public class TableController {
     public ResponseEntity index(@PathVariable("place_id") Long place_id){
         List<TableEntity> tablesList = tableService.getAllTables();
         if(tablesList.isEmpty()){
-            return ResponseEntity.status(200).body("there are no tables yet");
+            return ResponseEntity.status(200).body(tablesList);
         }
 
         return ResponseEntity.ok(tablesList);
