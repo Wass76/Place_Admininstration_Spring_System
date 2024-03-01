@@ -1,9 +1,9 @@
 package com.example.PlaceAdminister.Repository;
 
-import com.example.PlaceAdminister.DTO.ReservationDTO;
+//import com.example.PlaceAdminister.DTO.ReservationDTO;
 import com.example.PlaceAdminister.DTO.RoomDTO;
 import com.example.PlaceAdminister.DTO.TableDTO;
-import com.example.PlaceAdminister.Model_Entitiy.ReservationsEntity;
+//import com.example.PlaceAdminister.Model_Entitiy.ReservationsEntity;
 import com.example.PlaceAdminister.Model_Entitiy.RoomCategoryEntity;
 import com.example.PlaceAdminister.Model_Entitiy.TableEntity;
 import com.fasterxml.jackson.core.type.TypeReference;

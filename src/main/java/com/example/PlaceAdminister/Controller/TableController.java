@@ -133,7 +133,6 @@ public class TableController {
             return ResponseEntity.internalServerError().body("An error occurred while updating the table, maybe place_id or id or category_id are not correct");
 
         }
-
     }
 
     @DeleteMapping("delete/{id}")

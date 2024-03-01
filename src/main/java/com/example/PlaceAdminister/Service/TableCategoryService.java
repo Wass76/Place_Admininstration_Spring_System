@@ -52,7 +52,11 @@ public class TableCategoryService {
     public TableCategoryEntity getTableCategory(Long id)
     {
 //        Resource resource = resourceLoader.getResource("classpath:TableCategory.json");
-        return tableCategoryRepository.getById(id);
+        try {
+            return tableCategoryRepository.getById(id);
+        }catch (Exception e){
+        }
+        return null;
     }
 
 

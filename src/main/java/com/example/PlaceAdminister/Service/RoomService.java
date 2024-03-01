@@ -64,9 +64,14 @@ public class RoomService {
             PlaceEntity place = placeRepository.getById(roomDTO.getPlace_id()); // Might throw EntityNotFoundException
             RoomCategoryEntity roomCategory = roomCategoryRepository.getById(roomDTO.getCategory_id()); // Might throw EntityNotFoundException
 
+            if(roomCategory.getPlace().getId() != place.getId()){
+                throw new RuntimeException("unLogical operation");
+            }
+
             RoomEntity room = new RoomEntity(roomDTO);
             room.setPlace(place);
             room.setRoomCategory(roomCategory);
+
 
             return roomRepository.save(room);
         } catch (EntityNotFoundException e) {

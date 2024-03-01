@@ -1,6 +1,6 @@
 package com.example.PlaceAdminister.Service;
 
-import com.example.PlaceAdminister.DTO.ReservationDTO;
+//import com.example.PlaceAdminister.DTO.ReservationDTO;
 import com.example.PlaceAdminister.DTO.TableDTO;
 import com.example.PlaceAdminister.Model_Entitiy.PlaceEntity;
 import com.example.PlaceAdminister.Model_Entitiy.RoomEntity;
@@ -33,8 +33,8 @@ public class TableService {
     @Autowired
     private TableCategoryRepository tableCategoryRepository;
 
-    @Autowired
-    private ReservationService reservationService;
+//    @Autowired
+//    private ReservationService reservationService;
 
     @Autowired
     private PlaceRepository placeRepository;
@@ -59,7 +59,7 @@ public class TableService {
         Resource resource = resourceLoader.getResource("classpath:Tables.json");
 
         List<TableEntity> tableDTOList = tableRepository.findAll();
-        List<ReservationDTO> reservationDTOList = reservationService.getAllReservations();
+//        List<ReservationDTO> reservationDTOList = reservationService.getAllReservations();
 //        LocalTime time = now();
 //        if(reservationDTOList.stream().filter(i -> i.getTable_id()
 //                == tableDTOList.stream().filter(j->j.getId().equals(i))))
@@ -73,6 +73,13 @@ public class TableService {
         PlaceEntity place =placeRepository.getById(tableDTO.getPlace_id());
         RoomEntity room = roomRepository.getById(tableDTO.getRoom_id());
         Integer seats = tableCategory.getNum_of_seats();
+
+        if(room.getPlace().getId() != place.getId()){
+            return  null;
+        }
+        if(tableCategory.getPlace().getId() != place.getId()){
+            return  null;
+        }
 
         table.setTable_category(tableCategory);
         table.setRoom(room);
@@ -108,6 +115,13 @@ public class TableService {
             PlaceEntity place =placeRepository.getById(tableDTO.getPlace_id());
             RoomEntity room = roomRepository.getById(tableDTO.getRoom_id());
             Integer seats = tableCategory.getNum_of_seats();
+
+            if(room.getPlace().getId() != place.getId()){
+                return  null;
+            }
+            if(tableCategory.getPlace().getId() != place.getId()){
+                return  null;
+            }
 
             table.setTable_category(tableCategory);
             table.setRoom(room);

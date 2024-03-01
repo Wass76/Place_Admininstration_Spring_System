@@ -54,11 +54,14 @@ public class TableCategoryController {
             if(id == null || id<=0){
                 return ResponseEntity.badRequest().body("Invalid Id");
             }
+            if(place_id == null || place_id<=0){
+                return ResponseEntity.badRequest().body("Invalid place_id");
+            }
             TableCategoryEntity tableCategory = tableCategoryService.getTableCategory(id);
             if(tableCategory == null){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
             }
-            return ResponseEntity.ok(tableCategory) ;
+            return ResponseEntity.ok(tableCategory);
         }catch (Exception e){
             return ResponseEntity.internalServerError().body("An error occurred, maybe place_id or id are not correct");
         }

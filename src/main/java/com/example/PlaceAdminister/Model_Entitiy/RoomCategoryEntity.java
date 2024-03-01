@@ -39,8 +39,9 @@ public class RoomCategoryEntity {
     private Long id;
     @Column(name = "type")
     private String type;
-    @Column(name = "num_of_seats")
-    private Integer num_of_seats;
+
+//    @Column(name = "num_of_seats")
+//    private Integer num_of_seats;
 
     @JsonIgnore
     @ManyToOne
@@ -59,7 +60,7 @@ public class RoomCategoryEntity {
 
     public RoomCategoryEntity(RoomCategoryDTO roomCategoryDTO){
         type = roomCategoryDTO.getType();
-        num_of_seats  = roomCategoryDTO.getNum_of_seats();
+//        num_of_seats  = roomCategoryDTO.getNum_of_seats();
     }
 
 

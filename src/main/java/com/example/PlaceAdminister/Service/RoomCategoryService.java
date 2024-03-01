@@ -1,6 +1,7 @@
 package com.example.PlaceAdminister.Service;
 
 import com.example.PlaceAdminister.DTO.RoomCategoryDTO;
+import com.example.PlaceAdminister.Model_Entitiy.PlaceEntity;
 import com.example.PlaceAdminister.Model_Entitiy.RoomCategoryEntity;
 import com.example.PlaceAdminister.Repository.PlaceRepository;
 import com.example.PlaceAdminister.Repository.RoomCategoryRepository;
@@ -36,13 +37,21 @@ public class RoomCategoryService {
            return roomCategoryList;
     }
 
+    public List<RoomCategoryEntity> getAllCategories()
+    {
+        List<RoomCategoryEntity> roomCategoryEntityList = roomCategoryRepository.findAll();
+        return roomCategoryEntityList;
+    }
+
     public RoomCategoryEntity store(RoomCategoryDTO roomCategoryDTO) {
 //        Resource resource = resourceLoader.getResource("classpath:RoomCategories.json");
-
-        RoomCategoryEntity roomCategory = new RoomCategoryEntity(roomCategoryDTO);
-        roomCategory.setPlace(placeRepository.getById(roomCategoryDTO.getPlace_id()));
-
-        return roomCategoryRepository.save(roomCategory);
+        if(placeRepository.existsById(roomCategoryDTO.getPlace_id())) {
+            PlaceEntity place = placeRepository.getById(roomCategoryDTO.getPlace_id());
+            RoomCategoryEntity roomCategory = new RoomCategoryEntity(roomCategoryDTO);
+            roomCategory.setPlace(placeRepository.getById(roomCategoryDTO.getPlace_id()));
+            return roomCategoryRepository.save(roomCategory);
+        }
+        return null;
     }
 
     public RoomCategoryEntity getRoomCategory(Long id)
@@ -51,13 +60,15 @@ public class RoomCategoryService {
         return roomCategoryRepository.getById(id);
     }
 
+
+
     public RoomCategoryEntity update(Long id , RoomCategoryDTO roomCategoryDTO){
 //        Resource resource = resourceLoader.getResource("classpath:RoomCategories.json");
             RoomCategoryEntity roomCategory = roomCategoryRepository.getById(id);
             if(roomCategory != null){
 //                roomCategory.setPlace(roomCategoryDTO.getPlace_id());
                 roomCategory.setType(roomCategoryDTO.getType());
-                roomCategory.setNum_of_seats(roomCategoryDTO.getNum_of_seats());
+//                roomCategory.setNum_of_seats(roomCategoryDTO.getNum_of_seats());
                 roomCategoryRepository.save(roomCategory);
             }
         return roomCategory;
