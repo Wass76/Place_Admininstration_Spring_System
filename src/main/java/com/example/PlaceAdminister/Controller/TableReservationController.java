@@ -57,6 +57,20 @@ public class TableReservationController {
         return ResponseEntity.ok(tableReservationList);
     }
 
+    @PutMapping("reservation/takeMine/{id}")
+
+    public ResponseEntity takeMyReservation(@PathVariable("id") Long id){
+        try {
+            if(id == null || id<=0){
+                return ResponseEntity.badRequest().body("Invalid Id");
+            }
+            return ResponseEntity.ok(tableReservationService.takeReservation(id));
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body("An error occurred while creating reservation, maybe room_id or place_id are not correct");
+        }
+
+    }
+
     @PostMapping("{place_id}/reserve-table")
     public ResponseEntity ReserveTable(@RequestBody TableReservationRequest request, @PathVariable("place_id") Long place_id)
     {

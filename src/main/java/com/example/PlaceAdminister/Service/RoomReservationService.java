@@ -8,10 +8,12 @@ import com.example.PlaceAdminister.Repository.PlaceRepository;
 import com.example.PlaceAdminister.Repository.RoomRepository;
 import com.example.PlaceAdminister.Repository.RoomReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +43,39 @@ public class RoomReservationService {
             // You can return an empty list, throw an exception, or log an error message
             return Collections.emptyList();
         }
+    }
+
+    @Scheduled(fixedRate = 5000)
+    public void checkIfReservationMissed()
+    {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        List<RoomReservation> allReservations =  roomReservationRepository.findAll();
+        allReservations.forEach(nowReservation ->{
+            if(nowReservation.getTime().getHour()
+                    == localDateTime.getHour()
+                    && nowReservation.getStatus() == 1){
+                nowReservation.setStatus(3);
+                System.out.println("status is:" + nowReservation.getStatus());
+                roomReservationRepository.save(nowReservation);
+            }
+        });
+    }
+
+
+    public RoomReservation takeReservation(Long id) {
+        RoomReservation reservation = roomReservationRepository.getById(id);
+        if(roomReservationRepository.existsById(id)){
+
+            reservation.setPeriod_of_reservations(reservation.getPeriod_of_reservations());
+            reservation.setTime(reservation.getTime());
+            reservation.setNumber_of_seats(reservation.getNumber_of_seats());
+            reservation.setPlace(reservation.getPlace());
+            reservation.setRoom(reservation.getRoom());
+
+            reservation.setStatus(2);
+            roomReservationRepository.save(reservation);
+        }
+        return reservation;
     }
 
     public List<RoomReservation> getAllByPlaceIdAtTime(Long id , LocalDateTime time){

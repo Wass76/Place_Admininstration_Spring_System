@@ -2,6 +2,7 @@ package com.example.PlaceAdminister.Model_Entitiy;
 
 import com.example.PlaceAdminister.DTO.RoomReservationDTO;
 import com.example.PlaceAdminister.DTO.TableReservationDTO;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Component
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}) // Add these properties
 public class TableReservation {
     @Id
     @SequenceGenerator(

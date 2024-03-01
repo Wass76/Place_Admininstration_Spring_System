@@ -5,6 +5,7 @@ import com.example.PlaceAdminister.DTO.TableReservationDTO;
 import com.example.PlaceAdminister.Model_Entitiy.*;
 import com.example.PlaceAdminister.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -56,6 +57,39 @@ public class TableReservationService {
             // You can return an empty list, throw an exception, or log an error message
             return Collections.emptyList();
         }
+    }
+
+    @Scheduled(fixedRate = 5000)
+    public void checkIfReservationMissed(){
+        LocalDateTime localDateTime = LocalDateTime.now();
+
+        List<TableReservation> allReservations =  tableReservationRepository.findAll();
+
+        allReservations.forEach(nowReservation ->{
+            if(nowReservation.getTime().getHour()
+                    == localDateTime.getHour()
+                    && nowReservation.getStatus() == 1){
+                nowReservation.setStatus(3);
+                System.out.println("status is:" + nowReservation.getStatus());
+                tableReservationRepository.save(nowReservation);
+            }
+        });
+    }
+
+
+    public TableReservation takeReservation(Long id) {
+        TableReservation reservation = tableReservationRepository.getById(id);
+        if(tableReservationRepository.existsById(id)){
+
+            reservation.setPeriod_of_reservations(reservation.getPeriod_of_reservations());
+            reservation.setTime(reservation.getTime());
+            reservation.setNumber_of_seats(reservation.getNumber_of_seats());
+            reservation.setPlace(reservation.getPlace());
+            reservation.setTable(reservation.getTable());
+            reservation.setStatus(2);
+            tableReservationRepository.save(reservation);
+        }
+        return reservation;
     }
 
     public TableReservation reserve(TableReservationDTO reservationDTO){
