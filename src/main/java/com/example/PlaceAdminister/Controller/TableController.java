@@ -78,8 +78,8 @@ public class TableController {
         }
 
     }
-    @GetMapping("findByRoomId/{id}")
-    public ResponseEntity showByRoomId(@PathVariable("id") Long id){
+    @GetMapping("{place_id}/findByRoomId/{id}")
+    public ResponseEntity showByRoomId(@PathVariable("id") Long id , @PathVariable("place_id") Long place_id){
         if(id == null || id<=0){
             return ResponseEntity.badRequest().body("Invalid room id");
         }
@@ -96,8 +96,8 @@ public class TableController {
         return ResponseEntity.ok(tableRoomsList);
     }
 
-    @GetMapping("findByCategoryId/{id}")
-    public ResponseEntity showByCategoryId(@PathVariable("id") Long id){
+    @GetMapping("{place_id}/findByCategoryId/{id}")
+    public ResponseEntity showByCategoryId(@PathVariable("id") Long id, @PathVariable("place_id") Long place_id){
         if(id == null || id<=0){
             return ResponseEntity.badRequest().body("Invalid room id");
         }

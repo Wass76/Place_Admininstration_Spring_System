@@ -1,14 +1,17 @@
 server:
-  tomcat:
-    accesslog:
-      enabled: true
+  port: 8080
 
 spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/place_administration
+    username: Wassem
+    password: password
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
-  datasource:
-    url: jdbc:postgresql://dpg-cngsf6v109ks7386npgg-a.oregon-postgres.render.com/place_administration_17l5
-    username: wassem
-    password: btbZpeQ3OVt4FTh0JuzAdNUVE95RBwYj
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show_sql: true

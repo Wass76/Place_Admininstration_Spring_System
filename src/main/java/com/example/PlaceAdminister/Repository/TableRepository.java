@@ -29,6 +29,9 @@ public interface TableRepository extends JpaRepository<TableEntity,Long> {
 
     List<TableEntity> findByPlaceId(Long placeId);
 
+//    List<TableEntity> findByTableCategoryId(Long tableCategoryId);
+//    List<TableEntity> findByRoomId(Long roomId);
+
 //
 //    public List<TableDTO> readFromJsonTable(Resource resource) {
 //        String filepath1 = "src/main/resources/Rooms.json";

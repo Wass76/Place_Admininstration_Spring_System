@@ -98,12 +98,15 @@ public class TableService {
     {
 //        Resource resource = resourceLoader.getResource("classpath:Tables.json");
         return  tableRepository.findAll().stream().filter(i->i.getRoom().getId().equals(id)).toList();
+
+//        return tableRepository.findByRoomId(id);
     }
 
     public List<TableEntity> showTablesByCategoryId(Long id)
     {
 //        Resource resource = resourceLoader.getResource("classpath:Tables.json");
         return  tableRepository.findAll().stream().filter(i->i.getTable_category().getId().equals(id)).toList();
+//          return tableRepository.findByTableCategory(id);
     }
 
     public TableEntity update(Long id , TableDTO tableDTO)
