@@ -10,5 +10,5 @@ spring:
     show-sql: true
   datasource:
     url: jdbc:postgresql://dpg-co01fp5a73kc73cabgt0-a.oregon-postgres.render.com/place_administration_stage_2
-    username: wassem
-    password: btbZpeQ3OVt4FTh0JuzAdNUVE95RBwYj
+    username: place_administration_stage_2_user
+    password: unTijY5OZIlQDKP5mkuUwPcdvs9wfV0T
