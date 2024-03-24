@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public class RoomController {
     //checked
 
     @PostMapping("/{place_id}/newRoom")
+    @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
     public ResponseEntity create(@RequestBody RoomRequest request , @PathVariable("place_id") Long place_id)
     {
         if (request.getMax_num_of_chairs() == null || request.getCategory_id() == null) {
@@ -116,6 +118,7 @@ public class RoomController {
     }
 
     @PutMapping("/{place_id}/update/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
     public ResponseEntity edit(@PathVariable("id") Long id ,@RequestBody RoomRequest request ,@PathVariable("place_id") Long place_id){
         try {
             if(id == null || id<=0){
@@ -146,6 +149,7 @@ public class RoomController {
     }
 
     @DeleteMapping("/{place_id}/delete/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
     public ResponseEntity delete(@PathVariable("id") Long id ,@PathVariable("place_id") Long place_id){
         if(id == null || id<=0){
             return ResponseEntity.badRequest().body("Invalid Id");

@@ -9,6 +9,7 @@ import com.example.PlaceAdminister.Service.RoomCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -36,6 +37,7 @@ public class RoomCategoryController {
     }
 
     @PostMapping("{place_id}/newRoomCategory")
+    @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
     public ResponseEntity addRoomCategory(@RequestBody RoomCategoryRequest roomCategoryRequest ,@PathVariable("place_id") Long place_id)
     {
         roomCategoryRequest.setPlace_id(place_id);
@@ -79,6 +81,7 @@ public class RoomCategoryController {
     }
 
     @PutMapping("{place_id}/update/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
     public ResponseEntity edit(@PathVariable("id") Long id ,@RequestBody RoomCategoryRequest request , @PathVariable("place_id") Long place_id){
         try {
             if(id == null || id<=0)
@@ -111,6 +114,7 @@ public class RoomCategoryController {
     }
 
     @DeleteMapping("{place_id}/delete/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
     public ResponseEntity delete(@PathVariable("id") Long id , @PathVariable("place_id") Long place_id){
         if(id == null || id<=0)
         {

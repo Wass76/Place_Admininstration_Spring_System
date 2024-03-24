@@ -7,16 +7,19 @@ import com.example.PlaceAdminister.Service.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
 @RequestMapping("/api/v1/places")
+//@PreAuthorize("hasRole('ADMIN')")
 public class PlaceController {
     @Autowired
     private PlaceService placeService;
 
     @GetMapping("allplaces")
+//    @PreAuthorize("hasAnyAuthority('')")
     public ResponseEntity getAllPlacess() {
         List<PlaceEntity> placeList  = placeService.getAllPlaces();
         if(placeList == null || placeList.isEmpty() ){
@@ -25,7 +28,8 @@ public class PlaceController {
         return ResponseEntity.ok(placeList);
     }
 
-    @PostMapping("newplace")
+    @PostMapping("/newplace")
+    @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
     public ResponseEntity addPlace(@RequestBody PlaceRequest placeRequest) {
         if(placeRequest.getLocations() == null || placeRequest.getLocations().isEmpty() || placeRequest.getName() == null){
             return ResponseEntity.badRequest().body("validate your data please");
@@ -58,6 +62,7 @@ public class PlaceController {
     }
 
     @PutMapping ("edit/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
     public ResponseEntity edit(@PathVariable("id") Long id ,@RequestBody PlaceRequest request){
         try {
             if(id == null || id<=0)
@@ -82,11 +87,10 @@ public class PlaceController {
             return ResponseEntity.internalServerError().body("An error occurred while updating the place, maybe place_id is not correct");
 
         }
-
-
     }
 
     @DeleteMapping("delete/{id}")
+    @PreAuthorize("hasAuthority('admin:delete')")
     public ResponseEntity delete(@PathVariable("id") Long id){
         if(id == null || id<=0){
             return ResponseEntity.badRequest().body("Invalid Id");
@@ -99,6 +103,4 @@ public class PlaceController {
         placeService.delete(id);
         return ResponseEntity.ok("delete done successfully");
     }
-
-
 }

@@ -10,6 +10,7 @@ import com.example.PlaceAdminister.Service.TableReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ public class TableReservationController {
     TableReservationService tableReservationService;
 
     @GetMapping("{place_id}/get-all")
+    @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
     public ResponseEntity getAllForPlace(@PathVariable("place_id") Long place_id)
     {
         if(place_id == null || place_id<=0){
@@ -37,6 +39,7 @@ public class TableReservationController {
     }
 
     @GetMapping("{place_id}/get-all-by-time")
+//    @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
     public ResponseEntity getAllByPlaceIdAtTime(@PathVariable("place_id") Long place_id , String time)
     {
         LocalDateTime time1 = LocalDateTime.now();
@@ -58,7 +61,7 @@ public class TableReservationController {
     }
 
     @PutMapping("reservation/takeMine/{id}")
-
+//    @PreAuthorize("hasRole('USER' , 'MANA')")
     public ResponseEntity takeMyReservation(@PathVariable("id") Long id){
         try {
             if(id == null || id<=0){

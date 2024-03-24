@@ -59,7 +59,7 @@ public class TableReservationService {
         }
     }
 
-    @Scheduled(fixedRate = 5000)
+//    @Scheduled(fixedRate = 5000)
     public void checkIfReservationMissed(){
         LocalDateTime localDateTime = LocalDateTime.now();
 

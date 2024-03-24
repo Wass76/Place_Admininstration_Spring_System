@@ -1,3 +1,8 @@
+package com.example.PlaceAdminister.Service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
 //package com.example.PlaceAdminister.Service;
 //
 //import com.example.PlaceAdminister.DTO.ReservationDTO;
@@ -16,9 +21,13 @@
 //
 //import static java.time.LocalTime.now;
 //
-//@Service
-//@RequiredArgsConstructor
-//public class UserService {
+@Service
+@RequiredArgsConstructor
+public class UserService {
+
+
+
+}
 //
 //    @Autowired
 //    private UserEntity user;

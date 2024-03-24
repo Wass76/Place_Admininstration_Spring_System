@@ -1,3 +1,10 @@
+package com.example.PlaceAdminister.Repository;
+
+import com.example.PlaceAdminister.Model_Entitiy.UserEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
 //package com.example.PlaceAdminister.Repository;
 //
 //import com.example.PlaceAdminister.DTO.TableCategoryDTO;
@@ -21,7 +28,9 @@
 //
 //@Component
 //
-//public class UserRepository{
+public interface UserRepository extends JpaRepository<UserEntity,Long> {
+    Optional<UserEntity> findByEmail(String email);
+}
 //    public List<UserDTO> readFromJsonFile(String filePath) {
 //
 //        try {

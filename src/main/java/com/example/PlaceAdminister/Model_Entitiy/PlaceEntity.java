@@ -44,6 +44,9 @@ public class PlaceEntity {
     @JoinColumn(name = "table_category_id")
     private Set<TableCategoryEntity> tableCategories;
 
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    private Set<UserEntity> userEntities;
 
 
     public PlaceEntity(String name, String location) {

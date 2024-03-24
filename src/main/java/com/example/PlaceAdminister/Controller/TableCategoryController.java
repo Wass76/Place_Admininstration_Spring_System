@@ -7,6 +7,7 @@ import com.example.PlaceAdminister.Service.TableCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class TableCategoryController {
     }
 
     @PostMapping("/{place_id}/newTable")
+    @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
     public ResponseEntity create(@RequestBody TableCategoryRequest request ,@PathVariable("place_id") Long place_id)
     {
         if(place_id == null ||  place_id <=0 ){
@@ -69,6 +71,7 @@ public class TableCategoryController {
     }
 
     @PutMapping("{place_id}/update/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
     public ResponseEntity edit(@PathVariable("id") Long id ,@RequestBody TableCategoryRequest request,@PathVariable("place_id") Long place_id){
         try {
             if(id == null || id<=0){
@@ -91,6 +94,7 @@ public class TableCategoryController {
     }
 
     @DeleteMapping("delete/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
     public ResponseEntity delete(@PathVariable("id") Long id){
         if(id == null || id<=0){
             return ResponseEntity.badRequest().body("Invalid Id");
