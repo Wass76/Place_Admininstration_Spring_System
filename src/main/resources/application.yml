@@ -7,8 +7,18 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+      defer-datasource-initialization: true
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+          format_sql: true
+          jdbc.lob.non_contextual_creation: true
+    show_sql: true
+  servlet:
+    multipart:
+      max-file-size: 1650MB
+      max-request-size: 1650MB
   datasource:
-    url: jdbc:postgresql://dpg-co01fp5a73kc73cabgt0-a.oregon-postgres.render.com/place_administration_stage_2
-    username: place_administration_stage_2_user
-    password: unTijY5OZIlQDKP5mkuUwPcdvs9wfV0T
+    url: jdbc:postgresql://dpg-co8ldiv109ks73egl4o0-a.oregon-postgres.render.com/place_administration_stage_3
+    username: wassem
+    password: jIMGH1AsW7vTj4r0NPLM1fQ5UYw31gpO
