@@ -51,13 +51,6 @@ public class TableEntity {
 
     @Column(name = "status")
     private Integer status; //  1 = Available / 2 = Reserved / 3 =  Full
-//    @ElementCollection
-//    @JsonProperty("time_of_reservation")
-//    private List<LocalDateTime> time_of_reservation;
-//
-//    @ElementCollection
-//    @JsonProperty("period_of_reservation")
-//    private List<Integer> period_of_reservation ;
 
     @JsonIgnore
     @ManyToOne
