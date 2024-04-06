@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +37,9 @@ public class PlaceEntity {
     @Column(name = "location")
     private String location;
 
+//    @Lob
+//    private byte[] image;
+
     @OneToMany
     @JoinColumn(name = "room_id")
     private Set<RoomEntity> rooms;
@@ -48,14 +52,15 @@ public class PlaceEntity {
     @JoinColumn(name = "user_id")
     private Set<UserEntity> userEntities;
 
-
     public PlaceEntity(String name, String location) {
         this.name = name;
         this.location = location;
     }
 
-    public PlaceEntity(PlaceDTO placeDTO) {
+    public PlaceEntity(PlaceDTO placeDTO) throws IOException {
         name = placeDTO.getName();
         location = placeDTO.getLocations();
+//        if(placeDTO.getFile() != null)
+//            image = placeDTO.getFile().getBytes();
     }
 }

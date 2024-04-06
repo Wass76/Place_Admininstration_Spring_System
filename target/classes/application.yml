@@ -3,15 +3,20 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/place_administration
+    url: jdbc:postgresql://localhost:5430/place_administration
     username: Wassem
     password: password
   jpa:
     hibernate:
       ddl-auto: create-drop
-    defer-datasource-initialization: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
+      defer-datasource-initialization: true
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+          format_sql: true
+          jdbc.lob.non_contextual_creation: true
     show_sql: true
+  servlet:
+    multipart:
+      max-file-size: 1650MB
+      max-request-size: 1650MB

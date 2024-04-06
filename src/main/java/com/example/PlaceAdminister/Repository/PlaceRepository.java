@@ -19,5 +19,6 @@ import java.util.List;
 @Component
 public interface PlaceRepository extends JpaRepository<PlaceEntity,Long> {
 
+    PlaceEntity getByName(String name);
 
 }

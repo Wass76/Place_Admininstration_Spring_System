@@ -12,6 +12,7 @@ import lombok.Setter;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +43,8 @@ public class RoomCategoryEntity {
 
 //    @Column(name = "num_of_seats")
 //    private Integer num_of_seats;
+//    @Lob
+//    private byte[] image;
 
     @JsonIgnore
     @ManyToOne
@@ -58,8 +61,10 @@ public class RoomCategoryEntity {
     }
 
 
-    public RoomCategoryEntity(RoomCategoryDTO roomCategoryDTO){
+    public RoomCategoryEntity(RoomCategoryDTO roomCategoryDTO) throws IOException {
         type = roomCategoryDTO.getType();
+//        image = roomCategoryDTO.getFile().getBytes();
+
 //        num_of_seats  = roomCategoryDTO.getNum_of_seats();
     }
 

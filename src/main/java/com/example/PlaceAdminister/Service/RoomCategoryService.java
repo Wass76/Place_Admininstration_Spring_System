@@ -9,10 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
+@Transactional
 public class RoomCategoryService {
     @Autowired
     private RoomCategoryEntity roomCategories;
@@ -25,6 +28,7 @@ public class RoomCategoryService {
     private PlaceRepository placeRepository;
 
 
+    @Transactional
     public List<RoomCategoryEntity> getAllRoomCategories(Long id)
     {
 //        Resource resource = resourceLoader.getResource("classpath:RoomCategories.json");
@@ -42,26 +46,27 @@ public class RoomCategoryService {
         List<RoomCategoryEntity> roomCategoryEntityList = roomCategoryRepository.findAll();
         return roomCategoryEntityList;
     }
-
-    public RoomCategoryEntity store(RoomCategoryDTO roomCategoryDTO) {
+    @Transactional
+    public RoomCategoryEntity store(RoomCategoryDTO roomCategoryDTO) throws IOException {
 //        Resource resource = resourceLoader.getResource("classpath:RoomCategories.json");
         if(placeRepository.existsById(roomCategoryDTO.getPlace_id())) {
-            PlaceEntity place = placeRepository.getById(roomCategoryDTO.getPlace_id());
+            PlaceEntity place = placeRepository.getReferenceById(roomCategoryDTO.getPlace_id());
+            System.out.println("place found successfully");
             RoomCategoryEntity roomCategory = new RoomCategoryEntity(roomCategoryDTO);
-            roomCategory.setPlace(placeRepository.getById(roomCategoryDTO.getPlace_id()));
+            roomCategory.setPlace(place);
+            System.out.println("setting place done successfully");
             return roomCategoryRepository.save(roomCategory);
         }
         return null;
     }
-
+    @Transactional
     public RoomCategoryEntity getRoomCategory(Long id)
     {
 //        Resource resource = resourceLoader.getResource("classpath:RoomCategories.json");
         return roomCategoryRepository.getById(id);
     }
 
-
-
+@Transactional
     public RoomCategoryEntity update(Long id , RoomCategoryDTO roomCategoryDTO){
 //        Resource resource = resourceLoader.getResource("classpath:RoomCategories.json");
             RoomCategoryEntity roomCategory = roomCategoryRepository.getById(id);

@@ -2,6 +2,7 @@ package com.example.PlaceAdminister.Controller;
 
 import com.example.PlaceAdminister.DTO.RoomCategoryDTO;
 import com.example.PlaceAdminister.DTO.TableCategoryDTO;
+import com.example.PlaceAdminister.Exception.ApiRequestException;
 import com.example.PlaceAdminister.Model_Entitiy.RoomCategoryEntity;
 import com.example.PlaceAdminister.Request.RoomCategoryRequest;
 import com.example.PlaceAdminister.Service.PlaceService;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.List;
@@ -24,10 +26,10 @@ public class RoomCategoryController {
     @Autowired
     private PlaceService placeService;
 
-    @GetMapping("{place_id}/allRoomCategories")
+    @GetMapping(value = "{place_id}/allRoomCategories")
     public ResponseEntity getAllRoomCategories(@PathVariable("place_id") Long id) {
         if(id == null || id<=0){
-            return ResponseEntity.badRequest().body("Invalid Id");
+            throw new ApiRequestException("Invalid Id");
         }
         List<RoomCategoryEntity> roomCategoryList = roomCategoryService.getAllRoomCategories(id);
         if(roomCategoryList.isEmpty()){
@@ -36,23 +38,39 @@ public class RoomCategoryController {
         return ResponseEntity.ok(roomCategoryList);
     }
 
-    @PostMapping("{place_id}/newRoomCategory")
+    @PostMapping(value = "{place_id}/newRoomCategory" )
     @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
-    public ResponseEntity addRoomCategory(@RequestBody RoomCategoryRequest roomCategoryRequest ,@PathVariable("place_id") Long place_id)
+    public ResponseEntity addRoomCategory(
+            @RequestBody RoomCategoryRequest roomCategoryRequest ,
+//            @RequestParam String type,
+////            @RequestParam Long place_id,
+//            @RequestParam Integer num_of_seats,
+////            @RequestParam MultipartFile file,
+            @PathVariable("place_id") Long place_id)
     {
+//        RoomCategoryRequest roomCategoryRequest =
+//                RoomCategoryRequest.builder()
+//                .type(type)
+//                .num_of_seats(num_of_seats)
+//                        .place_id(place_id)
+////                        .file(file)
+//                .build();
         roomCategoryRequest.setPlace_id(place_id);
         if(roomCategoryRequest.getType() == null || roomCategoryRequest.getPlace_id() == null ){
-            return ResponseEntity.badRequest().body("validate your data please");
+            throw new ApiRequestException("Validate your data please");
+//            return ResponseEntity.badRequest().body("validate your data please");
         }
         RoomCategoryDTO roomCategoryDTO = new RoomCategoryDTO(roomCategoryRequest);
         try {
             RoomCategoryEntity newRoomCategory = roomCategoryService.store(roomCategoryDTO);
             if(newRoomCategory == null){
-                return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("please try again");
+                throw new ApiRequestException("Please try again");
+//                return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("please try again");
             }
             return ResponseEntity.ok(newRoomCategory);
         } catch (Exception e){
-            return ResponseEntity.internalServerError().body("An error occurred while creating the room, maybe place_id is not correct");
+            throw new ApiRequestException("An error occurred while creating the room, maybe place_id is not correct");
+//            return ResponseEntity.internalServerError().body("An error occurred while creating the room, maybe place_id is not correct");
 
         }
     }
@@ -61,21 +79,26 @@ public class RoomCategoryController {
     public ResponseEntity show(@PathVariable("id") Long id,@PathVariable("place_id") Long place_id){
         try {
             if(id == null || id<=0){
-                return ResponseEntity.badRequest().body("Invalid Id");
+                throw new ApiRequestException("Invalid Id");
+//                return ResponseEntity.badRequest().body("Invalid Id");
             }
             if(place_id == null || place_id<=0){
-                return ResponseEntity.badRequest().body("Invalid place_id");
+                throw new ApiRequestException("Invalid place id");
+//                return ResponseEntity.badRequest().body("Invalid place_id");
             }
             RoomCategoryEntity roomCategory = roomCategoryService.getRoomCategory(id);
             if(roomCategory == null){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+                throw new ApiRequestException("Can't find this item");
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
             }
             if(roomCategory.getPlace().getId() !=place_id){
+//                throw new ApiRequestException("you don't have permission to enter to this data");
                 return ResponseEntity.status(403).body("you don't have permission to enter to this data");
             }
             return ResponseEntity.ok(roomCategory);
         }catch (Exception e){
-            return ResponseEntity.internalServerError().body("An error occurred , maybe place_id or category id are not correct");
+            throw new ApiRequestException("An error occurred , maybe place_id or category id are not correct");
+//            return ResponseEntity.internalServerError().body("An error occurred , maybe place_id or category id are not correct");
 
         }
     }
@@ -86,29 +109,35 @@ public class RoomCategoryController {
         try {
             if(id == null || id<=0)
             {
-                return ResponseEntity.badRequest().body("Invalid Id");
+                throw new ApiRequestException("Invalid Id");
+//                return ResponseEntity.badRequest().body("Invalid Id");
             }
             if(place_id == null || place_id<=0)
             {
-                return ResponseEntity.badRequest().body("Invalid place_id");
+                throw new ApiRequestException("Invalid place id");
+//                return ResponseEntity.badRequest().body("Invalid p/lace_id");
             }
             if(request.getType() == null)
             {
-                return ResponseEntity.badRequest().body("validate your data please");
+                throw new ApiRequestException("validate your data please");
+//                return ResponseEntity.badRequest().body("validate your data please");
             }
             request.setPlace_id(place_id);
             RoomCategoryDTO roomCategoryDTO = new RoomCategoryDTO(request);
             RoomCategoryEntity roomCategory = roomCategoryService.getRoomCategory(id);
             if(roomCategory == null)
             {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+                throw new ApiRequestException("Can't find this item");
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
             }
             if(roomCategory.getPlace().getId() !=place_id){
+//                throw new ApiRequestException("You don't have permission to enter to this data");
                 return ResponseEntity.status(403).body("you don't have permission to enter to this data");
             }
             return ResponseEntity.ok(roomCategoryService.update(id ,roomCategoryDTO));
         }catch (Exception e){
-            return ResponseEntity.internalServerError().body("An error occurred while updating the room category, maybe place_id or id are not correct");
+            throw new ApiRequestException("An error occurred while updating the room category, maybe place_id or id are not correct");
+//            return ResponseEntity.internalServerError().body("An error occurred while updating the room category, maybe place_id or id are not correct");
         }
 
     }
@@ -118,16 +147,19 @@ public class RoomCategoryController {
     public ResponseEntity delete(@PathVariable("id") Long id , @PathVariable("place_id") Long place_id){
         if(id == null || id<=0)
         {
-            return ResponseEntity.badRequest().body("Invalid Id");
+            throw new ApiRequestException("Invalid Id");
+//            return ResponseEntity.badRequest().body("Invalid Id");
         }
         if(place_id == null || place_id<=0)
         {
-            return ResponseEntity.badRequest().body("Invalid place_id");
+            throw new ApiRequestException("Invalid place id");
+//            return ResponseEntity.badRequest().body("Invalid place_id");
         }
 
         RoomCategoryEntity roomCategory = roomCategoryService.getRoomCategory(id) ;
         if(roomCategory == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+            throw new ApiRequestException("Can't find this item");
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
         }
         if(roomCategory.getPlace().getId() != place_id){
             return ResponseEntity.status(403).body("you don't have permission to enter to this data");

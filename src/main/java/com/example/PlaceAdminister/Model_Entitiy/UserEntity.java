@@ -34,21 +34,20 @@ import java.util.Collection;
 @Component
 @Builder
 public class UserEntity implements UserDetails {
-//
-@Id
-@SequenceGenerator(
-        name = "user_id",
-        sequenceName = "user_id",
-        allocationSize = 1)
-@GeneratedValue(
-        strategy = GenerationType.SEQUENCE,
-        generator = "user_id")
-private Long id;
+
+    @Id
+    @SequenceGenerator(
+            name = "user_id",
+            sequenceName = "user_id",
+            allocationSize = 1)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "user_id")
+    private Long id;
 
     private String firstName;
 
     private String lastName;
-//    private String username;
 
     private String email;
 
@@ -56,11 +55,14 @@ private Long id;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "place_id",nullable = false)
+    @JoinColumn(name = "place_id")
     private PlaceEntity place;
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    // Replace byte[] with String to store the image path
+    private String imagePath;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -97,58 +99,3 @@ private Long id;
         return true;
     }
 }
-
-
-
-
-
-//    @JsonProperty("id")
-//    @Id
-//    private Long id;
-//    @JsonProperty("UserName")
-//    private String userName;
-//    @JsonProperty("role")
-//    private String role;
-//    @JsonProperty("phoneNumber")
-//    private Long phoneNumber;
-//
-//    @JsonProperty("password")
-//    private String password;
-//
-//    public UserEntity(String userName, String role, Long phoneNumber,String password) {
-//        this.userName = userName;
-//        this.role = role;
-//        this.phoneNumber = phoneNumber;
-//        this.password=password;
-//    }
-//
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-//    }
-//
-//    @Override
-//    public String getUsername() {
-//        return userName;
-//    }
-//
-//    @Override
-//    public boolean isAccountNonExpired() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isAccountNonLocked() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isCredentialsNonExpired() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isEnabled() {
-//        return true;
-//    }
-//}

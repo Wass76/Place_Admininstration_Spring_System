@@ -2,6 +2,8 @@ package com.example.PlaceAdminister.Repository;
 
 import com.example.PlaceAdminister.Model_Entitiy.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -28,7 +30,10 @@ import java.util.Optional;
 //
 //@Component
 //
+
 public interface UserRepository extends JpaRepository<UserEntity,Long> {
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     Optional<UserEntity> findByEmail(String email);
 }
 //    public List<UserDTO> readFromJsonFile(String filePath) {

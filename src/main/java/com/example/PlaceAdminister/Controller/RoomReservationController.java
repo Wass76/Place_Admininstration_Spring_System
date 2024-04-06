@@ -2,6 +2,7 @@ package com.example.PlaceAdminister.Controller;
 
 
 import com.example.PlaceAdminister.DTO.RoomReservationDTO;
+import com.example.PlaceAdminister.Exception.ApiRequestException;
 import com.example.PlaceAdminister.Model_Entitiy.RoomReservation;
 import com.example.PlaceAdminister.Request.RoomReservationRequest;
 import com.example.PlaceAdminister.Service.RoomReservationService;
@@ -28,11 +29,13 @@ public class RoomReservationController {
     public ResponseEntity getAllForPlace(@PathVariable("place_id") Long place_id)
     {
         if(place_id == null || place_id<=0){
-            return ResponseEntity.badRequest().body("Invalid Id");
+            throw new ApiRequestException("Invalid Id");
+//            return ResponseEntity.badRequest().body("Invalid Id");
         }
         List<RoomReservation> roomReservationList = roomReservationService.getAllByPlaceId(place_id);
         if(roomReservationList.isEmpty()){
-            return ResponseEntity.status(200).body("There is no reservation yet");
+            throw new ApiRequestException("There is no reservation yet");
+//            return ResponseEntity.status(200).body("There is no reservation yet");
         }
         return ResponseEntity.ok(roomReservationList);
     }
@@ -50,7 +53,8 @@ public class RoomReservationController {
 //        }
 
         if(place_id == null || place_id<=0){
-            return ResponseEntity.badRequest().body("Invalid Id");
+            throw new ApiRequestException("Invalid Id");
+//            return ResponseEntity.badRequest().body("Invalid Id");
         }
         List<RoomReservation> roomReservationList = roomReservationService.getAllByPlaceIdAtTime(place_id ,localDateTime);
         if(roomReservationList.isEmpty()){
@@ -63,11 +67,13 @@ public class RoomReservationController {
     public ResponseEntity takeMyReservation(@PathVariable("id") Long id){
         try {
             if(id == null || id<=0){
-                return ResponseEntity.badRequest().body("Invalid Id");
+                throw new ApiRequestException("Invalid Id");
+//                return ResponseEntity.badRequest().body("Invalid Id");
             }
             return ResponseEntity.ok(roomReservationService.takeReservation(id));
         }catch (Exception e){
-            return ResponseEntity.internalServerError().body("An error occurred while creating reservation, maybe room_id or place_id are not correct");
+            throw new ApiRequestException("An error occurred while creating reservation, maybe room_id or place_id are not correct");
+//            return ResponseEntity.internalServerError().body("An error occurred while creating reservation, maybe room_id or place_id are not correct");
         }
 
     }
@@ -76,10 +82,12 @@ public class RoomReservationController {
     public ResponseEntity ReserveRoom(@RequestBody RoomReservationRequest request, @PathVariable("place_id") Long place_id)
     {
         if(place_id == null || place_id<=0){
-            return ResponseEntity.badRequest().body("Invalid Id");
+            throw new ApiRequestException("Invalid Id");
+//            return ResponseEntity.badRequest().body("Invalid Id");
         }
         if(request.getRoom_id() == null ||request.getTime() == null || request.getPeriod_of_reservations() == null ){
-                return ResponseEntity.badRequest().body("validate your data please");
+            throw new ApiRequestException("validate your data please");
+//                return ResponseEntity.badRequest().body("validate your data please");
         }
         try {
             String timeStr = request.getTime();
@@ -94,7 +102,8 @@ public class RoomReservationController {
             return ResponseEntity.ok(reservation);
         }
         catch (Exception e){
-            return ResponseEntity.internalServerError().body("An error occurred while creating reservation, maybe room_id or place_id are not correct");
+            throw new ApiRequestException("An error occurred while creating reservation, maybe room_id or place_id are not correct");
+//            return ResponseEntity.internalServerError().body("An error occurred while creating reservation, maybe room_id or place_id are not correct");
         }
     }
 
@@ -102,12 +111,14 @@ public class RoomReservationController {
     public ResponseEntity UpdateReservation(@RequestBody RoomReservationRequest request ,@PathVariable("place_id") Long place_id ,@PathVariable("id") Long id){
         {
             if(place_id == null || place_id<=0 || id == null || id<=0 ){
-                return ResponseEntity.badRequest().body("Invalid Id");
+                throw new ApiRequestException("Invalid Id");
+//                return ResponseEntity.badRequest().body("Invalid Id");
             }
             if(request.getRoom_id() == null
                     || request.getTime() == null
                     || request.getPeriod_of_reservations() == null ){
-                return ResponseEntity.badRequest().body("validate your data please");
+                throw new ApiRequestException("validate your data please");
+//                return ResponseEntity.badRequest().body("validate your data please");
             }
             try {
                 String timeStr = request.getTime();
@@ -122,7 +133,8 @@ public class RoomReservationController {
                 return ResponseEntity.ok(reservation);
             }
             catch (Exception e){
-                return ResponseEntity.internalServerError().body("An error occurred while creating reservation, maybe room_id or place_id are not correct");
+                throw new ApiRequestException("An error occurred while creating reservation, maybe room_id or place_id are not correct");
+//                return ResponseEntity.internalServerError().body("An error occurred while creating reservation, maybe room_id or place_id are not correct");
             }
         }
     }
@@ -130,7 +142,8 @@ public class RoomReservationController {
     @DeleteMapping("{place_id}/cancel-reservation/{id}")
     public ResponseEntity CancelReservation(@PathVariable("id") Long id , @PathVariable("place_id") Long place_id){
         if(place_id == null || place_id<=0 || id == null || id<=0 ){
-            return ResponseEntity.badRequest().body("Invalid Id");
+            throw new ApiRequestException("Invalid Id");
+//            return ResponseEntity.badRequest().body("Invalid Id");
         }
         roomReservationService.cancelReservation(id);
         return ResponseEntity.ok("deleted done successfully");

@@ -1,7 +1,15 @@
 package com.example.PlaceAdminister.Service;
 
+import com.example.PlaceAdminister.Model_Entitiy.UserEntity;
+import com.example.PlaceAdminister.Repository.PlaceRepository;
+import com.example.PlaceAdminister.Repository.UserRepository;
+import com.example.PlaceAdminister.Request.RegisterRequest;
+import com.example.PlaceAdminister.Response.UserResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 //package com.example.PlaceAdminister.Service;
 //
@@ -25,67 +33,55 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final PlaceRepository placeRepository;
 
+    public UserResponse newUser(RegisterRequest request){
+        var user = UserEntity.builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(request.getRole())
+                .place(placeRepository.getReferenceById(request.getPlace_id()))
+//                .imagePath(fileName)
+                .build();
+
+        userRepository.save(user);
+
+        return UserResponse.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .place(user.getPlace().getName())
+                .role(user.getRole())
+                .imagePath(user.getImagePath())
+                .build();
+    }
+
+
+    public UserResponse editUser(RegisterRequest request , Long id){
+//        var user = userRepository.findByEmail(request.getEmail());
+        UserEntity user = userRepository.getReferenceById(id);
+        if (user != null){
+            user.setFirstName(request.getFirstName());
+            user.setLastName(request.getLastName());
+            user.setEmail(request.getEmail());
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            user.setRole(request.getRole());
+            user.setPlace(placeRepository.getReferenceById(request.getPlace_id()));
+            userRepository.save(user);
+        }
+        return UserResponse.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .place(user.getPlace().getName())
+                .build();
+    }
 
 }
-//
-//    @Autowired
-//    private UserEntity user;
-//    @Autowired
-//    private UserRepository userRepository;
-//
-//    private final PasswordEncoder encoder;
-//
-//    private String userFilePath = "src/main/resources/Users.json";
-//
-//
-//    public List<UserDTO> getAllTables(){
-//        return userRepository.readFromJsonFile(userFilePath);
-//    }
-//
-//    public UserDTO store(UserDTO userDTO){
-//        UserDTO newUser=userDTO;
-//        newUser.setPassword(encoder.encode(newUser.getPassword()));
-//        return userRepository.writeToJsonFile(newUser ,this.userFilePath);
-//    }
-//
-//    public UserDTO show(Long id)
-//    {
-//        return userRepository.searchDataById(id , this.userFilePath);
-//    }
-//
-//
-//
-//    public UserDTO update(Long id , UserDTO userDTO){
-//        return userRepository.UpdateById(id ,userDTO,this.userFilePath);
-//    }
-//
-//    public void delete(Long id){
-//        userRepository.deleteById(id,this.userFilePath);
-//    }
-//
-//    public UserDTO login(UserRequest userRequest){
-//        List<UserDTO> users=userRepository.readFromJsonFile(this.userFilePath);
-//        for(int i=0;i<users.size();i++){
-//            if(users.get(i).getPhoneNumber()== user.getPhoneNumber()){
-//                if(users.get(i).getPassword()== user.getPassword())
-//                    return users.get(i);
-//                else new UserDTO("Wrong Passsword");
-//            }
-//        }
-//        return new UserDTO("Not Found");
-//    }
-//
-//    public UserDTO register(UserRequest userRequest){
-//        List<UserDTO> users=userRepository.readFromJsonFile(this.userFilePath);
-//        for(int i=0;i<users.size();i++){
-//            if(users.get(i).getPhoneNumber()== user.getPhoneNumber()){
-//                    return new UserDTO("already exist");
-//            }
-//        }
-//        UserDTO user=store(new UserDTO(userRequest));
-//        return user;
-//    }
-//
-//}
-//
+
+

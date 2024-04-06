@@ -1,6 +1,7 @@
 package com.example.PlaceAdminister.Service;
 
 import com.example.PlaceAdminister.DTO.RoomDTO;
+import com.example.PlaceAdminister.Exception.ApiRequestException;
 import com.example.PlaceAdminister.Model_Entitiy.PlaceEntity;
 import com.example.PlaceAdminister.Model_Entitiy.RoomCategoryEntity;
 import com.example.PlaceAdminister.Model_Entitiy.RoomEntity;
@@ -11,12 +12,15 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 
 
 @Service
+@Transactional
 public class RoomService {
     @Autowired
     private RoomEntity rooms;
@@ -46,8 +50,7 @@ public class RoomService {
 
     }
 
-    public RoomEntity store(RoomDTO roomDTO)
-    {
+    public RoomEntity store(RoomDTO roomDTO) throws IOException {
 //        RoomEntity room = new RoomEntity(roomDTO);
 //
 //        System.out.println("place: " + roomDTO.getPlace_id());
@@ -65,7 +68,7 @@ public class RoomService {
             RoomCategoryEntity roomCategory = roomCategoryRepository.getById(roomDTO.getCategory_id()); // Might throw EntityNotFoundException
 
             if(roomCategory.getPlace().getId() != place.getId()){
-                throw new RuntimeException("unLogical operation");
+                throw new ApiRequestException("Bad request in place id");
             }
 
             RoomEntity room = new RoomEntity(roomDTO);

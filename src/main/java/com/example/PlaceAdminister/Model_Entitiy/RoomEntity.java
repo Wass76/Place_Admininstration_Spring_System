@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.*;
 
 @Entity
@@ -41,6 +42,9 @@ public class RoomEntity {
     @Column(name = "status")
     private Integer status;
 
+//    @Lob
+//    private byte[] image;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "place_id",nullable = false )
@@ -52,9 +56,10 @@ public class RoomEntity {
     private RoomCategoryEntity roomCategory;
 
 
-    public RoomEntity(RoomDTO roomDTO) {
+    public RoomEntity(RoomDTO roomDTO) throws IOException {
         max_num_of_chairs = roomDTO.getMax_num_of_chairs();
         status = roomDTO.getStatus();
+//        image = roomDTO.getFile().getBytes();
 //        place.setId(roomDTO.getPlace_id());
     }
 

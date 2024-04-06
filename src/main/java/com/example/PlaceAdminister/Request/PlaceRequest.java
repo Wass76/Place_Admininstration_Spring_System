@@ -1,6 +1,7 @@
 package com.example.PlaceAdminister.Request;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -12,5 +13,5 @@ import java.util.List;
 public class PlaceRequest {
     private String name;
     private String locations;
-    private String rooms;
+//    private MultipartFile file;
 }

@@ -1,27 +1,21 @@
-package com.example.PlaceAdminister.Request;
+package com.example.PlaceAdminister.Response;
 
 import com.example.PlaceAdminister.Model_Entitiy.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
-
+public class UserResponse {
     private String firstName;
-
     private String lastName;
-
     private String email;
-//    private String username;
-
-    private String password;
+    private String place;
     private Role role;
-    private Long place_id;
-//    private MultipartFile file;
+    private String imagePath;
+
 }

@@ -3,6 +3,7 @@ package com.example.PlaceAdminister.Controller;
 import com.example.PlaceAdminister.DTO.RoomDTO;
 import com.example.PlaceAdminister.DTO.TableCategoryDTO;
 import com.example.PlaceAdminister.DTO.TableDTO;
+import com.example.PlaceAdminister.Exception.ApiRequestException;
 import com.example.PlaceAdminister.Model_Entitiy.RoomEntity;
 import com.example.PlaceAdminister.Model_Entitiy.TableCategoryEntity;
 import com.example.PlaceAdminister.Model_Entitiy.TableEntity;
@@ -38,7 +39,6 @@ public class TableController {
         if(tablesList.isEmpty()){
             return ResponseEntity.status(200).body(tablesList);
         }
-
         return ResponseEntity.ok(tablesList);
     }
 
@@ -48,7 +48,8 @@ public class TableController {
     public ResponseEntity create(@RequestBody TableRequest request , @PathVariable("place_id") Long place_id)
     {
         if(request.getRoom_id() == null ||request.getCategory_id() == null ){
-            return ResponseEntity.badRequest().body("validate your data please");
+            throw new ApiRequestException("Validate your data please");
+//            return ResponseEntity.badRequest().body("validate your data please");
         }
         TableDTO tableDTO = new TableDTO(request);
         try {
@@ -56,11 +57,13 @@ public class TableController {
             TableEntity newTable = tableService.store(tableDTO);
 
             if(newTable == null){
-                return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("Failed to create table");
+                throw new ApiRequestException("Failed to create table");
+//                return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("Failed to create table");
             }
             return ResponseEntity.ok(newTable);
         }catch (Exception e){
-            return ResponseEntity.internalServerError().body("An error occurred while creating the room, maybe room_id or category_id not correct");
+            throw new ApiRequestException("An error occurred while creating the room, maybe room_id or category_id not correct");
+//            return ResponseEntity.internalServerError().body("An error occurred while creating the room, maybe room_id or category_id not correct");
         }
     }
 
@@ -68,32 +71,38 @@ public class TableController {
     public ResponseEntity show(@PathVariable("id") Long id){
         try {
             if(id == null || id<=0){
-                return ResponseEntity.badRequest().body("Invalid id");
+                throw new ApiRequestException("Invalid Id");
+//                return ResponseEntity.badRequest().body("Invalid id");
             }
             TableEntity table = tableService.getTable(id);
             if(table == null){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+                throw new ApiRequestException("Can't find this item");
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
             }
             return ResponseEntity.ok(table);
         }catch (Exception e){
-            return ResponseEntity.internalServerError().body("An error occurred, maybe place_id or id are not correct");
+            throw new ApiRequestException("An error occurred, maybe place_id or id are not correct");
+//            return ResponseEntity.internalServerError().body("An error occurred, maybe place_id or id are not correct");
         }
 
     }
     @GetMapping("{place_id}/findByRoomId/{id}")
     public ResponseEntity showByRoomId(@PathVariable("id") Long id , @PathVariable("place_id") Long place_id){
         if(id == null || id<=0){
-            return ResponseEntity.badRequest().body("Invalid room id");
+            throw new ApiRequestException("Invalid room id");
+//            return ResponseEntity.badRequest().body("Invalid room id");
         }
         RoomEntity roomDTO = roomService.getItem(id);
 
         if(roomDTO == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this room");
+            throw new ApiRequestException("Can't find this room");
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this room");
         }
 
         List<TableEntity> tableRoomsList =tableService.showTablesByRoomId(id);
         if(tableRoomsList == null){
-            return ResponseEntity.status(200).body("there is no tables in this room yet");
+            throw new ApiRequestException("There is no tables in this room yet");
+//            return ResponseEntity.status(200).body("there is no tables in this room yet");
         }
         return ResponseEntity.ok(tableRoomsList);
     }
@@ -101,15 +110,18 @@ public class TableController {
     @GetMapping("{place_id}/findByCategoryId/{id}")
     public ResponseEntity showByCategoryId(@PathVariable("id") Long id, @PathVariable("place_id") Long place_id){
         if(id == null || id<=0){
-            return ResponseEntity.badRequest().body("Invalid room id");
+            throw new ApiRequestException("Invalid room id");
+//            return ResponseEntity.badRequest().body("Invalid room id");
         }
         TableCategoryEntity tableCategory = tableCategoryService.getTableCategory(id);
         if(tableCategory == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this table category");
+            throw new ApiRequestException("Can't find this table category");
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this table category");
         }
         List<TableEntity> tableList = tableService.showTablesByCategoryId(id);
         if(tableList == null){
-            return ResponseEntity.status(200).body("there is no tables in this category yet");
+//            throw new ApiRequestException("There are no tables in this category yet")
+            return ResponseEntity.status(200).body("There is no tables in this category yet");
         }
         return ResponseEntity.ok(tableList) ; //
     }
@@ -120,20 +132,24 @@ public class TableController {
         try {
             if(id == null || id<=0){
 //            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("d");
-                return ResponseEntity.badRequest().body("Invalid Id");
+                throw new ApiRequestException("Invalid id");
+//                return ResponseEntity.badRequest().body("Invalid Id");
             }
             if(request.getRoom_id() == null ||request.getCategory_id() == null ){
-                return ResponseEntity.badRequest().body("validate your data please");
+                throw new ApiRequestException("Validate your data please");
+//                return ResponseEntity.badRequest().body("validate your data please");
             }
             TableDTO tableDTO = new TableDTO(request);
             tableDTO.setPlace_id(place_id);
             TableEntity table = tableService.getTable(id);
             if(table == null){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+                throw new ApiRequestException("Can't find this item");
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
             }
             return ResponseEntity.ok(tableService.update(id ,tableDTO));
         }catch (Exception e){
-            return ResponseEntity.internalServerError().body("An error occurred while updating the table, maybe place_id or id or category_id are not correct");
+            throw new ApiRequestException("An error occurred while updating the table, maybe place_id or id or category_id are not correct");
+//            return ResponseEntity.internalServerError().body("An error occurred while updating the table, maybe place_id or id or category_id are not correct");
 
         }
     }
@@ -141,12 +157,14 @@ public class TableController {
     @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
     public ResponseEntity delete(@PathVariable("id") Long id ){
         if(id == null || id<=0){
-            return ResponseEntity.badRequest().body("Invalid Id");
+            throw new ApiRequestException("Invalid Id");
+//            return ResponseEntity.badRequest().body("Invalid Id");
         }
 
         TableEntity table = tableService.getTable(id);
         if(table == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
+            throw new ApiRequestException("Can't find this item");
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("can't find this item");
         }
         tableService.delete(id);
         return ResponseEntity.ok("delete Done successfully");

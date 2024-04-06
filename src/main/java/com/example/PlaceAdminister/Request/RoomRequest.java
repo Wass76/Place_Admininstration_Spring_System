@@ -2,10 +2,8 @@ package com.example.PlaceAdminister.Request;
 
 import com.example.PlaceAdminister.Model_Entitiy.PlaceEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Time;
 import java.util.HashSet;
@@ -16,8 +14,10 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@Builder
 public class RoomRequest {
-    private Integer status;
     private Integer max_num_of_chairs;
     private Long category_id;
+    private Long place_id;
+//    private MultipartFile file;
 }

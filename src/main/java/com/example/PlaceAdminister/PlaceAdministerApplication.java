@@ -14,7 +14,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.File;
@@ -27,9 +29,8 @@ import static com.example.PlaceAdminister.Model_Entitiy.Role.MANAGER;
 @EnableScheduling
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @RequiredArgsConstructor
+@EnableJpaRepositories
 public class PlaceAdministerApplication {
-
-	private final PlaceRepository placeRepository;
 
 	private final PlaceService placeService;
 	public static void main(String[] args) {
@@ -71,8 +72,6 @@ public class PlaceAdministerApplication {
 					.place_id(place.getId())
 					.build();
 			System.out.println("manager token: " + authenticationService.register(manager).getToken());
-
-
 		};
 	}
 }
