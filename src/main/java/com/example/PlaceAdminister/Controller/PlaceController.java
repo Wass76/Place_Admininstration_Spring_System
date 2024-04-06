@@ -34,16 +34,16 @@ public class PlaceController {
     @PostMapping("newplace")
     @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
     public ResponseEntity addPlace(
-//            @RequestBody PlaceRequest placeRequest
-            @RequestParam String name,
-            @RequestParam String locations
+            @RequestBody PlaceRequest placeRequest
+//            @RequestParam String name,
+//            @RequestParam String locations
 //            @RequestParam MultipartFile file
             ) throws IOException {
-        PlaceRequest placeRequest = PlaceRequest.builder()
-                .name(name)
-                .locations(locations)
-//                .file(file)
-                .build();
+//        PlaceRequest placeRequest = PlaceRequest.builder()
+//                .name(name)
+//                .locations(locations)
+////                .file(file)
+//                .build();
         if(placeRequest.getLocations() == null || placeRequest.getLocations().isEmpty() || placeRequest.getName() == null){
             throw new ApiRequestException("validate your data please");
 //            return ResponseEntity.badRequest().body("validate your data please");

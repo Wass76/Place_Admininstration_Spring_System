@@ -1,5 +1,6 @@
 package com.example.PlaceAdminister.Controller;
 
+import com.example.PlaceAdminister.Exception.ApiRequestException;
 import com.example.PlaceAdminister.Model_Entitiy.Role;
 import com.example.PlaceAdminister.Request.AuthenticationRequest;
 import com.example.PlaceAdminister.Request.RegisterRequest;
@@ -70,6 +71,17 @@ public class UserController {
     ){
 
         return ResponseEntity.ok(userService.editUser(request,id));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity delete(@PathVariable("id") Long id){
+        try {
+            return userService.delete(id);
+        }
+        catch (Exception e){
+            throw new ApiRequestException("An error occurred while deleting, maybe id is not correct");
+        }
+
     }
 
 }

@@ -6,6 +6,7 @@ import com.example.PlaceAdminister.Repository.UserRepository;
 import com.example.PlaceAdminister.Request.RegisterRequest;
 import com.example.PlaceAdminister.Response.UserResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -80,6 +81,14 @@ public class UserService {
                 .role(user.getRole())
                 .place(user.getPlace().getName())
                 .build();
+    }
+
+    public ResponseEntity delete(Long id){
+        UserEntity user = userRepository.getReferenceById(id);
+        if(user != null){
+            userRepository.deleteById(id);
+        }
+        return ResponseEntity.ok().body("delete Done successfully" + user.getEmail() + user.getFirstName()) ;
     }
 
 }
