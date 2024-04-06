@@ -58,6 +58,7 @@ public class AuthenticationService {
 
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .id(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
@@ -67,28 +68,6 @@ public class AuthenticationService {
                 .build();
     }
 
-    public UserResponse newUser(RegisterRequest request){
-        var user = UserEntity.builder()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
-                .place(placeRepository.getReferenceById(request.getPlace_id()))
-//                .imagePath(fileName)
-                .build();
-
-        userRepository.save(user);
-
-        return UserResponse.builder()
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .place(user.getPlace().getName())
-                .role(user.getRole())
-//                .imagePath(user.getImagePath())
-                .build();
-    }
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
@@ -98,6 +77,7 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .id(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())

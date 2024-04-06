@@ -52,6 +52,7 @@ public class UserService {
         userRepository.save(user);
 
         return UserResponse.builder()
+                .id(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
@@ -75,6 +76,7 @@ public class UserService {
             userRepository.save(user);
         }
         return UserResponse.builder()
+                .id(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
