@@ -16,7 +16,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.File;
@@ -29,7 +28,6 @@ import static com.example.PlaceAdminister.Model_Entitiy.Role.MANAGER;
 @EnableScheduling
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @RequiredArgsConstructor
-@EnableJpaRepositories
 public class PlaceAdministerApplication {
 
 	private final PlaceService placeService;
